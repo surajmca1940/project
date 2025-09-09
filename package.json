@@ -1,0 +1,67 @@
+{
+  "name": "digital-psychological-intervention-system",
+  "version": "1.0.0",
+  "description": "A comprehensive digital platform for psychological intervention and mental health support in educational institutions",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test -- --coverage --watchAll=false",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:fix": "npm run lint:fix:backend && npm run lint:fix:frontend",
+    "lint:fix:backend": "cd backend && npm run lint:fix",
+    "lint:fix:frontend": "cd frontend && npm run lint:fix",
+    "format": "cd frontend && npm run format",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "db:seed": "cd backend && npm run db:seed",
+    "db:reset": "cd backend && npm run db:reset"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "mental-health",
+    "psychological-intervention",
+    "healthcare",
+    "education",
+    "wellness",
+    "support-system",
+    "ai-chatbot",
+    "appointment-booking",
+    "peer-support",
+    "analytics"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/digital-psychological-intervention-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/digital-psychological-intervention-system/issues"
+  },
+  "homepage": "https://github.com/your-org/digital-psychological-intervention-system#readme",
+  "author": {
+    "name": "DPIS Development Team",
+    "email": "dev-team@your-institution.edu"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
