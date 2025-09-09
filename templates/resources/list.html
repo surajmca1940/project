@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Resources - Digital Psychological Intervention System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3><i class="bi bi-book"></i> Mental Health Resources</h3>
+            <div>
+                <select class="form-select form-select-sm" style="width: 180px; display: inline-block;">
+                    <option selected>All Categories</option>
+                    <option value="guides">Guides</option>
+                    <option value="audio">Audio</option>
+                    <option value="video">Video</option>
+                </select>
+                <select class="form-select form-select-sm" style="width: 150px; display: inline-block;">
+                    <option selected>English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="bn">Bengali</option>
+                    <option value="ta">Tamil</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card resource-card guide h-100">
+                    <div class="card-body">
+                        <h5>Managing Exam Stress</h5>
+                        <p class="text-muted">Practical strategies for staying calm and focused during exam periods</p>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge bg-primary">Guide</span>
+                            <small class="text-muted">English</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card resource-card audio h-100">
+                    <div class="card-body">
+                        <h5>5-Minute Breathing Exercise</h5>
+                        <p class="text-muted">Guided audio for immediate relaxation during stressful moments</p>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge bg-success">Audio</span>
+                            <small class="text-muted">English</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card resource-card video h-100">
+                    <div class="card-body">
+                        <h5>Understanding Anxiety</h5>
+                        <p class="text-muted">Short video explaining the science of anxiety and coping methods</p>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge bg-danger">Video</span>
+                            <small class="text-muted">English</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+            <i class="bi bi-info-circle"></i> Looking for something specific? Contact the counseling center to request resources in your preferred language.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}

@@ -23,9 +23,14 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    
+    # Authentication URLs
+    path('', include('accounts.urls')),
+    
+    # App URLs
     path('ai-support/', include(('ai_support.urls', 'ai_support'), namespace='ai_support')),
     path('booking/', include(('booking_system.urls', 'booking_system'), namespace='booking_system')),
     path('resources/', include(('resources.urls', 'resources'), namespace='resources')),
     path('community/', include(('peer_support.urls', 'peer_support'), namespace='peer_support')),
     path('dashboard/', include(('admin_dashboard.urls', 'admin_dashboard'), namespace='admin_dashboard')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

@@ -4,203 +4,251 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-The Digital Psychological Intervention System (DPIS) is a comprehensive mental health platform for educational institutions. It's a full-stack TypeScript application with a React frontend, Node.js/Express backend, MongoDB database, and Redis caching layer, all containerized with Docker.
+The Digital Psychological Intervention System (DPIS) is a comprehensive **Django-based web application** providing mental health support for educational institutions. It features AI-guided support, appointment booking, peer support forums, educational resources, and administrative analytics.
 
-**Key Domain**: Mental health support system with AI chatbot, appointment booking, peer support forums, educational resources, and administrative analytics.
+
+**Key Domain**: Mental health platform addressing college student wellness with privacy-first design and institutional analytics.
 
 ## Architecture Overview
 
-This is a **monorepo with workspace structure** containing two main applications:
+### Core Technology Stack
+- **Backend**: Django 5.2.6 (Python) - Main web framework
+- **Database**: SQLite (development) / PostgreSQL (production-ready)
+- **Frontend**: HTML5, CSS3, JavaScript with Bootstrap 5
+- **Authentication**: Django's built-in user system
+- **Styling**: Custom CSS with Bootstrap components
 
-### Frontend (`frontend/`)
-- **React 18** with **TypeScript** and **Material-UI (MUI)**
-- **Redux Toolkit** for state management
-- **Socket.IO Client** for real-time features (chat, notifications)
-- **PWA capabilities** with service worker for offline support
-- **Component structure**:
-  - `components/ai-support/` - AI chatbot interface
-  - `components/booking/` - Appointment scheduling
-  - `components/peer-support/` - Forum and community features
-  - `components/resources/` - Educational content
-  - `components/admin/` - Dashboard and analytics
-  - `components/common/` - Reusable UI components
+### Django Application Structure
+The project follows Django's modular app architecture:
 
-### Backend (`backend/src/`)
-- **Node.js with Express.js** and **TypeScript**
-- **MongoDB with Mongoose ODM** for data persistence
-- **Socket.IO** for real-time communication
-- **JWT authentication** with bcrypt password hashing
-- **Key architecture patterns**:
-  - `routes/` - API endpoint definitions
-  - `controllers/` - Request handling logic
-  - `services/` - Business logic layer
-  - `models/` - Database schemas (User, Appointment, ChatSession, Resources)
-  - `middleware/` - Authentication, error handling, rate limiting
-  - `config/` - Database connection and logging setup
 
-### External Integrations
-- **OpenAI API** for AI chatbot responses and sentiment analysis
-- **Redis** for session storage and caching
-- **Email/SMS services** for notifications
-- **MongoDB encryption** for sensitive data protection
+
+- **`ai_support/`** - AI chatbot functionality and coping strategies
+- **`booking_system/`** - Appointment scheduling with counselors
+- **`resources/`** - Educational content and wellness materials
+- **`peer_support/`** - Community forums and peer interactions
+- **`admin_dashboard/`** - Analytics and administrative tools
+- **`mental_health_platform/`** - Main Django project configuration
+
+### Key Models and Data Architecture
+- **`ChatSession`** & **`ChatMessage`**: AI support conversation tracking
+- **`Counselor`** & **`Appointment`**: Professional booking system
+- **`AvailableSlot`**: Counselor availability management
+- **`CopingStrategy`**: Multi-language mental health resources
+- **Django User Model**: Extended for role-based access (student/counselor/admin)
+
+### Frontend Architecture (Django Templates + Vanilla JS)
+- **Template Structure**: Django's MVT pattern with template inheritance
+- **Base Template**: `templates/base.html` provides common layout and navigation
+- **App Templates**: Each Django app has its own template directory
+- **Static Files**: Organized in `static/` directory:
+  - `static/css/style.css` - Custom styling with CSS variables and animations
+  - `static/js/main.js` - Vanilla JavaScript with ES6 classes for interactivity
+- **Bootstrap 5**: CDN-loaded for responsive design and components
+- **Progressive Enhancement**: JavaScript enhances basic HTML functionality
 
 ## Common Development Commands
 
-### Full Stack Development
+### Django Development Workflow
 ```bash
-# Install all dependencies (root, frontend, backend)
-npm run install:all
+# Set up virtual environment (first time)
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
 
-# Start both frontend and backend in development mode
-npm run dev
+# Install dependencies
+pip install -r requirements.txt
 
-# Start individual services
-npm run dev:frontend    # React dev server on port 3000
-npm run dev:backend     # Node.js with nodemon on port 5000
+# Run development server
+python manage.py runserver
+# Application will be available at http://127.0.0.1:8000/
 ```
 
-### Building
+### Database Management
 ```bash
-# Build both applications for production
-npm run build
+# Create and apply migrations
+python manage.py makemigrations
+python manage.py migrate
 
-# Build individual applications
-npm run build:frontend  # Creates optimized React build
-npm run build:backend   # Compiles TypeScript to JavaScript
+# Create superuser for admin access
+python manage.py createsuperuser
+
+# Reset database (development only)
+rm db.sqlite3
+python manage.py migrate
+```
+
+### Django Management Commands
+```bash
+# Open Django shell for data manipulation
+python manage.py shell
+
+# Collect static files (production)
+python manage.py collectstatic
+
+# Check for Django system issues
+python manage.py check
+
+# Show current migrations status
+python manage.py showmigrations
 ```
 
 ### Testing
 ```bash
 # Run all tests
-npm test
+python manage.py test
 
-# Run tests individually
-npm run test:frontend   # React Testing Library with coverage
-npm run test:backend    # Jest unit tests
+# Run tests for specific app
+python manage.py test ai_support
+python manage.py test booking_system
+
+# Run specific test class or method
+python manage.py test ai_support.tests.ChatSessionTestCase
+python manage.py test ai_support.tests.ChatSessionTestCase.test_create_session
+
+# Run tests with coverage (if coverage.py is installed)
+coverage run --source='.' manage.py test
+coverage report
+coverage html  # Generate HTML coverage report
 ```
 
-### Linting and Code Quality
+### Docker Development (Alternative Setup)
 ```bash
-# Lint all code
-npm run lint
+# Start containerized development environment
+docker-compose up -d
 
-# Auto-fix linting issues
-npm run lint:fix
+# View logs
+docker-compose logs -f
 
-# Format frontend code (Prettier)
-npm run format
-```
-
-### Database Operations
-```bash
-# Seed database with initial data
-npm run db:seed
-
-# Reset database (destructive operation)
-npm run db:reset
-```
-
-### Docker Operations
-```bash
-# Start all services with Docker Compose
-npm run docker:up
-
-# View logs from all containers
-npm run docker:logs
-
-# Stop all services
-npm run docker:down
+# Stop services
+docker-compose down
 
 # Rebuild containers
-npm run docker:build
+docker-compose build
 ```
 
-### Running Individual Tests
+### Static Files Development
 ```bash
-# Backend: Run specific test file
-cd backend && npm test -- --testPathPattern=controllers/auth.test.ts
+# Collect and serve static files in development
+python manage.py collectstatic --noinput
 
-# Backend: Run tests in watch mode
-cd backend && npm run test:watch
+# Watch for CSS changes (if using a CSS preprocessor)
+# Currently using vanilla CSS, no build process needed
 
-# Frontend: Run specific component tests
-cd frontend && npm test -- --testPathPattern=ChatInterface.test.tsx
+# Static files are served automatically by Django dev server
+# Access at: http://127.0.0.1:8000/static/
+```
 
-# Frontend: Generate coverage report
-cd frontend && npm test -- --coverage --watchAll=false
+### Frontend Testing & Development
+```bash
+# Django dev server serves static files automatically
+python manage.py runserver
+
+# Templates are in templates/ directory
+# Static files (CSS/JS) are in static/ directory
+# Changes to templates/static files don't require server restart
+
+# Test JavaScript functionality in browser developer tools
+# No separate build process required for vanilla JS
 ```
 
 ## Key Development Patterns
 
-### Authentication Flow
-- JWT tokens for API authentication
-- Socket.IO uses the same JWT for real-time connections
-- Role-based access control (student, counselor, admin)
-- Protected routes require `authMiddleware`
+### Django Authentication & Authorization
+- **Django's built-in User model** extended for role-based access
+- **Session-based authentication** for web interface
+- **Role distinction**: Student, Counselor, Admin via user groups or profile fields
+- **Django permissions system** for view-level access control
+- **Login decorators** (`@login_required`) protect sensitive views
 
-### Data Security Approach
-- Sensitive data (chat messages, appointment notes) is **field-level encrypted**
-- All API endpoints use **input validation** with Joi schemas
-- **Rate limiting** applied to prevent abuse
-- **CORS** configured for specific origins only
+### Django App Architecture
+- **Modular app design**: Each feature area is a separate Django app
+- **Model-View-Template (MVT)** pattern throughout
+- **URL routing** with namespaced patterns (`ai_support:chat_view`)
+- **Class-based views (CBVs)** for consistent CRUD operations
+- **Django forms** for input validation and security
+- **Template inheritance**: Base template with blocks for extensible UI
 
-### Real-time Features
-- **Socket.IO** handles chat messages, appointment notifications
-- Users join personal rooms for targeted notifications
-- Chat sessions support both AI bot and peer-to-peer communication
+### Frontend JavaScript Patterns
+- **ES6 Classes**: `ChatInterface` and `AppointmentBooking` classes in `main.js`
+- **Progressive Enhancement**: JavaScript adds interactivity to functional HTML
+- **Event-Driven**: DOM event listeners for user interactions
+- **Bootstrap Integration**: Uses Bootstrap's JavaScript components (tooltips, modals, alerts)
+- **Vanilla JS**: No frameworks, pure JavaScript for maximum compatibility
 
-### State Management Pattern
-- **Redux Toolkit** with feature-based slice organization
-- API calls handled through **Redux Toolkit Query** (RTK Query)
-- Real-time updates integrated with Redux via Socket.IO middleware
+### Data Security & Privacy
+- **Django ORM** prevents SQL injection by default
+- **CSRF protection** enabled across all forms
+- **Sensitive data fields** should use Django's encryption utilities
+- **User data anonymization** for analytics and reporting
+- **Django's security middleware** handles common vulnerabilities
 
-### Database Schema Design
-- **User model**: Handles students, counselors, and administrators
-- **ChatSession model**: Stores encrypted conversation history with sentiment analysis
-- **Appointment model**: Manages booking system with multiple statuses
-- **Resources model**: Multi-language educational content system
+### Database Schema (Django Models)
+- **`User` (Django built-in)**: Core authentication, extended via OneToOne profiles
+- **`ChatSession`/`ChatMessage`**: AI support conversation tracking with anonymization
+- **`Counselor`**: Professional profiles with specializations and availability
+- **`Appointment`**: Booking system with status tracking and privacy controls
+- **`CopingStrategy`**: Multi-language mental health resources
+- **Foreign key relationships** maintain data integrity and enable efficient queries
 
 ## Environment Setup Requirements
 
-### Required Environment Variables
-**Backend** (`.env` file in `backend/`):
-```
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://admin:password123@localhost:27017/dpis?authSource=admin
-REDIS_URL=redis://:password123@localhost:6379
-JWT_SECRET=your-jwt-secret
-OPENAI_API_KEY=your-openai-key
-FRONTEND_URL=http://localhost:3000
-```
+### Python/Django Environment
+- Python 3.8+
+- pip (Python package manager)
+- Virtual environment (venv recommended)
 
-**Frontend** (`.env` file in `frontend/`):
-```
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_SOCKET_URL=http://localhost:5000
-```
+### Environment Variables
+- Configure Django settings via environment variables when deploying (e.g., `SECRET_KEY`, `DEBUG`, `DATABASE_URL`).
+- For local development with SQLite, environment variables are optional; defaults are defined in `mental_health_platform/settings.py`.
 
-### Prerequisites
-- **Node.js v16+** and **npm v8+**
-- **MongoDB** (local or Docker)
-- **Redis** (local or Docker)
-- **Docker & Docker Compose** for containerized development
+### Optional (Containerized Dev)
+- Docker & Docker Compose if using the alternative setup in `docker-compose.yml`.
+- Note: docker-compose includes services for MongoDB/Redis intended for a Node/React stack; these are not required for the Django app and can be ignored unless integrating a separate Node service.
 
 ## Mental Health Domain Context
 
 When working with this codebase, understand that:
 
-- **Data privacy is paramount** - all sensitive mental health data must be encrypted
-- **Crisis detection** features require immediate escalation to human counselors
-- **Anonymization** is used for analytics while preserving user privacy
+- **Data privacy is paramount** - Django ORM should handle sensitive mental health data carefully
+- **User anonymity options** are crucial for mental health platform adoption
+- **Crisis detection** in AI support should escalate to human counselors immediately
 - **Accessibility compliance** (WCAG 2.1 AA) is required for inclusive design
-- **Multi-language support** is essential for diverse student populations
+- **Multi-language support** is built into the resource system (see `CopingStrategy` model)
+- **Institutional analytics** must be anonymized while providing useful insights
 
-## Development Workflow Notes
+## Django Development Notes
 
-- The system uses **TypeScript throughout** for type safety in this sensitive domain
-- **Socket.IO connections** are authenticated and users join personal rooms
-- **AI responses** go through sentiment analysis and risk assessment before delivery
-- **Database queries** are optimized for privacy (no joins that could expose sensitive data)
-- **API rate limiting** is aggressive to prevent system abuse
-- **Logging** excludes sensitive data but maintains audit trails for security events
+- **Django admin interface** (`/admin/`) provides quick access to model management
+- **Template inheritance** maintains consistent UI across the platform (`templates/base.html` extends to all pages)
+- **Django's security features** (CSRF, SQL injection protection) are leveraged throughout
+- **Model relationships** use proper foreign keys for data integrity (see appointment booking system)
+- **Django migrations** track all schema changes for reliable deployments
+- **Static file handling** serves CSS/JS through Django's staticfiles system
+- **URL routing** is organized with app namespaces for maintainability
+- **JavaScript Classes**: `ChatInterface` and `AppointmentBooking` provide interactive functionality
+- **Bootstrap Integration**: Uses Bootstrap 5 components with custom CSS overrides
+- **Progressive Enhancement**: HTML forms work without JavaScript, JS adds enhanced UX
+
+## Important Project Context
+
+### Current Implementation vs. Documentation Mismatch
+- **Current**: Django-based web application with HTML/CSS/JS frontend (what actually runs)
+- **Unused**: Node.js/React configuration files exist but are not used (`frontend/`, `backend/` dirs)
+- **Documentation**: `docs/ARCHITECTURE.md` describes a Node.js/React/MongoDB stack that was planned but not implemented
+- **Docker setup**: `docker-compose.yml` is configured for Node.js/MongoDB, not the current Django app
+- **Package files**: `package.json` files exist but the Django app doesn't use npm or Node.js
+
+### Key Features (From Current Implementation)
+- **AI Support**: `ChatSession` and `ChatMessage` models + `ChatInterface` JavaScript class for real-time chat UI
+- **Counselor Booking**: `Counselor`, `Appointment`, and `AvailableSlot` models + `AppointmentBooking` JS class
+- **Resource Library**: `CopingStrategy` model with multi-language support and categorized display
+- **User Management**: Django User model with role-based navigation and access control
+- **Responsive UI**: Bootstrap 5 with custom CSS variables and hover animations
+- **Interactive Features**: Form validation, loading states, auto-hiding alerts, emergency modals
+
+### Security & Privacy Design Patterns
+- **Django security middleware** provides CSRF protection, clickjacking protection, etc.
+- **Sensitive data handling**: Patient/student mental health data requires careful privacy controls
+- **Role-based access**: Different user types (students, counselors, admins) have different permissions
+- **Audit capabilities**: Track access to sensitive features for compliance and security

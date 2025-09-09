@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment - Digital Psychological Intervention System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-calendar-check"></i> Book an Appointment</h4>
+                <small>Schedule confidential sessions with professional counselors</small>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Step 1: Select Counselor -->
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="bi bi-person"></i> Step 1: Choose Counselor</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="counselor" id="counselor1" value="1">
+                                    <label class="form-check-label" for="counselor1">
+                                        <strong>Dr. Sarah Johnson</strong><br>
+                                        <small class="text-muted">Clinical Psychologist</small><br>
+                                        <small>Specializes in anxiety and depression</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="counselor" id="counselor2" value="2">
+                                    <label class="form-check-label" for="counselor2">
+                                        <strong>Dr. Michael Chen</strong><br>
+                                        <small class="text-muted">Licensed Therapist</small><br>
+                                        <small>Focuses on stress management</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="counselor" id="counselor3" value="3">
+                                    <label class="form-check-label" for="counselor3">
+                                        <strong>Dr. Lisa Rodriguez</strong><br>
+                                        <small class="text-muted">Mental Health Counselor</small><br>
+                                        <small>Student support specialist</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Select Time -->
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="bi bi-clock"></i> Step 2: Choose Time</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="appointment-date" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="appointment-date" min="{{ today|date:'Y-m-d' }}">
+                                </div>
+                                
+                                <label class="form-label">Available Times</label>
+                                <div class="row">
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="09:00">
+                                            9:00 AM
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="10:00">
+                                            10:00 AM
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="11:00">
+                                            11:00 AM
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="14:00">
+                                            2:00 PM
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="15:00">
+                                            3:00 PM
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="appointment-slot p-2 border rounded text-center" data-time="16:00">
+                                            4:00 PM
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Additional Information -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5><i class="bi bi-chat-dots"></i> Step 3: Additional Information (Optional)</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="appointment-notes" class="form-label">Reason for appointment or any specific concerns</label>
+                                    <textarea class="form-control" id="appointment-notes" rows="3" placeholder="This information will help your counselor prepare for your session..."></textarea>
+                                    <small class="text-muted">This information is confidential and secure</small>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="anonymous-booking">
+                                    <label class="form-check-label" for="anonymous-booking">
+                                        I prefer to remain anonymous until my appointment
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book Button -->
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-success btn-lg" id="book-appointment-btn" disabled>
+                        <i class="bi bi-check-circle"></i> Book Appointment
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Emergency Contact Info -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h6><i class="bi bi-info-circle"></i> Need immediate help?</h6>
+                    <p class="mb-0">For urgent situations, call our crisis hotline: <strong>988</strong> or campus counseling: <strong>Ext. 2345</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const appointmentBooking = new AppointmentBooking();
+    
+    // Set minimum date to today
+    const dateInput = document.getElementById('appointment-date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+    
+    // Enable booking button when counselor and time are selected
+    function checkBookingReady() {
+        const counselorSelected = document.querySelector('input[name="counselor"]:checked');
+        const timeSelected = document.querySelector('.appointment-slot.selected');
+        const bookBtn = document.getElementById('book-appointment-btn');
+        
+        if (counselorSelected && timeSelected) {
+            bookBtn.disabled = false;
+        } else {
+            bookBtn.disabled = true;
+        }
+    }
+    
+    // Listen for counselor selection
+    document.querySelectorAll('input[name="counselor"]').forEach(input => {
+        input.addEventListener('change', checkBookingReady);
+    });
+    
+    // Book appointment action
+    document.getElementById('book-appointment-btn').addEventListener('click', function() {
+        const counselor = document.querySelector('input[name="counselor"]:checked');
+        const timeSlot = document.querySelector('.appointment-slot.selected');
+        const date = document.getElementById('appointment-date').value;
+        const notes = document.getElementById('appointment-notes').value;
+        
+        if (counselor && timeSlot && date) {
+            alert(`Appointment booked successfully!\n\nCounselor: ${counselor.nextElementSibling.querySelector('strong').textContent}\nDate: ${date}\nTime: ${timeSlot.textContent.trim()}\n\nYou will receive a confirmation email.`);
+        }
+    });
+});
+</script>
+{% endblock %}

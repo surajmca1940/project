@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Digital Psychological Intervention System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-person-circle"></i> Login</h4>
+                <small>Access your mental health support account</small>
+            </div>
+            <div class="card-body">
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Please correct the errors below.
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="id_username" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="id_password" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </form>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 p-3 bg-light rounded">
+            <h6><i class="bi bi-info-circle text-info"></i> Quick Access</h6>
+            <p class="small mb-2">You can use the platform anonymously by visiting:</p>
+            <ul class="small">
+                <li><a href="{% url 'ai_support:chat' %}">AI Support Chat</a> - No login required</li>
+                <li><a href="{% url 'resources:list' %}">Mental Health Resources</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}

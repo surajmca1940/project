@@ -126,11 +126,16 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             this.stopTyping();
-            this.addMessage(data.response, 'bot');
+            if (data.status === 'success') {
+                this.addMessage(data.response, 'bot');
+            } else {
+                this.addMessage(data.error || 'Sorry, something went wrong. Please try again.', 'bot');
+            }
         })
         .catch(error => {
+            console.error('Chat error:', error);
             this.stopTyping();
-            this.addMessage('Sorry, I encountered an error. Please try again or contact support.', 'bot');
+            this.addMessage('Sorry, I encountered a connection error. Please check your internet connection and try again.', 'bot');
         });
     };
 });
