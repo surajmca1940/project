@@ -69,7 +69,109 @@ There is a major gap in the availability, accessibility, and stigma-free deliver
 ## Project Structure
 
 ```
-digital-psychological-intervention-system/
+# Digital Psychological Intervention System
+
+A comprehensive web-based mental health platform designed specifically for higher education institutions to provide accessible, stigma-free psychological support to college students.
+
+## 🎯 Project Overview
+
+### Problem Statement
+
+Mental health issues among college students have significantly increased, including anxiety, depression, burnout, sleep disorders, academic stress, and social isolation. However, there is a major gap in the availability, accessibility, and stigma-free delivery of mental health support in most higher education institutions, especially in rural and semi-urban colleges.
+
+### Solution
+
+This Digital Psychological Intervention System provides:
+
+1. **AI-guided First-Aid Support** - Interactive chatbot offering coping strategies and professional referrals
+2. **Confidential Booking System** - Anonymous appointment scheduling with campus counselors
+3. **Psychoeducational Resource Hub** - Videos, audio content, and wellness guides in regional languages
+4. **Peer Support Platform** - Moderated peer-to-peer support forum with trained volunteers
+5. **Admin Dashboard** - Anonymous analytics for institutional policy planning and intervention recognition
+
+## 🚀 Features
+
+### For Students
+- **Anonymous AI Chat Support** - Get immediate help without revealing identity
+- **Resource Library** - Access self-help materials in multiple languages
+- **Appointment Booking** - Schedule confidential sessions with counselors
+- **Peer Community** - Connect with fellow students in a safe, moderated environment
+- **Crisis Support** - Immediate access to emergency contacts and helplines
+
+### For Administrators
+- **Analytics Dashboard** - Monitor usage trends and mental health indicators
+- **User Activity Tracking** - Anonymous data collection for policy decisions
+- **Alert System** - Notifications for unusual patterns or crisis situations
+- **Resource Management** - Add and manage educational content
+- **Counselor Scheduling** - Manage appointment availability and counselor profiles
+
+### For Counselors
+- **Appointment Management** - View and manage scheduled sessions
+- **Resource Creation** - Contribute educational materials
+- **Student Progress** - Anonymous tracking of intervention effectiveness
+
+## 🛠️ Technology Stack
+
+- **Backend**: Django 5.2.6 (Python)
+- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
+- **Database**: SQLite (development) / PostgreSQL (production ready)
+- **Styling**: Custom CSS with Bootstrap components
+- **Icons**: Bootstrap Icons
+- **Authentication**: Django's built-in authentication system
+
+## 📋 Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package installer)
+- Git
+
+## 🔧 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd digital-psychological-intervention-system
+```
+
+### 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+
+# On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Database Setup
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 5. Create Superuser (Optional)
+
+```bash
+python manage.py createsuperuser
+```
+
+### 6. Run Development Server
+
+```bash
+python manage.py runserver
+```
+
+The application will be available at `http://127.0.0.1:8000/`
 ├── frontend/           # React frontend application
 ├── backend/           # Node.js/Express API server
 ├── database/          # Database schemas and migrations
