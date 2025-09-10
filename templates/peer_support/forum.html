@@ -1,79 +1,80 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Peer Support Forum - Digital Psychological Intervention System{% endblock %}
+{% block title %}{% trans "Peer Support Forum" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-10 mx-auto">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3><i class="bi bi-people"></i> Peer Support Forum</h3>
+            <h3><i class="bi bi-people"></i> {% trans "Peer Support Forum" %}</h3>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
-                <i class="bi bi-plus-circle"></i> New Post
+                <i class="bi bi-plus-circle"></i> {% trans "New Post" %}
             </button>
         </div>
         
         <div class="alert alert-warning">
-            <i class="bi bi-shield-check"></i> This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information.
+            <i class="bi bi-shield-check"></i> {% trans "This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information." %}
         </div>
         
         <div class="forum-post">
             <div class="d-flex justify-content-between">
                 <div>
-                    <span class="author">Anonymous Student</span>
-                    <span class="timestamp">2 hours ago</span>
+                    <span class="author">{% trans "Anonymous Student" %}</span>
+                    <span class="timestamp">{% trans "2 hours ago" %}</span>
                 </div>
-                <span class="badge bg-secondary">Discussion</span>
+                <span class="badge bg-secondary">{% trans "Discussion" %}</span>
             </div>
-            <h5 class="mt-2">Dealing with exam anxiety</h5>
-            <p>Has anyone found effective ways to manage the stress during final exams? I've been having trouble sleeping and concentrating. Any advice would be appreciated.</p>
+            <h5 class="mt-2">{% trans "Dealing with exam anxiety" %}</h5>
+            <p>{% trans "Has anyone found effective ways to manage the stress during final exams? I've been having trouble sleeping and concentrating. Any advice would be appreciated." %}</p>
             <div class="d-flex justify-content-between">
-                <small class="text-muted">5 replies</small>
-                <button class="btn btn-sm btn-outline-primary">Reply</button>
-            </div>
-        </div>
-        
-        <div class="forum-post">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <span class="author">Study Buddy</span>
-                    <span class="timestamp">1 day ago</span>
-                </div>
-                <span class="badge bg-info">Resource Share</span>
-            </div>
-            <h5 class="mt-2">Meditation apps that actually work</h5>
-            <p>I've been using meditation apps for a few months now and wanted to share the ones that have really helped me with stress and focus. Here are my top 3...</p>
-            <div class="d-flex justify-content-between">
-                <small class="text-muted">12 replies</small>
-                <button class="btn btn-sm btn-outline-primary">Reply</button>
+                <small class="text-muted">{% trans "5 replies" %}</small>
+                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
             </div>
         </div>
         
         <div class="forum-post">
             <div class="d-flex justify-content-between">
                 <div>
-                    <span class="author">HopefulGrad</span>
-                    <span class="timestamp">3 days ago</span>
+                    <span class="author">{% trans "Study Buddy" %}</span>
+                    <span class="timestamp">{% trans "1 day ago" %}</span>
                 </div>
-                <span class="badge bg-success">Support</span>
+                <span class="badge bg-info">{% trans "Resource Share" %}</span>
             </div>
-            <h5 class="mt-2">Thank you to this community</h5>
-            <p>I just wanted to say thanks to everyone who has been supportive. Going through a tough time but the encouragement here has meant a lot.</p>
+            <h5 class="mt-2">{% trans "Meditation apps that actually work" %}</h5>
+            <p>{% trans "I've been using meditation apps for a few months now and wanted to share the ones that have really helped me with stress and focus. Here are my top 3..." %}</p>
             <div class="d-flex justify-content-between">
-                <small class="text-muted">8 replies</small>
-                <button class="btn btn-sm btn-outline-primary">Reply</button>
+                <small class="text-muted">{% trans "12 replies" %}</small>
+                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
+            </div>
+        </div>
+        
+        <div class="forum-post">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <span class="author">{% trans "HopefulGrad" %}</span>
+                    <span class="timestamp">{% trans "3 days ago" %}</span>
+                </div>
+                <span class="badge bg-success">{% trans "Support" %}</span>
+            </div>
+            <h5 class="mt-2">{% trans "Thank you to this community" %}</h5>
+            <p>{% trans "I just wanted to say thanks to everyone who has been supportive. Going through a tough time but the encouragement here has meant a lot." %}</p>
+            <div class="d-flex justify-content-between">
+                <small class="text-muted">{% trans "8 replies" %}</small>
+                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
             </div>
         </div>
         
         <nav class="mt-4">
             <ul class="pagination justify-content-center">
                 <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
+                    <a class="page-link">{% trans "Previous" %}</a>
                 </li>
                 <li class="page-item active"><a class="page-link" href="#">1</a></li>
                 <li class="page-item"><a class="page-link" href="#">2</a></li>
                 <li class="page-item"><a class="page-link" href="#">3</a></li>
                 <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
+                    <a class="page-link" href="#">{% trans "Next" %}</a>
                 </li>
             </ul>
         </nav>
@@ -85,39 +86,39 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
+                <h5 class="modal-title" id="newPostModalLabel">{% trans "Create New Post" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="mb-3">
-                        <label for="postCategory" class="form-label">Category</label>
+                        <label for="postCategory" class="form-label">{% trans "Category" %}</label>
                         <select class="form-select" id="postCategory">
-                            <option value="discussion">Discussion</option>
-                            <option value="support">Support</option>
-                            <option value="resource">Resource Share</option>
-                            <option value="advice">Advice Request</option>
+                            <option value="discussion">{% trans "Discussion" %}</option>
+                            <option value="support">{% trans "Support" %}</option>
+                            <option value="resource">{% trans "Resource Share" %}</option>
+                            <option value="advice">{% trans "Advice Request" %}</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="postTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="postTitle" placeholder="Brief description of your post">
+                        <label for="postTitle" class="form-label">{% trans "Title" %}</label>
+                        <input type="text" class="form-control" id="postTitle" placeholder="{% trans 'Brief description of your post' %}">
                     </div>
                     <div class="mb-3">
-                        <label for="postContent" class="form-label">Content</label>
-                        <textarea class="form-control" id="postContent" rows="5" placeholder="Share your thoughts, questions, or resources..."></textarea>
+                        <label for="postContent" class="form-label">{% trans "Content" %}</label>
+                        <textarea class="form-control" id="postContent" rows="5" placeholder="{% trans 'Share your thoughts, questions, or resources...' %}"></textarea>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="anonymousPost" checked>
                         <label class="form-check-label" for="anonymousPost">
-                            Post anonymously
+                            {% trans "Post anonymously" %}
                         </label>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit-post-btn">Post</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" id="submit-post-btn">{% trans "Post" %}</button>
             </div>
         </div>
     </div>
@@ -143,18 +144,18 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Validation
             if (!title) {
-                alert('Please enter a title for your post.');
+                alert('{% trans "Please enter a title for your post." %}');
                 return;
             }
             
             if (!content) {
-                alert('Please enter content for your post.');
+                alert('{% trans "Please enter content for your post." %}');
                 return;
             }
             
             // Disable button during submission
             submitPostBtn.disabled = true;
-            submitPostBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Posting...';
+            submitPostBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> {% trans "Posting..." %}';
             
             // Create post via API
             fetch('{% url "peer_support:create_post_api" %}', {
@@ -182,33 +183,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     newPostModal.hide();
                     
                     // Show success message
-                    alert('Your post has been created successfully! (In a real implementation, it would appear in the forum)');
+                    alert('{% trans "Your post has been created successfully! (In a real implementation, it would appear in the forum)" %}');
                     
                     // In a real implementation, you would reload the page or add the post to the DOM
                     // location.reload();
                 } else {
-                    alert(data.error || 'Failed to create post. Please try again.');
+                    alert(data.error || '{% trans "Failed to create post. Please try again." %}');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+                alert('{% trans "An error occurred. Please try again." %}');
             })
             .finally(() => {
                 // Re-enable button
                 submitPostBtn.disabled = false;
-                submitPostBtn.innerHTML = 'Post';
+                submitPostBtn.innerHTML = '{% trans "Post" %}';
             });
         });
     }
     
     // Make reply buttons functional
     document.querySelectorAll('.btn-outline-primary').forEach(button => {
-        if (button.textContent.trim() === 'Reply') {
+        if (button.textContent.trim() === '{% trans "Reply" %}') {
             button.addEventListener('click', function() {
-                const replyText = prompt('Enter your reply:');
+                const replyText = prompt('{% trans "Enter your reply:" %}');
                 if (replyText && replyText.trim()) {
-                    alert('Reply posted! (In a real implementation, this would be saved to the database)');
+                    alert('{% trans "Reply posted! (In a real implementation, this would be saved to the database)" %}');
                 }
             });
         }

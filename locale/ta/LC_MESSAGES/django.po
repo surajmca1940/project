@@ -1,0 +1,349 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Digital Psychological Intervention System\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 14:56+0000\n"
+"PO-Revision-Date: 2025-09-10 14:56+0000\n"
+"Last-Translator: System <system@example.com>\n"
+"Language-Team: Tamil <ta@example.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Digital Psychological Intervention System"
+msgstr "டிஜிட்டல் உளவியல் தலையீட்டு அமைப்பு"
+
+msgid "Mental Health Platform"
+msgstr "மன நலம் தளம்"
+
+msgid "AI Support"
+msgstr "AI ஆதரவு"
+
+msgid "Book Appointment"
+msgstr "சந்திப்பு முன்பதிவு செய்யுங்கள்"
+
+msgid "Resources"
+msgstr "வளங்கள்"
+
+msgid "Peer Support"
+msgstr "சக ஆதரவு"
+
+msgid "Hello"
+msgstr "வணக்கம்"
+
+msgid "Logout"
+msgstr "வெளியேறு"
+
+msgid "Dashboard"
+msgstr "பணியிடம்"
+
+msgid "Login"
+msgstr "உள்நுழை"
+
+msgid "Register"
+msgstr "பதிவு செய்"
+
+msgid "Digital Psychological Intervention System. All rights reserved."
+msgstr "டிஜிட்டல் உளவியல் தலையீட்டு அமைப்பு। அனைத்து உரிமைகளும் பாதுகாக்கப்படுகின்றன."
+
+msgid "Supporting mental health in higher education institutions"
+msgstr "உயர்கல்வி நிறுவனங்களில் மன நலத்தை ஆதரித்தல்"
+
+msgid "Home"
+msgstr "முகப்பு"
+
+msgid "A comprehensive platform supporting mental health and well-being in higher education institutions"
+msgstr "உயர்கல்வி நிறுவனங்களில் மன நலம் மற்றும் நல்வாழ்வை ஆதரிக்கும் ஒரு விரிவான தளம்"
+
+msgid "Get AI Support"
+msgstr "AI ஆதரவை பெறுங்கள்"
+
+msgid "AI-Guided Support"
+msgstr "AI வழிகாட்டும் ஆதரவு"
+
+msgid "Get immediate help with our interactive AI chatbot that provides coping strategies and professional referrals."
+msgstr "சமாளிக்கும் உத்திகள் மற்றும் தொழில்முறை பரிந்துரைகளை வழங்கும் எங்கள் ஊடாடும் AI சாட்பாட் மூலம் உடனடி உதவி பெறுங்கள்."
+
+msgid "Start Chat"
+msgstr "அரட்டை தொடங்கு"
+
+msgid "Confidential Booking"
+msgstr "இரகசிய முன்பதிவு"
+
+msgid "Schedule appointments with campus counselors or mental health professionals in complete confidentiality."
+msgstr "வளாக ஆலோசகர்கள் அல்லது மன நல நிபுணர்களுடன் முழு ரகசியத்தில் சந்திப்புகளை திட்டமிடுங்கள்."
+
+msgid "Book Now"
+msgstr "இப்போது முன்பதிவு செய்யுங்கள்"
+
+msgid "Resource Hub"
+msgstr "வள மையம்"
+
+msgid "Access videos, audio content, and wellness guides in multiple regional languages."
+msgstr "பல பிராந்திய மொழிகளில் வீடியோக்கள், ஆடியோ உள்ளடக்கம் மற்றும் நல்வாழ்வு வழிகாட்டிகளை அணுகவும்."
+
+msgid "Explore Resources"
+msgstr "வளங்களை ஆராயுங்கள்"
+
+msgid "Connect with fellow students in a moderated, safe environment with trained volunteers."
+msgstr "பயிற்சி பெற்ற தன்னார்வலர்களுடன் கட்டுப்படுத்தப்பட்ட, பாதுகாப்பான சூழலில் சக மாணவர்களுடன் இணைந்து கொள்ளுங்கள்."
+
+msgid "Join Community"
+msgstr "சமூகத்தில் சேருங்கள்"
+
+msgid "Need immediate help?"
+msgstr "உடனடி உதவி தேவையா?"
+
+msgid "If you're experiencing a mental health emergency, please contact:"
+msgstr "நீங்கள் மன நல அவசரநிலையை அனுபவித்துக் கொண்டிருந்தால், தயவுசெய்து தொடர்பு கொள்ளுங்கள்:"
+
+msgid "Campus Counseling Center"
+msgstr "வளாக ஆலோசனை மையம்"
+
+msgid "Extension:"
+msgstr "நீட்சி:"
+
+msgid "National Helpline"
+msgstr "தேசிய உதவி இல்லம்"
+
+msgid "Emergency Services"
+msgstr "அவசர சேவைகள்"
+
+# Booking page translations
+msgid "Book an Appointment"
+msgstr "சந்திப்பை முன்பதிவு செய்யுங்கள்"
+
+msgid "Schedule confidential sessions with professional counselors"
+msgstr "தொழில்முறை ஆலோசகர்களுடன் ரகசிய அமர்வுகளை திட்டமிடுங்கள்"
+
+msgid "Step 1: Choose Counselor"
+msgstr "படி 1: ஆலோசகரைப் தேர்ந்தெடுக்கவும்"
+
+msgid "Clinical Psychologist"
+msgstr "மருத்துவ உளவியல் நிபுணர்"
+
+msgid "Specializes in anxiety and depression"
+msgstr "கவலை மற்றும் மனச்சோர்வில் நிபுணத்துவம் பெற்றவர்"
+
+msgid "Licensed Therapist"
+msgstr "அங்கீகரிக்கப்பட்ட தெராபிஸ்ட்"
+
+msgid "Focuses on stress management"
+msgstr "மன அழுத்த மேலாண்மையில் கவனம் செலுத்துகிறார்"
+
+msgid "Mental Health Counselor"
+msgstr "மனநல ஆலோசகர்"
+
+msgid "Student support specialist"
+msgstr "மாணவர் ஆதரவு நிபுணர்"
+
+msgid "Step 2: Choose Time"
+msgstr "படி 2: நேரத்தைத் தேர்ந்தெடுக்கவும்"
+
+msgid "Date"
+msgstr "தேதி"
+
+msgid "Available Times"
+msgstr "கிடைக்கும் நேரங்கள்"
+
+msgid "Step 3: Additional Information (Optional)"
+msgstr "படி 3: கூடுதல் தகவல் (விருப்பத்தேர்வு)"
+
+msgid "Reason for appointment or any specific concerns"
+msgstr "சந்திப்புக்கான காரணம் அல்லது குறிப்பிட்ட கவலைகள்"
+
+msgid "This information will help your counselor prepare for your session..."
+msgstr "இந்தத் தகவல் உங்கள் ஆலோசகர் உங்கள் அமர்வுக்கு தயாராக உதவும்..."
+
+msgid "This information is confidential and secure"
+msgstr "இந்தத் தகவல் ரகசியமானதும் பாதுகாப்பானதும் ஆகும்"
+
+msgid "I prefer to remain anonymous until my appointment"
+msgstr "என் சந்திப்பு வரை நான் அடையாளம் காட்டாமல் இருக்க விரும்புகிறேன்"
+
+msgid "For urgent situations, call our crisis hotline:"
+msgstr "அவசர நிலைகளில், எங்கள் உதவி எண் அழைக்கவும்:"
+
+msgid "or campus counseling:"
+msgstr "அல்லது வளாக ஆலோசனை:"
+
+msgid "Ext."
+msgstr "எக்ஸ்ட்."
+
+# AI Support translations
+msgid "AI Support Chat"
+msgstr "AI ஆதரவு அரட்டை"
+
+msgid "AI Mental Health Support"
+msgstr "AI மனநல ஆதரவு"
+
+msgid "Get immediate help and coping strategies"
+msgstr "உடனடி உதவி மற்றும் சமாளிக்கும் உத்திகள் பெறுங்கள்"
+
+msgid "Hello! I'm here to provide mental health support and guidance. How are you feeling today? Please feel free to share what's on your mind."
+msgstr "வணக்கம்! மனநல ஆதரவும் வழிகாட்டுதலும் வழங்க நான் இங்கே இருக்கிறேன். இன்று நீங்கள் எப்படி உணருகிறீர்கள்? உங்கள் மனதில் இருப்பதை தயங்காமல் பகிர்ந்து கொள்ளுங்கள்."
+
+msgid "Type your message here..."
+msgstr "உங்கள் செய்தியை இங்கே தட்டச்சு செய்யவும்..."
+
+msgid "Send"
+msgstr "அனுப்பு"
+
+msgid "This AI assistant provides general support and coping strategies. For urgent situations, please contact emergency services or your campus counseling center."
+msgstr "இந்த AI உதவியாளர் பொது ஆதரவும் சமாளிக்கும் உத்திகளையும் வழங்குகிறது. அவசர நிலைகளில், தயவுசெய்து அவசர சேவைகளை அல்லது உங்கள் வளாக ஆலோசனை மையத்தை தொடர்பு கொள்ளுங்கள்."
+
+msgid "Schedule with a counselor"
+msgstr "ஆலோசகருடன் திட்டமிடுங்கள்"
+
+msgid "Self-help materials"
+msgstr "சுய உதவி பொருட்கள்"
+
+msgid "Explore"
+msgstr "ஆராயுங்கள்"
+
+msgid "Community"
+msgstr "சமூகம்"
+
+msgid "Peer support forum"
+msgstr "சக ஆதரவு மன்றம்"
+
+msgid "Join"
+msgstr "சேரவும்"
+
+msgid "Emergency Contacts"
+msgstr "அவசர தொடர்புகள்"
+
+msgid "National Crisis Helpline"
+msgstr "தேசிய அவசர உதவி எண்"
+
+# Resources page
+msgid "Mental Health Resources"
+msgstr "மனநல வளங்கள்"
+
+# Peer Support Forum translations
+msgid "Peer Support Forum"
+msgstr "சக ஆதரவு மன்றம்"
+
+msgid "New Post"
+msgstr "புதிய பதிவு"
+
+msgid "This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information."
+msgstr "இது பாதுகாப்பான, கட்டுப்படுத்தப்பட்ட இடம். தனியுரிமையை மதிக்கவும், தனிப்பட்ட அடையாளத் தகவலை பகிர்வதைத் தவிர்க்கவும்."
+
+msgid "Anonymous Student"
+msgstr "அடையாளம் தெரியாத மாணவர்"
+
+msgid "2 hours ago"
+msgstr "2 மணி நேரம் முன்பு"
+
+msgid "Discussion"
+msgstr "ஆலோசனை"
+
+msgid "Dealing with exam anxiety"
+msgstr "தேர்வு பயத்தை சமாளிப்பது"
+
+msgid "Has anyone found effective ways to manage the stress during final exams? I've been having trouble sleeping and concentrating. Any advice would be appreciated."
+msgstr "இறுதி தேர்வுகளின்போது மன அழுத்தத்தை கட்டுப்படுத்த பயனுள்ள வழிகளை யாரேனும் கண்டுபிடித்துள்ளீர்களா? எனக்கு தூங்குவதிலும் கவனம் செலுத்துவதிலும் சிரமம் உள்ளது. ஏதேனும் அறிவுரைகள் இருந்தால் பாராட்டப்படும்."
+
+msgid "5 replies"
+msgstr "5 பதில்கள்"
+
+msgid "Study Buddy"
+msgstr "படிப்பு தோழன்"
+
+msgid "1 day ago"
+msgstr "1 நாள் முன்பு"
+
+msgid "Resource Share"
+msgstr "வள பகிர்வு"
+
+msgid "Meditation apps that actually work"
+msgstr "உண்மையில் பயனுள்ள தியான பயன்பாடுகள்"
+
+msgid "I've been using meditation apps for a few months now and wanted to share the ones that have really helped me with stress and focus. Here are my top 3..."
+msgstr "நான் பல மாதங்களாக தியான பயன்பாடுகளைப் பயன்படுத்தி வருகிறேன், மன அழுத்தமும் கவனமும் மேம்பட உதவியவற்றைப் பகிர விரும்புகிறேன். இவை எனது முதல் 3..."
+
+msgid "12 replies"
+msgstr "12 பதில்கள்"
+
+msgid "HopefulGrad"
+msgstr "நம்பிக்கையுள்ள பட்டதாரி"
+
+msgid "3 days ago"
+msgstr "3 நாள் முன்பு"
+
+msgid "Support"
+msgstr "ஆதரவு"
+
+msgid "Thank you to this community"
+msgstr "இந்த சமூகத்திற்கு நன்றி"
+
+msgid "I just wanted to say thanks to everyone who has been supportive. Going through a tough time but the encouragement here has meant a lot."
+msgstr "ஆதரவு அளித்த அனைவருக்கும் நன்றி சொல்ல விரும்புகிறேன். கடினமான காலத்தை கடந்து கொண்டிருக்கிறேன், இங்குள்ள ஊக்குவிப்பு மிகவும் அர்த்தமுள்ளதாக இருந்தது."
+
+msgid "8 replies"
+msgstr "8 பதில்கள்"
+
+msgid "Previous"
+msgstr "முன்"
+
+msgid "Next"
+msgstr "அடுத்து"
+
+msgid "Create New Post"
+msgstr "புதிய பதிவை உருவாக்கவும்"
+
+msgid "Category"
+msgstr "வகை"
+
+msgid "Advice Request"
+msgstr "ஆலோசனை கோரிக்கை"
+
+msgid "Title"
+msgstr "தலைப்பு"
+
+msgid "Brief description of your post"
+msgstr "உங்கள் பதிவின் சுருக்கமான விளக்கம்"
+
+msgid "Content"
+msgstr "உள்ளடக்கம்"
+
+msgid "Share your thoughts, questions, or resources..."
+msgstr "உங்கள் எண்ணங்கள், கேள்விகள் அல்லது வளங்களைப் பகிரவும்..."
+
+msgid "Post anonymously"
+msgstr "அடையாளம் காட்டாமல் பதிவு செய்யவும்"
+
+msgid "Cancel"
+msgstr "ரத்து செய்"
+
+msgid "Please enter a title for your post."
+msgstr "உங்கள் பதிவுக்கான தலைப்பை உள்ளிடுங்கள்."
+
+msgid "Please enter content for your post."
+msgstr "உங்கள் பதிவுக்கான உள்ளடக்கத்தை உள்ளிடுங்கள்."
+
+msgid "Posting..."
+msgstr "பதிவேற்றப்படுகிறது..."
+
+msgid "Your post has been created successfully! (In a real implementation, it would appear in the forum)"
+msgstr "உங்கள் பதிவு வெற்றிகரமாக உருவாக்கப்பட்டது! (உண்மையான அமல்பாட்டில், இது மன்றத்தில் தோன்றும்)"
+
+msgid "Failed to create post. Please try again."
+msgstr "பதிவை உருவாக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
+
+msgid "An error occurred. Please try again."
+msgstr "ஒரு பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்."
+
+msgid "Enter your reply:"
+msgstr "உங்கள் பதிலை உள்ளிடவும்:"
+
+msgid "Reply posted! (In a real implementation, this would be saved to the database)"
+msgstr "பதில் பதிவிடப்பட்டது! (உண்மையான அமல்பாட்டில், இது தரவுத்தளத்தில் சேமிக்கப்படும்)"

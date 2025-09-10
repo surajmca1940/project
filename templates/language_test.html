@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Language Test" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>{% trans "Language Test Page" %}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Current Language Information" %}</h5>
+                    
+                    <p><strong>{% trans "Current Language Code" %}:</strong> {{ LANGUAGE_CODE }}</p>
+                    <p><strong>{% trans "Available Languages" %}:</strong></p>
+                    <ul>
+                        {% get_available_languages as languages %}
+                        {% for lang_code, lang_name in languages %}
+                            <li>{{ lang_code }} - {{ lang_name }} {% if LANGUAGE_CODE == lang_code %}<em>({% trans "current" %})</em>{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <p><strong>{% trans "Current URL" %}:</strong> {{ request.get_full_path }}</p>
+                    <p><strong>{% trans "Session Language" %}:</strong> {{ request.session.django_language|default:"Not set" }}</p>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Test Translations" %}</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>{% trans "Navigation Items" %}</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item">{% trans "Mental Health Platform" %}</li>
+                                <li class="list-group-item">{% trans "AI Support" %}</li>
+                                <li class="list-group-item">{% trans "Book Appointment" %}</li>
+                                <li class="list-group-item">{% trans "Resources" %}</li>
+                                <li class="list-group-item">{% trans "Peer Support" %}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>{% trans "Common Actions" %}</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item">{% trans "Login" %}</li>
+                                <li class="list-group-item">{% trans "Register" %}</li>
+                                <li class="list-group-item">{% trans "Logout" %}</li>
+                                <li class="list-group-item">{% trans "Dashboard" %}</li>
+                                <li class="list-group-item">{% trans "Home" %}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <h6>{% trans "Quick Language Switch Test" %}</h6>
+                <p>{% trans "Click these buttons to test language switching:" %}</p>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary" onclick="changeLanguage('en')">🇺🇸 English</button>
+                    <button type="button" class="btn btn-outline-success" onclick="changeLanguage('hi')">🇮🇳 हिन्दी</button>
+                    <button type="button" class="btn btn-outline-warning" onclick="changeLanguage('ta')">🇮🇳 தமிழ்</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

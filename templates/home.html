@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Home - Digital Psychological Intervention System{% endblock %}
+{% block title %}{% trans "Home" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
 
 {% block content %}
 <div class="hero-section bg-light p-5 rounded mb-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold text-primary">Digital Psychological Intervention System</h1>
-                <p class="lead">A comprehensive platform supporting mental health and well-being in higher education institutions</p>
+                <h1 class="display-4 fw-bold text-primary">{% trans "Digital Psychological Intervention System" %}</h1>
+                <p class="lead">{% trans "A comprehensive platform supporting mental health and well-being in higher education institutions" %}</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a href="{% url 'ai_support:chat' %}" class="btn btn-primary btn-lg px-4 me-md-2">Get AI Support</a>
-                    <a href="{% url 'booking_system:appointments' %}" class="btn btn-outline-secondary btn-lg px-4">Book Appointment</a>
+                    <a href="{% url 'ai_support:chat' %}" class="btn btn-primary btn-lg px-4 me-md-2">{% trans "Get AI Support" %}</a>
+                    <a href="{% url 'booking_system:appointments' %}" class="btn btn-outline-secondary btn-lg px-4">{% trans "Book Appointment" %}</a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -28,9 +29,9 @@
         <div class="card h-100 text-center">
             <div class="card-body">
                 <i class="bi bi-robot display-4 text-primary mb-3"></i>
-                <h5 class="card-title">AI-Guided Support</h5>
-                <p class="card-text">Get immediate help with our interactive AI chatbot that provides coping strategies and professional referrals.</p>
-                <a href="{% url 'ai_support:chat' %}" class="btn btn-primary">Start Chat</a>
+                <h5 class="card-title">{% trans "AI-Guided Support" %}</h5>
+                <p class="card-text">{% trans "Get immediate help with our interactive AI chatbot that provides coping strategies and professional referrals." %}</p>
+                <a href="{% url 'ai_support:chat' %}" class="btn btn-primary">{% trans "Start Chat" %}</a>
             </div>
         </div>
     </div>
@@ -39,9 +40,9 @@
         <div class="card h-100 text-center">
             <div class="card-body">
                 <i class="bi bi-calendar-check display-4 text-success mb-3"></i>
-                <h5 class="card-title">Confidential Booking</h5>
-                <p class="card-text">Schedule appointments with campus counselors or mental health professionals in complete confidentiality.</p>
-                <a href="{% url 'booking_system:appointments' %}" class="btn btn-success">Book Now</a>
+                <h5 class="card-title">{% trans "Confidential Booking" %}</h5>
+                <p class="card-text">{% trans "Schedule appointments with campus counselors or mental health professionals in complete confidentiality." %}</p>
+                <a href="{% url 'booking_system:appointments' %}" class="btn btn-success">{% trans "Book Now" %}</a>
             </div>
         </div>
     </div>
@@ -50,9 +51,9 @@
         <div class="card h-100 text-center">
             <div class="card-body">
                 <i class="bi bi-book display-4 text-info mb-3"></i>
-                <h5 class="card-title">Resource Hub</h5>
-                <p class="card-text">Access videos, audio content, and wellness guides in multiple regional languages.</p>
-                <a href="{% url 'resources:list' %}" class="btn btn-info">Explore Resources</a>
+                <h5 class="card-title">{% trans "Resource Hub" %}</h5>
+                <p class="card-text">{% trans "Access videos, audio content, and wellness guides in multiple regional languages." %}</p>
+                <a href="{% url 'resources:list' %}" class="btn btn-info">{% trans "Explore Resources" %}</a>
             </div>
         </div>
     </div>
@@ -61,9 +62,9 @@
         <div class="card h-100 text-center">
             <div class="card-body">
                 <i class="bi bi-people display-4 text-warning mb-3"></i>
-                <h5 class="card-title">Peer Support</h5>
-                <p class="card-text">Connect with fellow students in a moderated, safe environment with trained volunteers.</p>
-                <a href="{% url 'peer_support:forum' %}" class="btn btn-warning">Join Community</a>
+                <h5 class="card-title">{% trans "Peer Support" %}</h5>
+                <p class="card-text">{% trans "Connect with fellow students in a moderated, safe environment with trained volunteers." %}</p>
+                <a href="{% url 'peer_support:forum' %}" class="btn btn-warning">{% trans "Join Community" %}</a>
             </div>
         </div>
     </div>
@@ -73,19 +74,19 @@
     <div class="col-12">
         <div class="card bg-primary text-white">
             <div class="card-body text-center">
-                <h3>Need immediate help?</h3>
-                <p class="mb-3">If you're experiencing a mental health emergency, please contact:</p>
+                <h3>{% trans "Need immediate help?" %}</h3>
+                <p class="mb-3">{% trans "If you're experiencing a mental health emergency, please contact:" %}</p>
                 <div class="row">
                     <div class="col-md-4">
-                        <strong>Campus Counseling Center</strong><br>
-                        <span class="h5">Extension: 2345</span>
+                        <strong>{% trans "Campus Counseling Center" %}</strong><br>
+                        <span class="h5">{% trans "Extension:" %} 2345</span>
                     </div>
                     <div class="col-md-4">
-                        <strong>National Helpline</strong><br>
+                        <strong>{% trans "National Helpline" %}</strong><br>
                         <span class="h5">1-800-HELP-NOW</span>
                     </div>
                     <div class="col-md-4">
-                        <strong>Emergency Services</strong><br>
+                        <strong>{% trans "Emergency Services" %}</strong><br>
                         <span class="h5">911</span>
                     </div>
                 </div>

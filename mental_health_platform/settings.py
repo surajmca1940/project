@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -111,7 +112,25 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Support for multiple languages
+LANGUAGES = [
+    ('en', 'English'),
+    ('hi', 'Hindi'),
+    ('ta', 'Tamil'),
+    ('te', 'Telugu'),
+    ('bn', 'Bengali'),
+    ('mr', 'Marathi'),
+    ('gu', 'Gujarati'),
+    ('kn', 'Kannada'),
+    ('ml', 'Malayalam'),
+    ('pa', 'Punjabi'),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

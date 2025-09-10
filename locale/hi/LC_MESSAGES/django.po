@@ -1,0 +1,337 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Digital Psychological Intervention System\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 14:56+0000\n"
+"PO-Revision-Date: 2025-09-10 14:56+0000\n"
+"Last-Translator: System <system@example.com>\n"
+"Language-Team: Hindi <hi@example.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Digital Psychological Intervention System"
+msgstr "डिजिटल मनोवैज्ञानिक हस्तक्षेप प्रणाली"
+
+msgid "Mental Health Platform"
+msgstr "मानसिक स्वास्थ्य मंच"
+
+msgid "AI Support"
+msgstr "एआई सहायता"
+
+msgid "Book Appointment"
+msgstr "अपॉइंटमेंट बुक करें"
+
+msgid "Resources"
+msgstr "संसाधन"
+
+msgid "Peer Support"
+msgstr "साथी सहारा"
+
+msgid "Hello"
+msgstr "नमस्ते"
+
+msgid "Logout"
+msgstr "लॉग आउट"
+
+msgid "Dashboard"
+msgstr "डैशबोर्ड"
+
+msgid "Login"
+msgstr "लॉग इन"
+
+msgid "Register"
+msgstr "रजिस्टर करें"
+
+msgid "Digital Psychological Intervention System. All rights reserved."
+msgstr "डिजिटल मनोवैज्ञानिक हस्तक्षेप प्रणाली। सभी अधिकार सुरक्षित।"
+
+msgid "Supporting mental health in higher education institutions"
+msgstr "उच्च शिक्षा संस्थानों में मानसिक स्वास्थ्य का समर्थन"
+
+msgid "Home"
+msgstr "होम"
+
+msgid "A comprehensive platform supporting mental health and well-being in higher education institutions"
+msgstr "उच्च शिक्षा संस्थानों में मानसिक स्वास्थ्य और कल्याण का समर्थन करने वाला एक व्यापक मंच"
+
+msgid "Get AI Support"
+msgstr "एआई सहायता प्राप्त करें"
+
+msgid "AI-Guided Support"
+msgstr "एआई-निर्देशित सहायता"
+
+msgid "Get immediate help with our interactive AI chatbot that provides coping strategies and professional referrals."
+msgstr "हमारे इंटरेक्टिव एआई चैटबॉट से तत्काल सहायता प्राप्त करें जो मुकाबला रणनीतियां और पेशेवर रेफरल प्रदान करता है।"
+
+msgid "Start Chat"
+msgstr "चैट शुरू करें"
+
+msgid "Confidential Booking"
+msgstr "गोपनीय बुकिंग"
+
+msgid "Schedule appointments with campus counselors or mental health professionals in complete confidentiality."
+msgstr "कैंपस परामर्शदाताओं या मानसिक स्वास्थ्य पेशेवरों के साथ पूर्ण गोपनीयता में अपॉइंटमेंट शेड्यूल करें।"
+
+msgid "Book Now"
+msgstr "अभी बुक करें"
+
+msgid "Resource Hub"
+msgstr "संसाधन केंद्र"
+
+msgid "Access videos, audio content, and wellness guides in multiple regional languages."
+msgstr "कई क्षेत्रीय भाषाओं में वीडियो, ऑडियो सामग्री और कल्याण गाइड तक पहुंचें।"
+
+msgid "Explore Resources"
+msgstr "संसाधन खोजें"
+
+msgid "Connect with fellow students in a moderated, safe environment with trained volunteers."
+msgstr "प्रशिक्षित स्वयंसेवकों के साथ एक नियंत्रित, सुरक्षित वातावरण में साथी छात्रों से जुड़ें।"
+
+msgid "Join Community"
+msgstr "समुदाय में शामिल हों"
+
+msgid "Need immediate help?"
+msgstr "तत्काल सहायता की आवश्यकता है?"
+
+msgid "If you're experiencing a mental health emergency, please contact:"
+msgstr "यदि आप मानसिक स्वास्थ्य आपातकाल का सामना कर रहे हैं, तो कृपया संपर्क करें:"
+
+msgid "Campus Counseling Center"
+msgstr "कैंपस परामर्श केंद्र"
+
+msgid "Extension:"
+msgstr "एक्सटेंशन:"
+
+msgid "National Helpline"
+msgstr "राष्ट्रीय हेल्पलाइन"
+
+msgid "Emergency Services"
+msgstr "आपातकालीन सेवाएं"
+
+# Booking page translations
+msgid "Book an Appointment"
+msgstr "अपॉइंटमेंट बुक करें"
+
+msgid "Schedule confidential sessions with professional counselors"
+msgstr "पेशेवर परामर्शदाताओं के साथ गोपनीय सत्र निर्धारित करें"
+
+msgid "Step 1: Choose Counselor"
+msgstr "चरण 1: परामर्शदाता चुनें"
+
+msgid "Clinical Psychologist"
+msgstr "नैदानिक मनोवैज्ञानिक"
+
+msgid "Specializes in anxiety and depression"
+msgstr "चिंता और अवसाद में विशेषज्ञ"
+
+msgid "Licensed Therapist"
+msgstr "लाइसेंसशुदा चिकित्सक"
+
+msgid "Focuses on stress management"
+msgstr "तनाव प्रबंधन पर केंद्रित"
+
+msgid "Mental Health Counselor"
+msgstr "मानसिक स्वास्थ्य परामर्शदाता"
+
+msgid "Student support specialist"
+msgstr "छात्र सहायता विशेषज्ञ"
+
+msgid "Step 2: Choose Time"
+msgstr "चरण 2: समय चुनें"
+
+msgid "Date"
+msgstr "दिनांक"
+
+msgid "Available Times"
+msgstr "उपलब्ध समय"
+
+msgid "Step 3: Additional Information (Optional)"
+msgstr "चरण 3: अतिरिक्त जानकारी (वैकल्पिक)"
+
+msgid "Reason for appointment or any specific concerns"
+msgstr "अपॉइंटमेंट का कारण या कोई विशिष्ट चिंता"
+
+msgid "This information will help your counselor prepare for your session..."
+msgstr "यह जानकारी आपके परामर्शदाता को आपके सत्र की तैयारी में मदद करेगी..."
+
+msgid "This information is confidential and secure"
+msgstr "यह जानकारी गोपनीय और सुरक्षित है"
+
+msgid "I prefer to remain anonymous until my appointment"
+msgstr "मैं अपनी अपॉइंटमेंट तक गुमनाम रहना पसंद करता हूं"
+
+msgid "For urgent situations, call our crisis hotline:"
+msgstr "आपातकालीन स्थितियों के लिए, हमारी संकट हेल्पलाइन पर कॉल करें:"
+
+msgid "or campus counseling:"
+msgstr "या कैंपस परामर्श:"
+
+msgid "Ext."
+msgstr "एक्स."
+
+# AI Support translations
+msgid "AI Support Chat"
+msgstr "एआई सहायता चैट"
+
+msgid "AI Mental Health Support"
+msgstr "एआई मानसिक स्वास्थ्य सहायता"
+
+msgid "Get immediate help and coping strategies"
+msgstr "तत्काल सहायता और मुकाबला रणनीतियां प्राप्त करें"
+
+msgid "Hello! I'm here to provide mental health support and guidance. How are you feeling today? Please feel free to share what's on your mind."
+msgstr "नमस्ते! मैं यहां मानसिक स्वास्थ्य सहायता और मार्गदर्शन प्रदान करने के लिए हूं। आज आप कैसा महसूस कर रहे हैं? कृपया अपने मन की बात साझा करने में संकोच न करें।"
+
+msgid "Type your message here..."
+msgstr "यहाँ अपना संदेश टाइप करें..."
+
+msgid "Send"
+msgstr "भेजें"
+
+msgid "This AI assistant provides general support and coping strategies. For urgent situations, please contact emergency services or your campus counseling center."
+msgstr "यह एआई सहायक सामान्य सहायता और मुकाबला रणनीतियां प्रदान करता है। आपातकालीन स्थितियों के लिए, कृपया आपातकालीन सेवाओं या अपने कैंपस परामर्श केंद्र से संपर्क करें।"
+
+msgid "Schedule with a counselor"
+msgstr "परामर्शदाता के साथ निर्धारित करें"
+
+msgid "Self-help materials"
+msgstr "स्वयं सहायता सामग्री"
+
+msgid "Explore"
+msgstr "खोजें"
+
+msgid "Community"
+msgstr "समुदाय"
+
+msgid "Peer support forum"
+msgstr "साथी सहारा मंच"
+
+msgid "Join"
+msgstr "शामिल हों"
+
+msgid "Emergency Contacts"
+msgstr "आपातकालीन संपर्क"
+
+msgid "National Crisis Helpline"
+msgstr "राष्ट्रीय संकट हेल्पलाइन"
+
+# Peer Support Forum translations
+msgid "New Post"
+msgstr "नई पोस्ट"
+
+msgid "This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information."
+msgstr "यह एक सुरक्षित, नियंत्रित स्थान है। गोपनीयता का सम्मान करना और व्यक्तिगत पहचान की जानकारी साझा न करना याद रखें।"
+
+msgid "Anonymous Student"
+msgstr "गुमनाम छात्र"
+
+msgid "2 hours ago"
+msgstr "2 घंटे पहले"
+
+msgid "Dealing with exam anxiety"
+msgstr "परीक्षा की चिंता से निपटना"
+
+msgid "Has anyone found effective ways to manage the stress during final exams? I've been having trouble sleeping and concentrating. Any advice would be appreciated."
+msgstr "क्या किसी को अंतिम परीक्षा के दौरान तनाव को संभालने के प्रभावी तरीके मिले हैं? मुझे सोने और ध्यान केंद्रित करने में समस्या हो रही है। कोई भी सलाह की सराहना की जाएगी।"
+
+msgid "5 replies"
+msgstr "5 जवाब"
+
+msgid "Study Buddy"
+msgstr "अध्ययन मित्र"
+
+msgid "1 day ago"
+msgstr "1 दिन पहले"
+
+msgid "Meditation apps that actually work"
+msgstr "ध्यान ऐप्स जो वास्तव में काम करते हैं"
+
+msgid "I've been using meditation apps for a few months now and wanted to share the ones that have really helped me with stress and focus. Here are my top 3..."
+msgstr "मैं कुछ महीनों से ध्यान ऐप्स का उपयोग कर रहा हूं और उन ऐप्स को साझा करना चाहता था जिन्होंने वास्तव में तनाव और फोकस में मेरी मदद की है। यहाँ मेरे शीर्ष 3 हैं..."
+
+msgid "12 replies"
+msgstr "12 जवाब"
+
+msgid "HopefulGrad"
+msgstr "आशावान स्नातक"
+
+msgid "3 days ago"
+msgstr "3 दिन पहले"
+
+msgid "Thank you to this community"
+msgstr "इस समुदाय को धन्यवाद"
+
+msgid "I just wanted to say thanks to everyone who has been supportive. Going through a tough time but the encouragement here has meant a lot."
+msgstr "मैं केवल उन सभी को धन्यवाद देना चाहता था जो सहायक रहे हैं। कठिन समय से गुजर रहा हूँ लेकिन यहाँ की प्रोत्साहना का बहुत मतलब है।"
+
+msgid "8 replies"
+msgstr "8 जवाब"
+
+msgid "Previous"
+msgstr "पिछला"
+
+msgid "Next"
+msgstr "अगला"
+
+msgid "Create New Post"
+msgstr "नई पोस्ट बनाएं"
+
+msgid "Category"
+msgstr "श्रेणी"
+
+msgid "Advice Request"
+msgstr "सलाह अनुरोध"
+
+msgid "Title"
+msgstr "शीर्षक"
+
+msgid "Brief description of your post"
+msgstr "आपकी पोस्ट का संक्षिप्त विवरण"
+
+msgid "Content"
+msgstr "सामग्री"
+
+msgid "Share your thoughts, questions, or resources..."
+msgstr "अपने विचार, प्रश्न या संसाधन साझा करें..."
+
+msgid "Post anonymously"
+msgstr "गुमनाम रूप से पोस्ट करें"
+
+msgid "Cancel"
+msgstr "रद्द करें"
+
+msgid "Please enter a title for your post."
+msgstr "कृपया अपनी पोस्ट के लिए एक शीर्षक दर्ज करें।"
+
+msgid "Please enter content for your post."
+msgstr "कृपया अपनी पोस्ट के लिए सामग्री दर्ज करें।"
+
+msgid "Posting..."
+msgstr "पोस्ट कर रहे हैं..."
+
+msgid "Your post has been created successfully! (In a real implementation, it would appear in the forum)"
+msgstr "आपकी पोस्ट सफलतापूर्वक बनाई गई है! (वास्तविक कार्यान्वयन में, यह फ़ोरम में दिखाई देगी)"
+
+msgid "Failed to create post. Please try again."
+msgstr "पोस्ट बनाने में असफल। कृपया पुनः प्रयास करें।"
+
+msgid "An error occurred. Please try again."
+msgstr "एक त्रुटि हुई। कृपया पुनः प्रयास करें।"
+
+msgid "Enter your reply:"
+msgstr "अपना उत्तर दर्ज करें:"
+
+msgid "Reply posted! (In a real implementation, this would be saved to the database)"
+msgstr "उत्तर पोस्ट किया गया! (वास्तविक कार्यान्वयन में, यह डेटाबेस में सहेजा जाएगा)"
+
+# Additional translations
+msgid "Mental Health Resources"
+msgstr "मानसिक स्वास्थ्य संसाधन"

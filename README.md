@@ -99,16 +99,52 @@ This Digital Psychological Intervention System provides:
 - **Crisis Support** - Immediate access to emergency contacts and helplines
 
 ### For Administrators
-- **Analytics Dashboard** - Monitor usage trends and mental health indicators
+- **Real-time Analytics Dashboard** - Live monitoring of usage trends and mental health indicators
+- **Regional Analytics** - Cultural context-aware insights with regional breakdowns
 - **User Activity Tracking** - Anonymous data collection for policy decisions
-- **Alert System** - Notifications for unusual patterns or crisis situations
-- **Resource Management** - Add and manage educational content
-- **Counselor Scheduling** - Manage appointment availability and counselor profiles
+- **Alert System** - Notifications for unusual patterns, crisis situations, and counselor overloads
+- **Resource Management** - Add and manage educational content in multiple languages
+- **Counselor Scheduling** - Comprehensive offline support mapping with availability tracking
+- **Institution Customization** - Full branding and feature configuration per institution
+- **System Health Monitoring** - Real-time system performance and error tracking
 
 ### For Counselors
 - **Appointment Management** - View and manage scheduled sessions
-- **Resource Creation** - Contribute educational materials
+- **Availability Management** - Set weekly schedules with online/offline preferences
+- **Resource Creation** - Contribute educational materials in regional languages
 - **Student Progress** - Anonymous tracking of intervention effectiveness
+- **Offline Support Ticketing** - Direct integration with campus counseling services
+- **Regional Context Awareness** - Cultural sensitivity guidelines and preferences
+
+## 🌟 New Features Added
+
+### 🌍 Regional Cultural Context and Language Support
+- **Multi-language Support** - Full localization for 10 Indian languages (Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, Punjabi, English)
+- **Cultural Context Awareness** - Region-specific cultural preferences, festivals, values, and communication styles
+- **Localized Content** - Mental health resources adapted to regional cultural contexts
+- **Language Preference Settings** - Users can set their preferred language for UI and content
+
+### 🏛️ Institution-specific Customization
+- **Branding Customization** - Institution logos, color schemes, and custom CSS
+- **Feature Toggles** - Enable/disable specific features per institution (AI support, peer support, offline booking, anonymous mode)
+- **Working Hours Configuration** - Customizable operational hours and timezone settings
+- **Institution Types** - Support for colleges, universities, technical institutes, medical colleges, etc.
+
+### 👥 Offline Support Mapping
+- **Counselor Directory** - Complete database of on-campus counselors with contact details
+- **Availability Scheduling** - Weekly schedule management for counselors
+- **Room Location Tracking** - Physical location mapping for in-person sessions
+- **Specialization Tags** - Match students with counselors based on expertise areas
+- **Support Ticket System** - Seamless offline referral and follow-up tracking
+- **Multi-language Counselor Support** - Language preference matching between students and counselors
+
+### 📊 Real-time Analytics for Admin
+- **Live Dashboard** - Real-time metrics with customizable widgets
+- **Regional Analytics** - Cultural context-aware insights and regional comparisons
+- **System Health Monitoring** - CPU, memory, database, and response time tracking
+- **Crisis Alert System** - Automated alerts for unusual patterns and emergency situations
+- **Counselor Workload Monitoring** - Track counselor availability and workload distribution
+- **Cultural Resource Effectiveness** - Monitor effectiveness of region-specific resources
 
 ## 🛠️ Technology Stack
 
