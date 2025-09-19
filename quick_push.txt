@@ -1,0 +1,13 @@
+🚀 QUICK PUSH COMMAND
+
+After you get your Personal Access Token from GitHub:
+
+1. Copy this command:
+   git push origin main
+
+2. When prompted for username: surajmca1940
+3. When prompted for password: paste your Personal Access Token
+
+✨ Your enhanced mental health platform will be live on GitHub!
+
+Repository URL: https://github.com/surajmca1940/project
