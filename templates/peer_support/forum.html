@@ -7,14 +7,14 @@
 <div class="row">
     <div class="col-lg-10 mx-auto">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3><i class="bi bi-people"></i> {% trans "Peer Support Forum" %}</h3>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+            <h3 style="color: var(--primary-color);"><i class="bi bi-people"></i> {% trans "Peer Support Forum" %}</h3>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#newPostModal" style="background: linear-gradient(135deg, var(--primary-color), var(--info-color)); color: white; border: none;">
                 <i class="bi bi-plus-circle"></i> {% trans "New Post" %}
             </button>
         </div>
         
-        <div class="alert alert-warning">
-            <i class="bi bi-shield-check"></i> {% trans "This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information." %}
+        <div class="alert" style="background: rgba(212, 185, 150, 0.1); border: 1px solid var(--warning-color); border-radius: 12px; color: var(--dark-color);">
+            <i class="bi bi-shield-check" style="color: var(--warning-color);"></i> {% trans "This is a safe, moderated space. Remember to respect privacy and avoid sharing personal identifying information." %}
         </div>
         
         <div class="forum-post">
@@ -23,13 +23,13 @@
                     <span class="author">{% trans "Anonymous Student" %}</span>
                     <span class="timestamp">{% trans "2 hours ago" %}</span>
                 </div>
-                <span class="badge bg-secondary">{% trans "Discussion" %}</span>
+                <span class="badge" style="background: var(--secondary-color); color: white;">{% trans "Discussion" %}</span>
             </div>
             <h5 class="mt-2">{% trans "Dealing with exam anxiety" %}</h5>
             <p>{% trans "Has anyone found effective ways to manage the stress during final exams? I've been having trouble sleeping and concentrating. Any advice would be appreciated." %}</p>
             <div class="d-flex justify-content-between">
                 <small class="text-muted">{% trans "5 replies" %}</small>
-                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
+                <button class="btn btn-sm" style="border: 1px solid var(--primary-color); color: var(--primary-color); background: rgba(124, 147, 195, 0.1);">{% trans "Reply" %}</button>
             </div>
         </div>
         
@@ -39,13 +39,13 @@
                     <span class="author">{% trans "Study Buddy" %}</span>
                     <span class="timestamp">{% trans "1 day ago" %}</span>
                 </div>
-                <span class="badge bg-info">{% trans "Resource Share" %}</span>
+                <span class="badge" style="background: var(--info-color); color: white;">{% trans "Resource Share" %}</span>
             </div>
             <h5 class="mt-2">{% trans "Meditation apps that actually work" %}</h5>
             <p>{% trans "I've been using meditation apps for a few months now and wanted to share the ones that have really helped me with stress and focus. Here are my top 3..." %}</p>
             <div class="d-flex justify-content-between">
                 <small class="text-muted">{% trans "12 replies" %}</small>
-                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
+                <button class="btn btn-sm" style="border: 1px solid var(--primary-color); color: var(--primary-color); background: rgba(124, 147, 195, 0.1);">{% trans "Reply" %}</button>
             </div>
         </div>
         
@@ -55,13 +55,13 @@
                     <span class="author">{% trans "HopefulGrad" %}</span>
                     <span class="timestamp">{% trans "3 days ago" %}</span>
                 </div>
-                <span class="badge bg-success">{% trans "Support" %}</span>
+                <span class="badge" style="background: var(--success-color); color: white;">{% trans "Support" %}</span>
             </div>
             <h5 class="mt-2">{% trans "Thank you to this community" %}</h5>
             <p>{% trans "I just wanted to say thanks to everyone who has been supportive. Going through a tough time but the encouragement here has meant a lot." %}</p>
             <div class="d-flex justify-content-between">
                 <small class="text-muted">{% trans "8 replies" %}</small>
-                <button class="btn btn-sm btn-outline-primary">{% trans "Reply" %}</button>
+                <button class="btn btn-sm" style="border: 1px solid var(--primary-color); color: var(--primary-color); background: rgba(124, 147, 195, 0.1);">{% trans "Reply" %}</button>
             </div>
         </div>
         
@@ -117,8 +117,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
-                <button type="button" class="btn btn-primary" id="submit-post-btn">{% trans "Post" %}</button>
+                <button type="button" class="btn" data-bs-dismiss="modal" style="background: var(--secondary-color); color: white; border: none;">{% trans "Cancel" %}</button>
+                <button type="button" class="btn" id="submit-post-btn" style="background: linear-gradient(135deg, var(--primary-color), var(--info-color)); color: white; border: none;">{% trans "Post" %}</button>
             </div>
         </div>
     </div>

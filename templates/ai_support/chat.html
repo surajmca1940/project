@@ -7,9 +7,9 @@
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <div class="card">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color), var(--info-color)); color: white; border-radius: 16px 16px 0 0;">
                 <h4 class="mb-0"><i class="bi bi-robot"></i> {% trans "AI Mental Health Support" %}</h4>
-                <small>{% trans "Get immediate help and coping strategies" %}</small>
+                <small style="opacity: 0.9;">{% trans "Get immediate help and coping strategies" %}</small>
             </div>
             <div class="card-body">
                 <div id="chat-container" class="chat-container mb-3">
@@ -20,7 +20,7 @@
                 
                 <div class="input-group">
                     <input type="text" id="message-input" class="form-control" placeholder="{% trans 'Type your message here...' %}" maxlength="500">
-                    <button class="btn btn-primary" type="button" id="send-button">
+                    <button class="btn" type="button" id="send-button" style="background: linear-gradient(135deg, var(--primary-color), var(--info-color)); color: white; border: none;">
                         <i class="bi bi-send"></i> {% trans "Send" %}
                     </button>
                 </div>
@@ -38,10 +38,10 @@
             <div class="col-md-4 mb-3">
                 <div class="card text-center h-100">
                     <div class="card-body">
-                        <i class="bi bi-calendar-check display-6 text-success mb-2"></i>
+                        <i class="bi bi-calendar-check display-6 mb-2" style="color: var(--success-color);"></i>
                         <h6>{% trans "Book Appointment" %}</h6>
                         <p class="small">{% trans "Schedule with a counselor" %}</p>
-                        <a href="{% url 'booking_system:appointments' %}" class="btn btn-success btn-sm">{% trans "Book Now" %}</a>
+                        <a href="{% url 'booking_system:appointments' %}" class="btn btn-sm" style="background: var(--success-color); color: white; border: none;">{% trans "Book Now" %}</a>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,10 @@
             <div class="col-md-4 mb-3">
                 <div class="card text-center h-100">
                     <div class="card-body">
-                        <i class="bi bi-book display-6 text-info mb-2"></i>
+                        <i class="bi bi-book display-6 mb-2" style="color: var(--info-color);"></i>
                         <h6>{% trans "Resources" %}</h6>
                         <p class="small">{% trans "Self-help materials" %}</p>
-                        <a href="{% url 'resources:list' %}" class="btn btn-info btn-sm">{% trans "Explore" %}</a>
+                        <a href="{% url 'resources:list' %}" class="btn btn-sm" style="background: var(--info-color); color: white; border: none;">{% trans "Explore" %}</a>
                     </div>
                 </div>
             </div>
@@ -60,10 +60,10 @@
             <div class="col-md-4 mb-3">
                 <div class="card text-center h-100">
                     <div class="card-body">
-                        <i class="bi bi-people display-6 text-warning mb-2"></i>
+                        <i class="bi bi-people display-6 mb-2" style="color: var(--warning-color);"></i>
                         <h6>{% trans "Community" %}</h6>
                         <p class="small">{% trans "Peer support forum" %}</p>
-                        <a href="{% url 'peer_support:forum' %}" class="btn btn-warning btn-sm">{% trans "Join" %}</a>
+                        <a href="{% url 'peer_support:forum' %}" class="btn btn-sm" style="background: var(--warning-color); color: white; border: none;">{% trans "Join" %}</a>
                     </div>
                 </div>
             </div>

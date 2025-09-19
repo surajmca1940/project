@@ -7,9 +7,9 @@
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <div class="card">
-            <div class="card-header bg-success text-white">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--success-color), var(--info-color)); color: white; border-radius: 16px 16px 0 0;">
                 <h4 class="mb-0"><i class="bi bi-calendar-check"></i> {% trans "Book an Appointment" %}</h4>
-                <small>{% trans "Schedule confidential sessions with professional counselors" %}</small>
+                <small style="opacity: 0.9;">{% trans "Schedule confidential sessions with professional counselors" %}</small>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -121,7 +121,7 @@
                 
                 <!-- Book Button -->
                 <div class="text-center mt-4">
-                    <button type="button" class="btn btn-success btn-lg" id="book-appointment-btn" disabled>
+                    <button type="button" class="btn btn-lg" id="book-appointment-btn" disabled style="background: linear-gradient(135deg, var(--success-color), var(--info-color)); color: white; border: none;">
                         <i class="bi bi-check-circle"></i> {% trans "Book Appointment" %}
                     </button>
                 </div>
@@ -131,9 +131,9 @@
         <!-- Emergency Contact Info -->
         <div class="row mt-4">
             <div class="col-12">
-                <div class="alert alert-info">
-                    <h6><i class="bi bi-info-circle"></i> {% trans "Need immediate help?" %}</h6>
-                    <p class="mb-0">{% trans "For urgent situations, call our crisis hotline:" %} <strong>988</strong> {% trans "or campus counseling:" %} <strong>{% trans "Ext." %} 2345</strong></p>
+                <div class="alert" style="background: rgba(156, 197, 212, 0.1); border: 1px solid var(--info-color); border-radius: 12px; color: var(--dark-color);">
+                    <h6><i class="bi bi-info-circle" style="color: var(--info-color);"></i> {% trans "Need immediate help?" %}</h6>
+                    <p class="mb-0">{% trans "For urgent situations, call our crisis hotline:" %} <strong style="color: var(--danger-color);">988</strong> {% trans "or campus counseling:" %} <strong style="color: var(--primary-color);">{% trans "Ext." %} 2345</strong></p>
                 </div>
             </div>
         </div>
