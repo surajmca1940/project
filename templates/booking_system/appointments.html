@@ -1,93 +1,263 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "Book Appointment" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card">
-            <div class="card-header" style="background: linear-gradient(135deg, var(--success-color), var(--info-color)); color: white; border-radius: 16px 16px 0 0;">
-                <h4 class="mb-0"><i class="bi bi-calendar-check"></i> {% trans "Book an Appointment" %}</h4>
-                <small style="opacity: 0.9;">{% trans "Schedule confidential sessions with professional counselors" %}</small>
+<!-- Progress Indicator -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="booking-progress">
+            <div class="progress-step active" data-step="1">
+                <div class="progress-circle">1</div>
+                <span>{% trans "Choose Counselor" %}</span>
             </div>
-            <div class="card-body">
-                <div class="row">
+            <div class="progress-step" data-step="2">
+                <div class="progress-circle">2</div>
+                <span>{% trans "Select Time" %}</span>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="progress-circle">3</div>
+                <span>{% trans "Details" %}</span>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="progress-circle">4</div>
+                <span>{% trans "Confirm" %}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <!-- Header Section -->
+        <div class="booking-header text-center mb-5">
+            <div class="booking-icon-wrapper">
+                <i class="bi bi-calendar-heart booking-main-icon"></i>
+            </div>
+            <h2 class="booking-title">{% trans "Schedule Your Confidential Session" %}</h2>
+            <p class="booking-subtitle">{% trans "Connect with professional counselors in a safe, private environment" %}</p>
+        </div>
+
+        <!-- Main Booking Card -->
+        <div class="booking-main-card">
+            <div class="booking-card-header">
+                <h4 class="mb-0"><i class="bi bi-shield-check"></i> {% trans "Secure Appointment Booking" %}</h4>
+                <div class="booking-security-badges">
+                    <span class="security-badge"><i class="bi bi-lock-fill"></i> {% trans "Encrypted" %}</span>
+                    <span class="security-badge"><i class="bi bi-eye-slash-fill"></i> {% trans "Confidential" %}</span>
+                </div>
+            </div>
+            <div class="booking-card-body">
+                <div class="booking-steps">
                     <!-- Step 1: Select Counselor -->
-                    <div class="col-md-6 mb-4">
-                        <h5><i class="bi bi-person"></i> {% trans "Step 1: Choose Counselor" %}</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="radio" name="counselor" id="counselor1" value="1">
-                                    <label class="form-check-label" for="counselor1">
-                                        <strong>Dr. Sarah Johnson</strong><br>
-                                        <small class="text-muted">{% trans "Clinical Psychologist" %}</small><br>
-                                        <small>{% trans "Specializes in anxiety and depression" %}</small>
-                                    </label>
+                    <div class="booking-step" id="step-1" data-step="1">
+                        <div class="step-header">
+                            <div class="step-icon"><i class="bi bi-person-heart"></i></div>
+                            <h5>{% trans "Choose Your Counselor" %}</h5>
+                            <p class="text-muted">{% trans "Select a professional who best matches your needs" %}</p>
+                        </div>
+                        
+                        <div class="counselors-grid">
+                            <div class="counselor-card" data-counselor-id="1">
+                                <div class="counselor-avatar">
+                                    <img src="https://images.unsplash.com/photo-1594824375155-38cfb4b3a2bf?w=100&h=100&fit=crop&crop=face" alt="Dr. Sarah Johnson" class="avatar-img">
+                                    <div class="availability-indicator available"></div>
                                 </div>
-                                
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="radio" name="counselor" id="counselor2" value="2">
-                                    <label class="form-check-label" for="counselor2">
-                                        <strong>Dr. Michael Chen</strong><br>
-                                        <small class="text-muted">{% trans "Licensed Therapist" %}</small><br>
-                                        <small>{% trans "Focuses on stress management" %}</small>
-                                    </label>
+                                <div class="counselor-info">
+                                    <h6>Dr. Sarah Johnson</h6>
+                                    <span class="counselor-title">{% trans "Clinical Psychologist" %}</span>
+                                    <div class="specializations">
+                                        <span class="spec-tag">{% trans "Anxiety" %}</span>
+                                        <span class="spec-tag">{% trans "Depression" %}</span>
+                                        <span class="spec-tag">{% trans "PTSD" %}</span>
+                                    </div>
+                                    <div class="counselor-stats">
+                                        <div class="stat">
+                                            <i class="bi bi-star-fill"></i>
+                                            <span>4.9 (127 reviews)</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="bi bi-clock"></i>
+                                            <span>{% trans "8+ years exp" %}</span>
+                                        </div>
+                                    </div>
+                                    <div class="languages">
+                                        <small><i class="bi bi-translate"></i> {% trans "English, Hindi, Spanish" %}</small>
+                                    </div>
                                 </div>
-                                
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="counselor" id="counselor3" value="3">
-                                    <label class="form-check-label" for="counselor3">
-                                        <strong>Dr. Lisa Rodriguez</strong><br>
-                                        <small class="text-muted">{% trans "Mental Health Counselor" %}</small><br>
-                                        <small>{% trans "Student support specialist" %}</small>
-                                    </label>
+                            </div>
+                            
+                            <div class="counselor-card" data-counselor-id="2">
+                                <div class="counselor-avatar">
+                                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face" alt="Dr. Michael Chen" class="avatar-img">
+                                    <div class="availability-indicator available"></div>
+                                </div>
+                                <div class="counselor-info">
+                                    <h6>Dr. Michael Chen</h6>
+                                    <span class="counselor-title">{% trans "Licensed Therapist" %}</span>
+                                    <div class="specializations">
+                                        <span class="spec-tag">{% trans "Stress Management" %}</span>
+                                        <span class="spec-tag">{% trans "Relationships" %}</span>
+                                    </div>
+                                    <div class="counselor-stats">
+                                        <div class="stat">
+                                            <i class="bi bi-star-fill"></i>
+                                            <span>4.8 (89 reviews)</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="bi bi-clock"></i>
+                                            <span>{% trans "6+ years exp" %}</span>
+                                        </div>
+                                    </div>
+                                    <div class="languages">
+                                        <small><i class="bi bi-translate"></i> {% trans "English, Mandarin" %}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="counselor-card" data-counselor-id="3">
+                                <div class="counselor-avatar">
+                                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face" alt="Dr. Lisa Rodriguez" class="avatar-img">
+                                    <div class="availability-indicator busy"></div>
+                                </div>
+                                <div class="counselor-info">
+                                    <h6>Dr. Lisa Rodriguez</h6>
+                                    <span class="counselor-title">{% trans "Student Support Specialist" %}</span>
+                                    <div class="specializations">
+                                        <span class="spec-tag">{% trans "Academic Stress" %}</span>
+                                        <span class="spec-tag">{% trans "Life Transitions" %}</span>
+                                    </div>
+                                    <div class="counselor-stats">
+                                        <div class="stat">
+                                            <i class="bi bi-star-fill"></i>
+                                            <span>4.9 (156 reviews)</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="bi bi-clock"></i>
+                                            <span>{% trans "10+ years exp" %}</span>
+                                        </div>
+                                    </div>
+                                    <div class="languages">
+                                        <small><i class="bi bi-translate"></i> {% trans "English, Spanish, Portuguese" %}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Step 2: Select Time -->
-                    <div class="col-md-6 mb-4">
-                        <h5><i class="bi bi-clock"></i> {% trans "Step 2: Choose Time" %}</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="appointment-date" class="form-label">{% trans "Date" %}</label>
-                                    <input type="date" class="form-control" id="appointment-date" min="{{ today|date:'Y-m-d' }}">
+                    <div class="booking-step" id="step-2" data-step="2" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-icon"><i class="bi bi-calendar3"></i></div>
+                            <h5>{% trans "Choose Date & Time" %}</h5>
+                            <p class="text-muted">{% trans "Select your preferred appointment slot" %}</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="date-picker-section">
+                                    <h6><i class="bi bi-calendar-week"></i> {% trans "Select Date" %}</h6>
+                                    <div class="custom-calendar">
+                                        <div class="calendar-header">
+                                            <button type="button" class="calendar-nav prev-month">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </button>
+                                            <h6 class="current-month"></h6>
+                                            <button type="button" class="calendar-nav next-month">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="calendar-grid" id="calendar-grid">
+                                            <!-- Calendar days will be generated by JavaScript -->
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                <label class="form-label">{% trans "Available Times" %}</label>
-                                <div class="row">
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="09:00">
-                                            9:00 AM
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="time-slots-section">
+                                    <div class="time-header">
+                                        <h6><i class="bi bi-clock"></i> {% trans "Available Time Slots" %}</h6>
+                                        <div class="session-type-selector">
+                                            <input type="radio" id="session-50" name="duration" value="50min" checked>
+                                            <label for="session-50">50 min</label>
+                                            <input type="radio" id="session-25" name="duration" value="25min">
+                                            <label for="session-25">25 min</label>
                                         </div>
                                     </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="10:00">
-                                            10:00 AM
+                                    
+                                    <div class="time-slots-grid">
+                                        <div class="time-period">
+                                            <h6 class="period-title">{% trans "Morning" %}</h6>
+                                            <div class="time-slots">
+                                                <div class="time-slot available" data-time="09:00">
+                                                    <span class="time">9:00 AM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                                <div class="time-slot available" data-time="10:00">
+                                                    <span class="time">10:00 AM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                                <div class="time-slot booked" data-time="11:00">
+                                                    <span class="time">11:00 AM</span>
+                                                    <span class="status">{% trans "Booked" %}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="time-period">
+                                            <h6 class="period-title">{% trans "Afternoon" %}</h6>
+                                            <div class="time-slots">
+                                                <div class="time-slot available" data-time="14:00">
+                                                    <span class="time">2:00 PM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                                <div class="time-slot available" data-time="15:00">
+                                                    <span class="time">3:00 PM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                                <div class="time-slot preferred" data-time="16:00">
+                                                    <span class="time">4:00 PM</span>
+                                                    <span class="status">{% trans "Popular" %}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="time-period">
+                                            <h6 class="period-title">{% trans "Evening" %}</h6>
+                                            <div class="time-slots">
+                                                <div class="time-slot available" data-time="17:00">
+                                                    <span class="time">5:00 PM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                                <div class="time-slot available" data-time="18:00">
+                                                    <span class="time">6:00 PM</span>
+                                                    <span class="status">{% trans "Available" %}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="11:00">
-                                            11:00 AM
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="14:00">
-                                            2:00 PM
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="15:00">
-                                            3:00 PM
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <div class="appointment-slot p-2 border rounded text-center" data-time="16:00">
-                                            4:00 PM
+                                    
+                                    <div class="booking-preferences">
+                                        <h6><i class="bi bi-gear"></i> {% trans "Session Preferences" %}</h6>
+                                        <div class="preference-options">
+                                            <label class="preference-option">
+                                                <input type="radio" name="session-type" value="video" checked>
+                                                <i class="bi bi-camera-video"></i>
+                                                <span>{% trans "Video Session" %}</span>
+                                            </label>
+                                            <label class="preference-option">
+                                                <input type="radio" name="session-type" value="phone">
+                                                <i class="bi bi-telephone"></i>
+                                                <span>{% trans "Phone Call" %}</span>
+                                            </label>
+                                            <label class="preference-option">
+                                                <input type="radio" name="session-type" value="in-person">
+                                                <i class="bi bi-person"></i>
+                                                <span>{% trans "In-Person" %}</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -96,33 +266,176 @@
                     </div>
                 </div>
                 
-                <!-- Step 3: Additional Information -->
-                <div class="row">
-                    <div class="col-12">
-                        <h5><i class="bi bi-chat-dots"></i> {% trans "Step 3: Additional Information (Optional)" %}</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="appointment-notes" class="form-label">{% trans "Reason for appointment or any specific concerns" %}</label>
-                                    <textarea class="form-control" id="appointment-notes" rows="3" placeholder="{% trans 'This information will help your counselor prepare for your session...' %}"></textarea>
-                                    <small class="text-muted">{% trans "This information is confidential and secure" %}</small>
+                    <!-- Step 3: Personal Details -->
+                    <div class="booking-step" id="step-3" data-step="3" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-icon"><i class="bi bi-clipboard-heart"></i></div>
+                            <h5>{% trans "Share Your Information" %}</h5>
+                            <p class="text-muted">{% trans "Help your counselor prepare for the best possible session" %}</p>
+                        </div>
+                        
+                        <div class="details-form">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="form-section">
+                                        <h6><i class="bi bi-chat-text"></i> {% trans "What brings you here today?" %}</h6>
+                                        <div class="concern-tags">
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="anxiety">
+                                                <span>{% trans "Anxiety" %}</span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="depression">
+                                                <span>{% trans "Depression" %}</span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="stress">
+                                                <span>{% trans "Academic Stress" %}</span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="relationships">
+                                                <span>{% trans "Relationships" %}</span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="sleep">
+                                                <span>{% trans "Sleep Issues" %}</span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="other">
+                                                <span>{% trans "Other" %}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-section">
+                                        <label for="appointment-notes" class="form-label">
+                                            <i class="bi bi-journal-text"></i> {% trans "Additional details (Optional)" %}
+                                        </label>
+                                        <textarea class="form-control custom-textarea" id="additional-notes" rows="4" placeholder="{% trans 'Share any additional information that might help your counselor understand your situation better...' %}"></textarea>
+                                        <small class="form-help">
+                                            <i class="bi bi-shield-lock"></i> {% trans "This information is encrypted and confidential" %}
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="form-section">
+                                        <h6><i class="bi bi-gear"></i> {% trans "Privacy Preferences" %}</h6>
+                                        <div class="privacy-options">
+                                            <label class="privacy-option">
+                                                <input type="radio" name="anonymity" value="named" checked>
+                                                <div class="option-content">
+                                                    <i class="bi bi-person-check"></i>
+                                                    <div>
+                                                        <strong>{% trans "Use My Name" %}</strong>
+                                                        <small>{% trans "Counselor will know your identity" %}</small>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label class="privacy-option">
+                                                <input type="radio" name="anonymity" value="anonymous">
+                                                <div class="option-content">
+                                                    <i class="bi bi-incognito"></i>
+                                                    <div>
+                                                        <strong>{% trans "Stay Anonymous" %}</strong>
+                                                        <small>{% trans "Counselor won't know your identity until session" %}</small>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="anonymous-booking">
-                                    <label class="form-check-label" for="anonymous-booking">
-                                        {% trans "I prefer to remain anonymous until my appointment" %}
-                                    </label>
+                                <div class="col-lg-4">
+                                    <div class="appointment-summary">
+                                        <h6><i class="bi bi-card-checklist"></i> {% trans "Session Summary" %}</h6>
+                                        <div class="summary-item">
+                                            <span class="label">{% trans "Counselor:" %}</span>
+                                            <span class="value" id="summary-counselor">{% trans "Not selected" %}</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">{% trans "Date:" %}</span>
+                                            <span class="value" id="summary-date">{% trans "Not selected" %}</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">{% trans "Time:" %}</span>
+                                            <span class="value" id="summary-time">{% trans "Not selected" %}</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">{% trans "Duration:" %}</span>
+                                            <span class="value" id="summary-duration">50 min</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">{% trans "Type:" %}</span>
+                                            <span class="value" id="summary-type">{% trans "Video Call" %}</span>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Confirmation -->
+                    <div class="booking-step" id="step-4" data-step="4" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-icon"><i class="bi bi-check-circle"></i></div>
+                            <h5>{% trans "Confirm Your Appointment" %}</h5>
+                            <p class="text-muted">{% trans "Please review your booking details before confirming" %}</p>
+                        </div>
+                        
+                        <div class="confirmation-card">
+                            <div class="confirmation-header">
+                                <i class="bi bi-calendar-event"></i>
+                                <h6>{% trans "Appointment Confirmed" %}</h6>
+                            </div>
+                            
+                            <div class="confirmation-details">
+                                <div class="detail-row">
+                                    <div class="counselor-preview">
+                                        <img src="" alt="" class="counselor-thumb" id="confirm-counselor-img">
+                                        <div>
+                                            <strong id="confirm-counselor-name"></strong>
+                                            <small id="confirm-counselor-title"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span id="confirm-full-date"></span>
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <i class="bi bi-clock"></i>
+                                    <span id="confirm-full-time"></span>
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <i class="bi bi-camera-video"></i>
+                                    <span id="confirm-session-type"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="confirmation-actions">
+                                <button type="button" class="btn btn-outline-secondary" id="edit-booking">
+                                    <i class="bi bi-pencil"></i> {% trans "Edit Booking" %}
+                                </button>
+                                <button type="button" class="btn btn-primary" id="final-confirm-btn">
+                                    <i class="bi bi-check-circle"></i> {% trans "Confirm Appointment" %}
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Book Button -->
-                <div class="text-center mt-4">
-                    <button type="button" class="btn btn-lg" id="book-appointment-btn" disabled style="background: linear-gradient(135deg, var(--success-color), var(--info-color)); color: white; border: none;">
-                        <i class="bi bi-check-circle"></i> {% trans "Book Appointment" %}
+                <!-- Navigation Buttons -->
+                <div class="booking-navigation">
+                    <button type="button" class="btn btn-outline-secondary btn-prev" style="display: none;">
+                        <i class="bi bi-arrow-left"></i> {% trans "Previous" %}
+                    </button>
+                    <button type="button" class="btn btn-primary btn-next">
+                        {% trans "Next" %} <i class="bi bi-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-success btn-confirm" style="display: none;">
+                        <i class="bi bi-check-circle"></i> {% trans "Confirm Booking" %}
                     </button>
                 </div>
             </div>
@@ -146,45 +459,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const appointmentBooking = new AppointmentBooking();
-    
-    // Set minimum date to today
-    const dateInput = document.getElementById('appointment-date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-    dateInput.value = today;
-    
-    // Enable booking button when counselor and time are selected
-    function checkBookingReady() {
-        const counselorSelected = document.querySelector('input[name="counselor"]:checked');
-        const timeSelected = document.querySelector('.appointment-slot.selected');
-        const bookBtn = document.getElementById('book-appointment-btn');
-        
-        if (counselorSelected && timeSelected) {
-            bookBtn.disabled = false;
-        } else {
-            bookBtn.disabled = true;
-        }
-    }
-    
-    // Listen for counselor selection
-    document.querySelectorAll('input[name="counselor"]').forEach(input => {
-        input.addEventListener('change', checkBookingReady);
-    });
-    
-    // Book appointment action
-    document.getElementById('book-appointment-btn').addEventListener('click', function() {
-        const counselor = document.querySelector('input[name="counselor"]:checked');
-        const timeSlot = document.querySelector('.appointment-slot.selected');
-        const date = document.getElementById('appointment-date').value;
-        const notes = document.getElementById('appointment-notes').value;
-        
-        if (counselor && timeSlot && date) {
-            alert(`Appointment booked successfully!\n\nCounselor: ${counselor.nextElementSibling.querySelector('strong').textContent}\nDate: ${date}\nTime: ${timeSlot.textContent.trim()}\n\nYou will receive a confirmation email.`);
-        }
-    });
-});
-</script>
+<script src="{% static 'js/booking-simple.js' %}"></script>
 {% endblock %}

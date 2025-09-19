@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
@@ -31,6 +31,10 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('language-test/', TemplateView.as_view(template_name='language_test.html'), name='language_test'),
+    
+    # Friendly URL redirects
+    path('appointments/', RedirectView.as_view(url='/booking/', permanent=True), name='appointments_redirect'),
+    path('booking-test/', TemplateView.as_view(template_name='booking_test.html'), name='booking_test'),
     
     # Authentication URLs
     path('', include('accounts.urls')),

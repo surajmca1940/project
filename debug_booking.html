@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Enhanced Booking System - Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>Server Status Test</h2>
+        <div id="server-test" class="result">Testing server connection...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Static Files Test</h2>
+        <div id="css-test" class="result">Testing CSS load...</div>
+        <div id="js-test" class="result">Testing JavaScript load...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Booking Page Elements Test</h2>
+        <div id="elements-test" class="result">Testing page elements...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>JavaScript Functionality Test</h2>
+        <div id="js-functionality" class="result">Testing JavaScript functionality...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Quick Access Links</h2>
+        <p><a href="http://127.0.0.1:8000/" target="_blank">🏠 Home Page</a></p>
+        <p><a href="http://127.0.0.1:8000/booking/" target="_blank">📅 Booking Page</a></p>
+        <p><a href="http://127.0.0.1:8000/ai-support/" target="_blank">🤖 AI Support</a></p>
+        <p><a href="http://127.0.0.1:8000/admin/" target="_blank">⚙️ Admin</a></p>
+    </div>
+    
+    <script>
+        // Test server connection
+        fetch('http://127.0.0.1:8000/')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('server-test').textContent = '✅ Server is running successfully';
+                    document.getElementById('server-test').className = 'result success';
+                } else {
+                    document.getElementById('server-test').textContent = '❌ Server connection failed';
+                    document.getElementById('server-test').className = 'result error';
+                }
+            })
+            .catch(error => {
+                document.getElementById('server-test').textContent = '❌ Server not accessible: ' + error.message;
+                document.getElementById('server-test').className = 'result error';
+            });
+        
+        // Test CSS loading
+        fetch('http://127.0.0.1:8000/static/css/style.css')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('css-test').textContent = '✅ CSS file loads successfully';
+                    document.getElementById('css-test').className = 'result success';
+                } else {
+                    document.getElementById('css-test').textContent = '❌ CSS file failed to load';
+                    document.getElementById('css-test').className = 'result error';
+                }
+            })
+            .catch(error => {
+                document.getElementById('css-test').textContent = '❌ CSS file error: ' + error.message;
+                document.getElementById('css-test').className = 'result error';
+            });
+        
+        // Test JavaScript loading
+        fetch('http://127.0.0.1:8000/static/js/booking.js')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('js-test').textContent = '✅ Booking JavaScript loads successfully';
+                    document.getElementById('js-test').className = 'result success';
+                } else {
+                    document.getElementById('js-test').textContent = '❌ Booking JavaScript failed to load';
+                    document.getElementById('js-test').className = 'result error';
+                }
+            })
+            .catch(error => {
+                document.getElementById('js-test').textContent = '❌ Booking JavaScript error: ' + error.message;
+                document.getElementById('js-test').className = 'result error';
+            });
+        
+        // Test booking page elements
+        fetch('http://127.0.0.1:8000/booking/')
+            .then(response => response.text())
+            .then(html => {
+                const hasProgressSteps = html.includes('progress-step');
+                const hasCounselorCards = html.includes('counselor-card');
+                const hasTimeSlots = html.includes('time-slot');
+                const hasNavigationButtons = html.includes('btn-next');
+                
+                let message = '';
+                if (hasProgressSteps && hasCounselorCards && hasTimeSlots && hasNavigationButtons) {
+                    message = '✅ All essential booking elements found in HTML';
+                    document.getElementById('elements-test').className = 'result success';
+                } else {
+                    message = '❌ Missing booking elements: ';
+                    if (!hasProgressSteps) message += 'progress-steps ';
+                    if (!hasCounselorCards) message += 'counselor-cards ';
+                    if (!hasTimeSlots) message += 'time-slots ';
+                    if (!hasNavigationButtons) message += 'navigation-buttons ';
+                    document.getElementById('elements-test').className = 'result error';
+                }
+                document.getElementById('elements-test').textContent = message;
+            })
+            .catch(error => {
+                document.getElementById('elements-test').textContent = '❌ Failed to check elements: ' + error.message;
+                document.getElementById('elements-test').className = 'result error';
+            });
+        
+        // Open booking page in iframe to test JavaScript
+        setTimeout(() => {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'http://127.0.0.1:8000/booking/';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const hasJS = iframeDoc.querySelector('#step-1') !== null;
+                    
+                    if (hasJS) {
+                        document.getElementById('js-functionality').textContent = '✅ Booking page loads with proper structure';
+                        document.getElementById('js-functionality').className = 'result success';
+                    } else {
+                        document.getElementById('js-functionality').textContent = '❌ Booking page structure issues detected';
+                        document.getElementById('js-functionality').className = 'result error';
+                    }
+                } catch (e) {
+                    document.getElementById('js-functionality').textContent = '⚠️ Cannot access iframe content (CORS), but page is loading';
+                    document.getElementById('js-functionality').className = 'result';
+                }
+            };
+        }, 2000);
+    </script>
+</body>
+</html>
