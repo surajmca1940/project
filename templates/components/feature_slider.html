@@ -1,0 +1,887 @@
+{% load i18n %}
+
+<div class="feature-slider-container">
+    <!-- Slider Header -->
+    <div class="slider-header text-center mb-5">
+        <h2 class="display-4 mb-3" style="color: var(--primary-color); font-weight: 600;">
+            🚀 {% trans "Platform Features" %}
+        </h2>
+        <p class="lead text-muted">
+            {% trans "Comprehensive mental health support with modern, user-friendly interfaces" %}
+        </p>
+    </div>
+
+    <!-- Main Slider -->
+    <div class="feature-slider" id="featureSlider">
+        <!-- Slide 1: Assessment Templates -->
+        <div class="slider-slide active" data-slide="0">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-content">
+                        <div class="feature-icon mb-4">
+                            <i class="fas fa-clipboard-check" style="font-size: 4rem; color: var(--primary-color); opacity: 0.8;"></i>
+                        </div>
+                        <h3 class="feature-title mb-3">
+                            {% trans "Assessment Templates" %}
+                        </h3>
+                        <p class="feature-description mb-4">
+                            {% trans "User-friendly interfaces for taking mental health assessments with question-by-question navigation, progress tracking, and instant results." %}
+                        </p>
+                        
+                        <div class="feature-highlights">
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Interactive question-by-question interface" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Real-time progress tracking" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "AJAX form submission" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Instant results with severity analysis" %}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-actions mt-4">
+                            <a href="{% url 'assessments:list' %}" class="btn btn-primary btn-lg me-3">
+                                <i class="fas fa-play me-2"></i>
+                                {% trans "Try Assessment" %}
+                            </a>
+                            <button class="btn btn-outline-secondary" onclick="showDemo('assessment')">
+                                <i class="fas fa-eye me-2"></i>
+                                {% trans "View Demo" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-preview">
+                        <div class="preview-window">
+                            <div class="preview-header">
+                                <div class="preview-dots">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <div class="preview-title">{% trans "Mental Health Assessment" %}</div>
+                            </div>
+                            <div class="preview-content">
+                                <!-- Simulated Assessment Interface -->
+                                <div class="assessment-preview">
+                                    <div class="progress-section mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="text-muted small">{% trans "Question 3 of 9" %}</span>
+                                            <span class="text-primary small">33% {% trans "Complete" %}</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-primary" style="width: 33%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="question-card">
+                                        <h5 class="question-text mb-4">
+                                            {% trans "Over the last 2 weeks, how often have you been bothered by feeling down, depressed, or hopeless?" %}
+                                        </h5>
+                                        
+                                        <div class="answer-options">
+                                            <div class="option-item mb-3">
+                                                <input type="radio" id="opt1" name="question" class="form-check-input me-3">
+                                                <label for="opt1" class="form-check-label">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="option-item mb-3">
+                                                <input type="radio" id="opt2" name="question" class="form-check-input me-3">
+                                                <label for="opt2" class="form-check-label">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="option-item mb-3">
+                                                <input type="radio" id="opt3" name="question" class="form-check-input me-3">
+                                                <label for="opt3" class="form-check-label">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="option-item">
+                                                <input type="radio" id="opt4" name="question" class="form-check-input me-3">
+                                                <label for="opt4" class="form-check-label">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Recommendation Pages -->
+        <div class="slider-slide" data-slide="1">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-content">
+                        <div class="feature-icon mb-4">
+                            <i class="fas fa-lightbulb" style="font-size: 4rem; color: var(--warning-color); opacity: 0.8;"></i>
+                        </div>
+                        <h3 class="feature-title mb-3">
+                            {% trans "Recommendation Pages" %}
+                        </h3>
+                        <p class="feature-description mb-4">
+                            {% trans "Personalized suggestions and actionable insights based on assessment results, helping users find the right resources and support." %}
+                        </p>
+                        
+                        <div class="feature-highlights">
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Personalized recommendation feed" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Category filtering and status tracking" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Urgency level indicators" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Interactive action controls" %}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-actions mt-4">
+                            <a href="{% url 'recommendations:my' %}" class="btn btn-warning btn-lg me-3">
+                                <i class="fas fa-star me-2"></i>
+                                {% trans "View Recommendations" %}
+                            </a>
+                            <button class="btn btn-outline-secondary" onclick="showDemo('recommendations')">
+                                <i class="fas fa-eye me-2"></i>
+                                {% trans "View Demo" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-preview">
+                        <div class="preview-window">
+                            <div class="preview-header">
+                                <div class="preview-dots">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <div class="preview-title">{% trans "My Recommendations" %}</div>
+                            </div>
+                            <div class="preview-content">
+                                <!-- Simulated Recommendations Interface -->
+                                <div class="recommendations-preview">
+                                    <div class="recommendation-card mb-3">
+                                        <div class="d-flex align-items-start">
+                                            <div class="recommendation-icon me-3">
+                                                <i class="fas fa-meditation text-primary"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h6 class="mb-0">{% trans "Daily Mindfulness Practice" %}</h6>
+                                                    <span class="badge bg-warning">{% trans "Medium" %}</span>
+                                                </div>
+                                                <p class="text-muted small mb-2">
+                                                    {% trans "Based on your assessment, practicing mindfulness can help reduce anxiety levels." %}
+                                                </p>
+                                                <div class="recommendation-actions">
+                                                    <button class="btn btn-sm btn-primary me-2">{% trans "Start" %}</button>
+                                                    <button class="btn btn-sm btn-outline-secondary">{% trans "Learn More" %}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recommendation-card mb-3">
+                                        <div class="d-flex align-items-start">
+                                            <div class="recommendation-icon me-3">
+                                                <i class="fas fa-calendar-alt text-success"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h6 class="mb-0">{% trans "Schedule Counseling Session" %}</h6>
+                                                    <span class="badge bg-success">{% trans "Low" %}</span>
+                                                </div>
+                                                <p class="text-muted small mb-2">
+                                                    {% trans "Connect with a professional counselor for personalized support." %}
+                                                </p>
+                                                <div class="recommendation-actions">
+                                                    <button class="btn btn-sm btn-success me-2">{% trans "Schedule" %}</button>
+                                                    <button class="btn btn-sm btn-outline-secondary">{% trans "Info" %}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Dashboard Visualization -->
+        <div class="slider-slide" data-slide="2">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-content">
+                        <div class="feature-icon mb-4">
+                            <i class="fas fa-chart-line" style="font-size: 4rem; color: var(--info-color); opacity: 0.8;"></i>
+                        </div>
+                        <h3 class="feature-title mb-3">
+                            {% trans "Dashboard Visualization" %}
+                        </h3>
+                        <p class="feature-description mb-4">
+                            {% trans "Comprehensive analytics dashboard with Chart.js visualizations for monitoring mental health trends and institutional insights." %}
+                        </p>
+                        
+                        <div class="feature-highlights">
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Real-time analytics with Chart.js" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Interactive filtering and data exploration" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Multiple chart types (pie, bar, line)" %}</span>
+                            </div>
+                            <div class="highlight-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>{% trans "Alert system for critical notifications" %}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-actions mt-4">
+                            {% if user.is_staff %}
+                            <a href="{% url 'wellness_dashboard:home' %}" class="btn btn-info btn-lg me-3">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                {% trans "View Dashboard" %}
+                            </a>
+                            {% endif %}
+                            <button class="btn btn-outline-secondary" onclick="showDemo('dashboard')">
+                                <i class="fas fa-eye me-2"></i>
+                                {% trans "View Demo" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-preview">
+                        <div class="preview-window">
+                            <div class="preview-header">
+                                <div class="preview-dots">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <div class="preview-title">{% trans "Wellness Analytics" %}</div>
+                            </div>
+                            <div class="preview-content">
+                                <!-- Simulated Dashboard Interface -->
+                                <div class="dashboard-preview">
+                                    <div class="metrics-row mb-3">
+                                        <div class="metric-item">
+                                            <div class="metric-value text-primary">2,847</div>
+                                            <div class="metric-label">{% trans "Total Users" %}</div>
+                                        </div>
+                                        <div class="metric-item">
+                                            <div class="metric-value text-success">89%</div>
+                                            <div class="metric-label">{% trans "Completion Rate" %}</div>
+                                        </div>
+                                        <div class="metric-item">
+                                            <div class="metric-value text-warning">127</div>
+                                            <div class="metric-label">{% trans "High Risk" %}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="chart-preview">
+                                        <!-- Simulated Pie Chart -->
+                                        <div class="chart-placeholder">
+                                            <canvas id="previewChart" width="300" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slider Navigation -->
+    <div class="slider-navigation text-center mt-5">
+        <div class="slider-dots">
+            <button class="slider-dot active" data-slide="0"></button>
+            <button class="slider-dot" data-slide="1"></button>
+            <button class="slider-dot" data-slide="2"></button>
+        </div>
+        
+        <div class="slider-controls mt-3">
+            <button class="btn btn-outline-primary me-2" id="prevSlide">
+                <i class="fas fa-chevron-left"></i>
+                {% trans "Previous" %}
+            </button>
+            <button class="btn btn-outline-primary" id="nextSlide">
+                {% trans "Next" %}
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.feature-slider-container {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.05) 0%, 
+        rgba(168, 85, 247, 0.05) 50%, 
+        rgba(6, 182, 212, 0.05) 100%);
+    border-radius: 24px;
+    margin: 2rem 0;
+}
+
+.feature-slider {
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+}
+
+.slider-slide {
+    display: none;
+    padding: 2rem 4rem;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+.slider-slide.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.feature-content {
+    padding: 2rem 0;
+}
+
+.feature-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.feature-description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.feature-highlights {
+    margin: 2rem 0;
+}
+
+.highlight-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.feature-preview {
+    padding: 2rem;
+}
+
+.preview-window {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.preview-header {
+    background: #f8f9fa;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.preview-dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot.red { background: #ff5f57; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #28ca42; }
+
+.preview-title {
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.preview-content {
+    padding: 2rem 1.5rem;
+    min-height: 300px;
+}
+
+/* Assessment Preview Styles */
+.question-card {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.question-text {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.option-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.option-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Recommendations Preview Styles */
+.recommendation-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dashboard Preview Styles */
+.metrics-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.metric-item {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.chart-placeholder {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Navigation Styles */
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.slider-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.slider-dot.active {
+    background: var(--primary-color);
+    transform: scale(1.2);
+}
+
+.slider-controls button {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.slider-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .slider-slide {
+        padding: 1rem 2rem;
+    }
+    
+    .feature-title {
+        font-size: 2rem;
+    }
+    
+    .feature-description {
+        font-size: 1rem;
+    }
+    
+    .metrics-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .feature-actions {
+        text-align: center;
+    }
+    
+    .feature-actions .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = new FeatureSlider();
+});
+
+class FeatureSlider {
+    constructor() {
+        this.currentSlide = 0;
+        this.totalSlides = 3;
+        this.autoplayInterval = null;
+        
+        this.init();
+        this.createPreviewChart();
+        this.startAutoplay();
+    }
+    
+    init() {
+        // Navigation buttons
+        document.getElementById('prevSlide').addEventListener('click', () => {
+            this.previousSlide();
+        });
+        
+        document.getElementById('nextSlide').addEventListener('click', () => {
+            this.nextSlide();
+        });
+        
+        // Dot navigation
+        document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.goToSlide(index);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') this.previousSlide();
+            if (e.key === 'ArrowRight') this.nextSlide();
+        });
+        
+        // Touch/swipe support
+        this.addTouchSupport();
+    }
+    
+    goToSlide(slideIndex) {
+        // Hide current slide
+        document.querySelectorAll('.slider-slide').forEach(slide => {
+            slide.classList.remove('active');
+        });
+        
+        // Show target slide
+        const targetSlide = document.querySelector(`[data-slide="${slideIndex}"]`);
+        targetSlide.classList.add('active');
+        
+        // Update dots
+        document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === slideIndex);
+        });
+        
+        this.currentSlide = slideIndex;
+        
+        // Restart autoplay
+        this.restartAutoplay();
+    }
+    
+    nextSlide() {
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        this.goToSlide(nextIndex);
+    }
+    
+    previousSlide() {
+        const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.goToSlide(prevIndex);
+    }
+    
+    startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+            this.nextSlide();
+        }, 8000); // Auto-advance every 8 seconds
+    }
+    
+    stopAutoplay() {
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+        }
+    }
+    
+    restartAutoplay() {
+        this.stopAutoplay();
+        this.startAutoplay();
+    }
+    
+    addTouchSupport() {
+        let startX = 0;
+        let endX = 0;
+        
+        const slider = document.getElementById('featureSlider');
+        
+        slider.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+        
+        slider.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            this.handleSwipe();
+        });
+        
+        // Mouse support for desktop
+        slider.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            slider.style.cursor = 'grabbing';
+        });
+        
+        slider.addEventListener('mouseup', (e) => {
+            endX = e.clientX;
+            slider.style.cursor = 'grab';
+            this.handleSwipe();
+        });
+    }
+    
+    handleSwipe() {
+        const threshold = 50;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                this.nextSlide();
+            } else {
+                this.previousSlide();
+            }
+        }
+    }
+    
+    createPreviewChart() {
+        // Create a simple preview chart for the dashboard slide
+        const canvas = document.getElementById('previewChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        
+        // Simple pie chart simulation
+        const data = [
+            { label: 'Minimal', value: 45, color: '#10b981' },
+            { label: 'Mild', value: 30, color: '#f59e0b' },
+            { label: 'Moderate', value: 20, color: '#f97316' },
+            { label: 'Severe', value: 5, color: '#dc2626' }
+        ];
+        
+        let currentAngle = 0;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 60;
+        
+        data.forEach(segment => {
+            const sliceAngle = (segment.value / 100) * 2 * Math.PI;
+            
+            // Draw pie slice
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+            ctx.lineTo(centerX, centerY);
+            ctx.fillStyle = segment.color;
+            ctx.fill();
+            
+            currentAngle += sliceAngle;
+        });
+    }
+}
+
+// Demo functions
+function showDemo(type) {
+    let demoContent = '';
+    
+    switch(type) {
+        case 'assessment':
+            demoContent = `
+                <div class="demo-modal-content">
+                    <h4>Assessment Templates Demo</h4>
+                    <p>Interactive mental health assessments with:</p>
+                    <ul>
+                        <li>Question-by-question navigation</li>
+                        <li>Real-time progress tracking</li>
+                        <li>AJAX form submission</li>
+                        <li>Instant results and severity analysis</li>
+                    </ul>
+                </div>
+            `;
+            break;
+        case 'recommendations':
+            demoContent = `
+                <div class="demo-modal-content">
+                    <h4>Recommendation Pages Demo</h4>
+                    <p>Personalized mental health recommendations featuring:</p>
+                    <ul>
+                        <li>Assessment-based suggestions</li>
+                        <li>Category filtering and status tracking</li>
+                        <li>Urgency level indicators</li>
+                        <li>Interactive action controls</li>
+                    </ul>
+                </div>
+            `;
+            break;
+        case 'dashboard':
+            demoContent = `
+                <div class="demo-modal-content">
+                    <h4>Dashboard Visualization Demo</h4>
+                    <p>Comprehensive analytics dashboard with:</p>
+                    <ul>
+                        <li>Chart.js visualizations</li>
+                        <li>Real-time data updates</li>
+                        <li>Interactive filtering</li>
+                        <li>Alert system for critical notifications</li>
+                    </ul>
+                </div>
+            `;
+            break;
+    }
+    
+    // Create and show modal
+    const modal = document.createElement('div');
+    modal.className = 'demo-modal';
+    modal.innerHTML = `
+        <div class="demo-modal-backdrop" onclick="this.parentElement.remove()">
+            <div class="demo-modal-dialog" onclick="event.stopPropagation()">
+                ${demoContent}
+                <button class="btn btn-primary mt-3" onclick="this.closest('.demo-modal').remove()">
+                    Close
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+</script>
+
+<style>
+.demo-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+}
+
+.demo-modal-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.demo-modal-dialog {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    margin: 1rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.demo-modal-content h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.demo-modal-content ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.demo-modal-content ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.demo-modal-content ul li:before {
+    content: "✓";
+    color: var(--success-color);
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+</style>

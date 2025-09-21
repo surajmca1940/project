@@ -1,0 +1,669 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Wellness Dashboard" %}{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    }
+    
+    .metric-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        transition: all 0.3s ease;
+        border-left: 4px solid;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .metric-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .metric-change {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+    
+    .change-positive {
+        color: var(--success-color);
+    }
+    
+    .change-negative {
+        color: var(--danger-color);
+    }
+    
+    .chart-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 1rem 0;
+    }
+    
+    .chart-container.large {
+        height: 400px;
+    }
+    
+    .alert-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        border-left: 4px solid;
+    }
+    
+    .alert-critical {
+        border-left-color: #dc2626;
+    }
+    
+    .alert-warning {
+        border-left-color: #f59e0b;
+    }
+    
+    .alert-info {
+        border-left-color: #06b6d4;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .metric-primary {
+        border-left-color: var(--primary-color);
+    }
+    
+    .metric-primary .metric-value {
+        color: var(--primary-color);
+    }
+    
+    .metric-success {
+        border-left-color: var(--success-color);
+    }
+    
+    .metric-success .metric-value {
+        color: var(--success-color);
+    }
+    
+    .metric-warning {
+        border-left-color: #f59e0b;
+    }
+    
+    .metric-warning .metric-value {
+        color: #f59e0b;
+    }
+    
+    .metric-danger {
+        border-left-color: var(--danger-color);
+    }
+    
+    .metric-danger .metric-value {
+        color: var(--danger-color);
+    }
+    
+    .loading-skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+        background-size: 400% 100%;
+        animation: skeleton 1.5s ease-in-out infinite;
+        border-radius: 8px;
+        height: 20px;
+        margin: 0.5rem 0;
+    }
+    
+    @keyframes skeleton {
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .filter-bar {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(31, 38, 135, 0.1);
+    }
+    
+    .date-picker {
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 8px;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="display-5 mb-3">
+                📊 {% trans "Wellness Dashboard" %}
+            </h1>
+            <p class="mb-0" style="opacity: 0.9;">
+                {% trans "Real-time insights into student mental health and well-being across your institution" %}
+            </p>
+        </div>
+        
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h6 class="mb-3">{% trans "Dashboard Filters" %}</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label small">{% trans "Date Range" %}</label>
+                            <select class="form-select date-picker" id="date-range">
+                                <option value="7">{% trans "Last 7 Days" %}</option>
+                                <option value="30" selected>{% trans "Last 30 Days" %}</option>
+                                <option value="90">{% trans "Last 90 Days" %}</option>
+                                <option value="365">{% trans "Last Year" %}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">{% trans "Assessment Type" %}</label>
+                            <select class="form-select date-picker" id="assessment-filter">
+                                <option value="all">{% trans "All Assessments" %}</option>
+                                <option value="PHQ9">{% trans "Depression (PHQ-9)" %}</option>
+                                <option value="GAD7">{% trans "Anxiety (GAD-7)" %}</option>
+                                <option value="SQI">{% trans "Sleep Quality" %}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">{% trans "Institution" %}</label>
+                            <select class="form-select date-picker" id="institution-filter">
+                                <option value="all">{% trans "All Institutions" %}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary" id="refresh-dashboard">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        {% trans "Refresh Data" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="stats-grid" id="key-metrics">
+            <!-- Metrics loaded via JavaScript -->
+        </div>
+        
+        <!-- Charts Row 1 -->
+        <div class="row">
+            <!-- Severity Distribution Pie Chart -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5 class="mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        {% trans "Severity Level Distribution" %}
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="severity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assessments by Type Bar Chart -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5 class="mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        {% trans "Assessments by Type" %}
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="assessments-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Row 2 -->
+        <div class="row">
+            <!-- Daily Trends Line Chart -->
+            <div class="col-12">
+                <div class="chart-card">
+                    <h5 class="mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-chart-line me-2"></i>
+                        {% trans "Daily Assessment Trends" %}
+                    </h5>
+                    <div class="chart-container large">
+                        <canvas id="trends-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alerts and Recent Activity -->
+        <div class="row">
+            <!-- Recent Alerts -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5 class="mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% trans "Recent Alerts" %}
+                    </h5>
+                    <div id="recent-alerts">
+                        <!-- Alerts loaded via JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h5 class="mb-3" style="color: var(--primary-color);">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        {% trans "Quick Statistics" %}
+                    </h5>
+                    <div id="quick-stats">
+                        <!-- Quick stats loaded via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+class WellnessDashboard {
+    constructor() {
+        this.charts = {};
+        this.currentDateRange = 30;
+        this.currentAssessmentFilter = 'all';
+        this.currentInstitutionFilter = 'all';
+        
+        this.init();
+    }
+    
+    async init() {
+        this.setupEventListeners();
+        await this.loadDashboardData();
+    }
+    
+    setupEventListeners() {
+        document.getElementById('refresh-dashboard').addEventListener('click', () => {
+            this.loadDashboardData();
+        });
+        
+        document.getElementById('date-range').addEventListener('change', (e) => {
+            this.currentDateRange = parseInt(e.target.value);
+            this.loadDashboardData();
+        });
+        
+        document.getElementById('assessment-filter').addEventListener('change', (e) => {
+            this.currentAssessmentFilter = e.target.value;
+            this.loadDashboardData();
+        });
+        
+        document.getElementById('institution-filter').addEventListener('change', (e) => {
+            this.currentInstitutionFilter = e.target.value;
+            this.loadDashboardData();
+        });
+    }
+    
+    async loadDashboardData() {
+        try {
+            this.showLoadingStates();
+            
+            // Calculate date range
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(endDate.getDate() - this.currentDateRange);
+            
+            const params = new URLSearchParams({
+                start_date: startDate.toISOString().split('T')[0],
+                end_date: endDate.toISOString().split('T')[0],
+            });
+            
+            // Load dashboard data
+            const response = await fetch(`/wellness-dashboard/api/dashboard/?${params}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Update components
+            this.updateKeyMetrics(data.summary);
+            this.updateCharts(data);
+            this.updateAlerts(data.recent_alerts || []);
+            this.updateQuickStats(data.summary);
+            
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            this.showErrorState();
+        }
+    }
+    
+    showLoadingStates() {
+        // Show loading skeletons
+        document.getElementById('key-metrics').innerHTML = `
+            <div class="metric-card metric-primary">
+                <div class="loading-skeleton"></div>
+                <div class="loading-skeleton" style="width: 60%;"></div>
+            </div>
+        `.repeat(4);
+        
+        document.getElementById('recent-alerts').innerHTML = `
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton" style="width: 80%;"></div>
+            <div class="loading-skeleton" style="width: 90%;"></div>
+        `;
+        
+        document.getElementById('quick-stats').innerHTML = `
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton" style="width: 70%;"></div>
+            <div class="loading-skeleton" style="width: 85%;"></div>
+        `;
+    }
+    
+    updateKeyMetrics(summary) {
+        const metrics = [
+            {
+                value: summary.total_users || 0,
+                label: '{% trans "Total Users" %}',
+                icon: 'fas fa-users',
+                type: 'primary'
+            },
+            {
+                value: summary.completed_assessments || 0,
+                label: '{% trans "Completed Assessments" %}',
+                icon: 'fas fa-check-circle',
+                type: 'success'
+            },
+            {
+                value: `${summary.completion_rate || 0}%`,
+                label: '{% trans "Completion Rate" %}',
+                icon: 'fas fa-percentage',
+                type: 'primary'
+            },
+            {
+                value: summary.users_needing_counselling || 0,
+                label: '{% trans "Need Counselling" %}',
+                icon: 'fas fa-exclamation-triangle',
+                type: 'warning'
+            },
+            {
+                value: summary.high_risk_users || 0,
+                label: '{% trans "High Risk Users" %}',
+                icon: 'fas fa-alert-triangle',
+                type: 'danger'
+            },
+            {
+                value: summary.severe_cases || 0,
+                label: '{% trans "Severe Cases" %}',
+                icon: 'fas fa-ambulance',
+                type: 'danger'
+            }
+        ];
+        
+        const metricsHtml = metrics.map(metric => `
+            <div class="metric-card metric-${metric.type}">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="${metric.icon}" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="metric-value">${metric.value}</div>
+                        <div class="metric-label">${metric.label}</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        document.getElementById('key-metrics').innerHTML = metricsHtml;
+    }
+    
+    async updateCharts(data) {
+        await Promise.all([
+            this.updateSeverityChart(),
+            this.updateAssessmentsChart(),
+            this.updateTrendsChart()
+        ]);
+    }
+    
+    async updateSeverityChart() {
+        try {
+            const response = await fetch('/wellness-dashboard/api/charts/severity_pie/');
+            const chartData = await response.json();
+            
+            if (this.charts.severity) {
+                this.charts.severity.destroy();
+            }
+            
+            const ctx = document.getElementById('severity-chart').getContext('2d');
+            this.charts.severity = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error updating severity chart:', error);
+        }
+    }
+    
+    async updateAssessmentsChart() {
+        try {
+            const response = await fetch('/wellness-dashboard/api/charts/assessments_bar/');
+            const chartData = await response.json();
+            
+            if (this.charts.assessments) {
+                this.charts.assessments.destroy();
+            }
+            
+            const ctx = document.getElementById('assessments-chart').getContext('2d');
+            this.charts.assessments = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error updating assessments chart:', error);
+        }
+    }
+    
+    async updateTrendsChart() {
+        try {
+            const response = await fetch('/wellness-dashboard/api/charts/trends_line/');
+            const chartData = await response.json();
+            
+            if (this.charts.trends) {
+                this.charts.trends.destroy();
+            }
+            
+            const ctx = document.getElementById('trends-chart').getContext('2d');
+            this.charts.trends = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error updating trends chart:', error);
+        }
+    }
+    
+    updateAlerts(alerts) {
+        if (!alerts.length) {
+            document.getElementById('recent-alerts').innerHTML = `
+                <div class="text-center py-3 text-muted">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    {% trans "No active alerts" %}
+                </div>
+            `;
+            return;
+        }
+        
+        const alertsHtml = alerts.map(alert => `
+            <div class="alert-card alert-${alert.severity}">
+                <div class="d-flex align-items-start">
+                    <div class="me-3">
+                        <i class="fas fa-${alert.severity === 'critical' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">${alert.threshold.name}</h6>
+                        <p class="mb-1 small">${alert.message}</p>
+                        <small class="text-muted">
+                            ${new Date(alert.triggered_at).toLocaleDateString()}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        document.getElementById('recent-alerts').innerHTML = alertsHtml;
+    }
+    
+    updateQuickStats(summary) {
+        const statsHtml = `
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-center p-2">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">
+                            ${summary.active_users || 0}
+                        </div>
+                        <small class="text-muted">{% trans "Active Users" %}</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center p-2">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);">
+                            ${summary.completion_rate || 0}%
+                        </div>
+                        <small class="text-muted">{% trans "Completion Rate" %}</small>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="small">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{% trans "Depression Assessments:" %}</span>
+                    <strong>${summary.assessments_by_type?.PHQ9 || 0}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{% trans "Anxiety Assessments:" %}</span>
+                    <strong>${summary.assessments_by_type?.GAD7 || 0}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{% trans "Sleep Assessments:" %}</span>
+                    <strong>${summary.assessments_by_type?.SQI || 0}</strong>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('quick-stats').innerHTML = statsHtml;
+    }
+    
+    showErrorState() {
+        document.getElementById('key-metrics').innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger-color); margin-bottom: 1rem;"></i>
+                <h5>{% trans "Error Loading Dashboard" %}</h5>
+                <p class="text-muted">{% trans "Please check your connection and try again." %}</p>
+                <button class="btn btn-primary" onclick="dashboard.loadDashboardData()">
+                    {% trans "Retry" %}
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Initialize dashboard when page loads
+let dashboard;
+document.addEventListener('DOMContentLoaded', function() {
+    dashboard = new WellnessDashboard();
+});
+</script>
+{% endblock %}

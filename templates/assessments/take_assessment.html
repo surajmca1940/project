@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ questionnaire.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .assessment-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .assessment-header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .question-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .question-number {
+        background: linear-gradient(45deg, var(--primary-color), var(--info-color));
+        color: white;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    
+    .choice-option {
+        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+    
+    .choice-option:hover {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: var(--primary-color);
+    }
+    
+    .choice-option.selected {
+        background: linear-gradient(45deg, var(--primary-color), var(--info-color));
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    
+    .choice-radio {
+        margin-right: 1rem;
+        transform: scale(1.2);
+    }
+    
+    .progress-bar {
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+        transition: width 0.5s ease;
+    }
+    
+    .loading-spinner {
+        display: none;
+    }
+    
+    .loading .loading-spinner {
+        display: inline-block;
+    }
+    
+    .loading .btn-text {
+        display: none;
+    }
+    
+    .instructions-card {
+        background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="assessment-container">
+        <!-- Assessment Header -->
+        <div class="assessment-header">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                {% if questionnaire.questionnaire_type == 'PHQ9' %}
+                    🌧️
+                {% elif questionnaire.questionnaire_type == 'GAD7' %}
+                    😰
+                {% elif questionnaire.questionnaire_type == 'SQI' %}
+                    😴
+                {% else %}
+                    🧠
+                {% endif %}
+            </div>
+            <h2 class="mb-3" style="color: var(--primary-color);">
+                {{ questionnaire.title }}
+            </h2>
+            <p class="text-muted mb-0">
+                {{ questionnaire.description }}
+            </p>
+        </div>
+        
+        <!-- Instructions -->
+        {% if questionnaire.instructions %}
+        <div class="instructions-card">
+            <h5 style="color: var(--primary-color);">
+                <i class="fas fa-info-circle me-2"></i>
+                {% trans "Instructions" %}
+            </h5>
+            <p class="mb-0">{{ questionnaire.instructions }}</p>
+        </div>
+        {% endif %}
+        
+        <!-- Progress Bar -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">{% trans "Progress" %}</small>
+                <small class="text-muted">
+                    <span id="current-question">0</span> / {{ questions.count }}
+                </small>
+            </div>
+            <div class="progress" style="height: 6px;">
+                <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%;"></div>
+            </div>
+        </div>
+        
+        <!-- Assessment Form -->
+        <form id="assessment-form" data-questionnaire-id="{{ questionnaire.id }}">
+            {% csrf_token %}
+            
+            {% for question in questions %}
+            <div class="question-card" id="question-{{ question.order }}" 
+                 {% if question.order > 1 %}style="display: none;"{% endif %}>
+                <div class="question-number">{{ question.order }}</div>
+                <h4 class="mb-4" style="color: var(--primary-color);">
+                    {{ question.text }}
+                </h4>
+                
+                <div class="choices">
+                    {% for choice in question.choices.all %}
+                    <div class="choice-option" data-choice-id="{{ choice.id }}" data-question-id="{{ question.id }}">
+                        <input type="radio" 
+                               name="question_{{ question.id }}" 
+                               value="{{ choice.id }}" 
+                               id="choice_{{ choice.id }}" 
+                               class="choice-radio"
+                               required>
+                        <label for="choice_{{ choice.id }}" class="mb-0 w-100 cursor-pointer">
+                            {{ choice.text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" id="prev-btn" class="btn btn-outline-primary" style="display: none;">
+                    <i class="fas fa-chevron-left me-2"></i>
+                    {% trans "Previous" %}
+                </button>
+                
+                <div class="ms-auto">
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        <span class="btn-text">
+                            {% trans "Next" %}
+                            <i class="fas fa-chevron-right ms-2"></i>
+                        </span>
+                        <div class="loading-spinner spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                    
+                    <button type="submit" id="submit-btn" class="btn btn-success" style="display: none;">
+                        <span class="btn-text">
+                            <i class="fas fa-check me-2"></i>
+                            {% trans "Complete Assessment" %}
+                        </span>
+                        <div class="loading-spinner spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="success-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" style="color: var(--success-color);">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {% trans "Assessment Complete!" %}
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-3" style="font-size: 3rem; color: var(--success-color);">✅</div>
+                <p>{% trans "Thank you for completing the assessment. Your results are ready!" %}</p>
+                <div id="result-summary" class="mt-3"></div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <a href="" id="view-results-btn" class="btn btn-primary">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    {% trans "View Results" %}
+                </a>
+                <a href="{% url 'assessments:list' %}" class="btn btn-outline-primary">
+                    {% trans "Take Another Assessment" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const totalQuestions = {{ questions.count }};
+    let currentQuestion = 1;
+    const responses = {};
+    
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const currentQuestionSpan = document.getElementById('current-question');
+    
+    // Update progress
+    function updateProgress() {
+        const progress = (currentQuestion / totalQuestions) * 100;
+        progressBar.style.width = progress + '%';
+        currentQuestionSpan.textContent = currentQuestion;
+    }
+    
+    // Show question
+    function showQuestion(questionNum) {
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.style.display = 'none';
+        });
+        
+        const currentCard = document.getElementById(`question-${questionNum}`);
+        if (currentCard) {
+            currentCard.style.display = 'block';
+        }
+        
+        // Update navigation buttons
+        prevBtn.style.display = questionNum > 1 ? 'block' : 'none';
+        
+        if (questionNum === totalQuestions) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+        } else {
+            nextBtn.style.display = 'block';
+            submitBtn.style.display = 'none';
+        }
+        
+        updateProgress();
+    }
+    
+    // Handle choice selection
+    document.addEventListener('change', function(e) {
+        if (e.target.type === 'radio') {
+            const questionId = e.target.name.replace('question_', '');
+            responses[questionId] = parseInt(e.target.value);
+            
+            // Add selected style to choice option
+            const choiceOptions = document.querySelectorAll(`input[name="${e.target.name}"]`);
+            choiceOptions.forEach(option => {
+                option.closest('.choice-option').classList.remove('selected');
+            });
+            e.target.closest('.choice-option').classList.add('selected');
+        }
+    });
+    
+    // Handle choice option click (for better UX)
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.choice-option')) {
+            const choiceOption = e.target.closest('.choice-option');
+            const radio = choiceOption.querySelector('input[type="radio"]');
+            if (radio && !radio.checked) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            }
+        }
+    });
+    
+    // Navigation handlers
+    nextBtn.addEventListener('click', function() {
+        const currentQuestionId = document.querySelector(`#question-${currentQuestion} input[type="radio"]`).name.replace('question_', '');
+        
+        if (!responses[currentQuestionId]) {
+            showToast('{% trans "Please select an answer before continuing." %}', 'warning');
+            return;
+        }
+        
+        if (currentQuestion < totalQuestions) {
+            currentQuestion++;
+            showQuestion(currentQuestion);
+        }
+    });
+    
+    prevBtn.addEventListener('click', function() {
+        if (currentQuestion > 1) {
+            currentQuestion--;
+            showQuestion(currentQuestion);
+        }
+    });
+    
+    // Submit assessment
+    document.getElementById('assessment-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Check if all questions are answered
+        for (let i = 1; i <= totalQuestions; i++) {
+            const questionCard = document.getElementById(`question-${i}`);
+            const questionId = questionCard.querySelector('input[type="radio"]').name.replace('question_', '');
+            
+            if (!responses[questionId]) {
+                showToast('{% trans "Please answer all questions before submitting." %}', 'warning');
+                return;
+            }
+        }
+        
+        submitBtn.classList.add('loading');
+        
+        try {
+            // Start assessment
+            const startResponse = await fetch('/assessments/api/start-assessment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    questionnaire: {{ questionnaire.id }}
+                })
+            });
+            
+            if (!startResponse.ok) {
+                throw new Error('Failed to start assessment');
+            }
+            
+            const assessmentData = await startResponse.json();
+            
+            // Submit responses
+            const responseData = [];
+            for (const [questionId, choiceId] of Object.entries(responses)) {
+                responseData.push({
+                    question_id: parseInt(questionId),
+                    choice_id: choiceId
+                });
+            }
+            
+            const submitResponse = await fetch('/assessments/api/submit-assessment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    assessment_id: assessmentData.id,
+                    responses: responseData
+                })
+            });
+            
+            if (!submitResponse.ok) {
+                throw new Error('Failed to submit assessment');
+            }
+            
+            const result = await submitResponse.json();
+            
+            // Show success modal with results
+            showSuccessModal(result);
+            
+        } catch (error) {
+            console.error('Assessment submission error:', error);
+            showToast('{% trans "There was an error submitting your assessment. Please try again." %}', 'error');
+        } finally {
+            submitBtn.classList.remove('loading');
+        }
+    });
+    
+    function showSuccessModal(result) {
+        const modal = new bootstrap.Modal(document.getElementById('success-modal'));
+        const resultSummary = document.getElementById('result-summary');
+        const viewResultsBtn = document.getElementById('view-results-btn');
+        
+        // Display result summary
+        resultSummary.innerHTML = `
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-center p-3" style="background: rgba(99, 102, 241, 0.1); border-radius: 8px;">
+                        <div style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold;">
+                            ${result.total_score}
+                        </div>
+                        <small class="text-muted">{% trans "Score" %}</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center p-3" style="background: rgba(99, 102, 241, 0.1); border-radius: 8px;">
+                        <div style="font-size: 1rem; color: var(--primary-color); font-weight: bold; text-transform: capitalize;">
+                            ${result.severity_level.replace('_', ' ')}
+                        </div>
+                        <small class="text-muted">{% trans "Level" %}</small>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        viewResultsBtn.href = `/assessments/results/${result.id}/`;
+        modal.show();
+    }
+    
+    function showToast(message, type = 'info') {
+        // Simple toast notification
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+        toast.style.zIndex = '9999';
+        toast.textContent = message;
+        toast.style.minWidth = '300px';
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 5000);
+    }
+    
+    // Initialize first question
+    updateProgress();
+});
+</script>
+{% endblock %}

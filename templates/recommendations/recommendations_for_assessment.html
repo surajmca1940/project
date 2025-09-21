@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Recommendations for" %} {{ assessment.questionnaire.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .recommendations-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .assessment-summary {
+        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    }
+    
+    .severity-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 1rem 0;
+    }
+    
+    .severity-minimal { background: rgba(16, 185, 129, 0.2); }
+    .severity-mild { background: rgba(245, 158, 11, 0.2); }
+    .severity-moderate { background: rgba(249, 115, 22, 0.2); }
+    .severity-moderately-severe { background: rgba(239, 68, 68, 0.2); }
+    .severity-severe { background: rgba(220, 38, 38, 0.2); }
+    
+    .recommendations-header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .recommendation-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        border-left: 4px solid;
+        transition: all 0.3s ease;
+    }
+    
+    .recommendation-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+    }
+    
+    .urgency-low { border-left-color: #10b981; }
+    .urgency-medium { border-left-color: #f59e0b; }
+    .urgency-high { border-left-color: #f97316; }
+    .urgency-urgent { border-left-color: #dc2626; animation: urgentPulse 2s infinite; }
+    
+    @keyframes urgentPulse {
+        0% { border-left-color: #dc2626; }
+        50% { border-left-color: #ef4444; }
+        100% { border-left-color: #dc2626; }
+    }
+    
+    .category-header {
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0 1.5rem;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .category-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+    }
+    
+    .priority-urgent {
+        position: relative;
+    }
+    
+    .priority-urgent::before {
+        content: '🚨';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #dc2626;
+        color: white;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    
+    .getting-started {
+        background: linear-gradient(45deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--success-color);
+    }
+    
+    .progress-indicator {
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+    
+    .urgency-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .urgency-low-badge { background: #d1fae5; color: #065f46; }
+    .urgency-medium-badge { background: #fef3c7; color: #92400e; }
+    .urgency-high-badge { background: #fed7aa; color: #c2410c; }
+    .urgency-urgent-badge { background: #fecaca; color: #991b1b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="recommendations-container">
+        <!-- Assessment Summary -->
+        <div class="assessment-summary">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                {% if assessment.questionnaire.questionnaire_type == 'PHQ9' %}
+                    🌧️
+                {% elif assessment.questionnaire.questionnaire_type == 'GAD7' %}
+                    😰
+                {% elif assessment.questionnaire.questionnaire_type == 'SQI' %}
+                    😴
+                {% else %}
+                    🧠
+                {% endif %}
+            </div>
+            
+            <h2 class="mb-3">
+                {% trans "Recommendations Based On Your" %} {{ assessment.questionnaire.title }}
+            </h2>
+            
+            <div class="severity-indicator severity-{{ assessment.severity_level }}">
+                {% trans "Score:" %} {{ assessment.total_score }}/{{ assessment.questionnaire.max_score }} 
+                - {{ assessment.severity_level|title }} {% trans "Level" %}
+            </div>
+            
+            <p class="mb-0" style="opacity: 0.9;">
+                {% trans "Completed on" %} {{ assessment.completed_at|date:"F j, Y" }}
+            </p>
+        </div>
+        
+        <!-- Getting Started -->
+        {% if user_recommendations %}
+        <div class="getting-started">
+            <h4 style="color: var(--success-color);">
+                <i class="fas fa-rocket me-2"></i>
+                {% trans "Getting Started" %}
+            </h4>
+            <p class="mb-3">
+                {% trans "We've curated specific recommendations based on your assessment results. Start with the urgent items and work your way through the suggestions at your own pace." %}
+            </p>
+            
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <strong style="color: var(--success-color); font-size: 1.5rem;">{{ urgent_count }}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Urgent Recommendations" %}</small>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <strong style="color: var(--success-color); font-size: 1.5rem;">{{ categories_count }}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Different Categories" %}</small>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <strong style="color: var(--success-color); font-size: 1.5rem;">{{ total_duration }}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Minutes Total Time" %}</small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Recommendations by Category -->
+        {% if user_recommendations %}
+            {% regroup user_recommendations by recommendation.category as category_groups %}
+            
+            {% for category_group in category_groups %}
+            <div class="category-header">
+                <h4 class="mb-2">
+                    <div class="category-icon" style="background-color: {{ category_group.grouper.color }}20; color: {{ category_group.grouper.color }};">
+                        {{ category_group.grouper.icon }}
+                    </div>
+                    {{ category_group.grouper.name }}
+                </h4>
+                <p class="text-muted mb-0">
+                    {{ category_group.grouper.description }}
+                </p>
+            </div>
+            
+            {% for user_rec in category_group.list %}
+            <div class="recommendation-card urgency-{{ user_rec.recommendation.urgency }} {% if user_rec.recommendation.urgency == 'urgent' %}priority-urgent{% endif %}">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <h5 class="mb-0" style="color: var(--primary-color);">
+                                {{ user_rec.recommendation.title }}
+                            </h5>
+                            <span class="urgency-badge urgency-{{ user_rec.recommendation.urgency }}-badge">
+                                {{ user_rec.recommendation.urgency }}
+                            </span>
+                        </div>
+                        
+                        <p class="text-muted mb-3">
+                            {{ user_rec.recommendation.description }}
+                        </p>
+                        
+                        {% if user_rec.recommendation.instructions %}
+                        <div class="instructions mb-3" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                            <h6 style="color: var(--primary-color);">
+                                <i class="fas fa-list-ol me-2"></i>
+                                {% trans "How to do this:" %}
+                            </h6>
+                            <div style="white-space: pre-line;">{{ user_rec.recommendation.instructions }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            {% if user_rec.recommendation.duration_minutes %}
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ user_rec.recommendation.duration_minutes }} {% trans "minutes" %}
+                            </small>
+                            {% endif %}
+                            
+                            {% if user_rec.recommendation.recommendation_type %}
+                            <small class="text-muted">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ user_rec.recommendation.recommendation_type|title }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-primary start-recommendation" data-id="{{ user_rec.id }}">
+                                <i class="fas fa-play me-1"></i>
+                                {% trans "Start Now" %}
+                            </button>
+                            
+                            <button class="btn btn-success complete-recommendation" data-id="{{ user_rec.id }}">
+                                <i class="fas fa-check me-1"></i>
+                                {% trans "Mark Complete" %}
+                            </button>
+                            
+                            <button class="btn btn-outline-warning bookmark-recommendation" data-id="{{ user_rec.id }}">
+                                <i class="fas fa-bookmark me-1"></i>
+                                {% trans "Save for Later" %}
+                            </button>
+                            
+                            {% if user_rec.recommendation.external_url %}
+                            <a href="{{ user_rec.recommendation.external_url }}" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                {% trans "Learn More" %}
+                            </a>
+                            {% endif %}
+                            
+                            {% if user_rec.recommendation.video_url %}
+                            <a href="{{ user_rec.recommendation.video_url }}" target="_blank" class="btn btn-outline-secondary">
+                                <i class="fas fa-video me-1"></i>
+                                {% trans "Watch Video" %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if user_rec.recommendation.urgency == 'urgent' %}
+                <div class="alert alert-warning mt-3" style="border-left: 4px solid #f59e0b;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>{% trans "Priority Recommendation:" %}</strong>
+                    {% trans "This recommendation is marked as urgent based on your assessment results. Consider addressing this first." %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+            
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4" style="font-size: 4rem; color: var(--text-muted);">🔍</div>
+            <h3 class="text-muted">{% trans "Generating Recommendations..." %}</h3>
+            <p class="text-muted mb-4">
+                {% trans "We're analyzing your assessment results to provide personalized recommendations. Please check back in a few moments." %}
+            </p>
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-refresh me-2"></i>
+                {% trans "Refresh Page" %}
+            </button>
+        </div>
+        {% endif %}
+        
+        <!-- Next Steps -->
+        {% if user_recommendations %}
+        <div class="progress-indicator mt-4">
+            <h5 style="color: var(--primary-color);">
+                <i class="fas fa-route me-2"></i>
+                {% trans "Your Next Steps" %}
+            </h5>
+            
+            <div class="row mt-3">
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <div style="font-size: 2rem; color: var(--primary-color);">1️⃣</div>
+                        <strong>{% trans "Start with Urgent" %}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Address high priority recommendations first" %}</small>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <div style="font-size: 2rem; color: var(--primary-color);">2️⃣</div>
+                        <strong>{% trans "Practice Daily" %}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Consistency is key to seeing improvement" %}</small>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <div class="mb-2">
+                        <div style="font-size: 2rem; color: var(--primary-color);">3️⃣</div>
+                        <strong>{% trans "Track Progress" %}</strong>
+                    </div>
+                    <small class="text-muted">{% trans "Retake assessments to monitor changes" %}</small>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'recommendations:my' %}" class="btn btn-primary me-3">
+                    <i class="fas fa-list me-2"></i>
+                    {% trans "View All My Recommendations" %}
+                </a>
+                
+                <a href="{% url 'assessments:list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-redo me-2"></i>
+                    {% trans "Take Another Assessment" %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Same JavaScript functions as in my_recommendations.html for handling interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle recommendation actions
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.complete-recommendation')) {
+            const btn = e.target.closest('.complete-recommendation');
+            const recId = btn.getAttribute('data-id');
+            updateRecommendationStatus(recId, 'completed');
+        }
+        
+        if (e.target.closest('.bookmark-recommendation')) {
+            const btn = e.target.closest('.bookmark-recommendation');
+            const recId = btn.getAttribute('data-id');
+            updateRecommendationStatus(recId, 'bookmarked');
+        }
+        
+        if (e.target.closest('.start-recommendation')) {
+            const btn = e.target.closest('.start-recommendation');
+            const recId = btn.getAttribute('data-id');
+            updateRecommendationStatus(recId, 'started');
+        }
+    });
+    
+    async function updateRecommendationStatus(recId, status) {
+        try {
+            const response = await fetch(`/recommendations/api/user-recommendations/${recId}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ status: status })
+            });
+            
+            if (response.ok) {
+                showToast(`Recommendation ${status}!`, 'success');
+                setTimeout(() => location.reload(), 1000);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            showToast('Failed to update recommendation', 'error');
+        }
+    }
+    
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+        toast.style.zIndex = '9999';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %}

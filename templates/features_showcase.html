@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Platform Features" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.02) 0%, 
+            rgba(168, 85, 247, 0.02) 50%, 
+            rgba(6, 182, 212, 0.02) 100%);
+    }
+    
+    .features-hero {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        margin-bottom: 3rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .features-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="7" cy="7" r="7"/></g></g></svg>');
+        animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .features-hero h1,
+    .features-hero p {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .features-navigation {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 3rem 0;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .nav-card {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        height: 100%;
+    }
+    
+    .nav-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .nav-card-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .nav-card h5 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .nav-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .nav-card .btn {
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Features Hero Section -->
+    <div class="features-hero">
+        <h1 class="display-3 mb-4" style="font-weight: 700;">
+            🎯 {% trans "Comprehensive Platform Features" %}
+        </h1>
+        <p class="lead mb-0" style="font-size: 1.3rem; opacity: 0.9;">
+            {% trans "Discover the powerful tools and interfaces designed to support student mental health and institutional wellness programs" %}
+        </p>
+    </div>
+
+    <!-- Interactive Feature Slider -->
+    {% include 'components/feature_slider.html' %}
+
+    <!-- Quick Navigation Cards -->
+    <div class="features-navigation">
+        <div class="text-center mb-5">
+            <h3 style="color: var(--primary-color); font-weight: 600;">
+                {% trans "Explore Our Platform" %}
+            </h3>
+            <p class="text-muted">
+                {% trans "Quick access to all platform features and capabilities" %}
+            </p>
+        </div>
+        
+        <div class="row">
+            <!-- Assessment Quick Access -->
+            <div class="col-md-4 mb-4">
+                <div class="nav-card">
+                    <i class="fas fa-clipboard-data nav-card-icon" style="color: var(--primary-color);"></i>
+                    <h5>{% trans "Take Assessment" %}</h5>
+                    <p>{% trans "Start a mental health screening with our user-friendly assessment interface" %}</p>
+                    <a href="{% url 'assessments:list' %}" class="btn btn-primary">
+                        {% trans "Start Now" %} <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Recommendations Quick Access -->
+            <div class="col-md-4 mb-4">
+                <div class="nav-card">
+                    <i class="fas fa-lightbulb nav-card-icon" style="color: var(--warning-color);"></i>
+                    <h5>{% trans "View Recommendations" %}</h5>
+                    <p>{% trans "Get personalized suggestions based on your assessment results and needs" %}</p>
+                    <a href="{% url 'recommendations:my' %}" class="btn btn-warning">
+                        {% trans "View Mine" %} <i class="fas fa-star ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Quick Access -->
+            <div class="col-md-4 mb-4">
+                <div class="nav-card">
+                    <i class="fas fa-chart-line nav-card-icon" style="color: var(--info-color);"></i>
+                    <h5>{% trans "Analytics Dashboard" %}</h5>
+                    <p>{% trans "Comprehensive wellness analytics and insights for administrators" %}</p>
+                    {% if user.is_staff %}
+                        <a href="{% url 'wellness_dashboard:home' %}" class="btn btn-info">
+                            {% trans "View Dashboard" %} <i class="fas fa-chart-bar ms-2"></i>
+                        </a>
+                    {% else %}
+                        <button class="btn btn-outline-info" disabled>
+                            {% trans "Admin Only" %}
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Features Grid -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="text-center mb-5">
+                <h3 style="color: var(--primary-color); font-weight: 600;">
+                    {% trans "Additional Platform Features" %}
+                </h3>
+                <p class="text-muted">
+                    {% trans "Supporting tools and services for comprehensive mental health care" %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- AI Support -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="nav-card">
+                <i class="fas fa-robot nav-card-icon" style="color: var(--secondary-color);"></i>
+                <h6>{% trans "AI Support Chat" %}</h6>
+                <p class="small">{% trans "24/7 intelligent assistance and coping strategies" %}</p>
+                <a href="{% url 'ai_support:chat' %}" class="btn btn-sm btn-outline-secondary">
+                    {% trans "Chat Now" %}
+                </a>
+            </div>
+        </div>
+        
+        <!-- Booking System -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="nav-card">
+                <i class="fas fa-calendar-alt nav-card-icon" style="color: var(--success-color);"></i>
+                <h6>{% trans "Appointment Booking" %}</h6>
+                <p class="small">{% trans "Schedule sessions with professional counselors" %}</p>
+                <a href="{% url 'booking_system:appointments' %}" class="btn btn-sm btn-outline-success">
+                    {% trans "Book Session" %}
+                </a>
+            </div>
+        </div>
+        
+        <!-- Resources -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="nav-card">
+                <i class="fas fa-book-open nav-card-icon" style="color: var(--info-color);"></i>
+                <h6>{% trans "Resource Library" %}</h6>
+                <p class="small">{% trans "Wellness guides and educational content" %}</p>
+                <a href="{% url 'resources:list' %}" class="btn btn-sm btn-outline-info">
+                    {% trans "Browse" %}
+                </a>
+            </div>
+        </div>
+        
+        <!-- Peer Support -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="nav-card">
+                <i class="fas fa-users nav-card-icon" style="color: var(--warning-color);"></i>
+                <h6>{% trans "Peer Support" %}</h6>
+                <p class="small">{% trans "Connect with fellow students safely" %}</p>
+                <a href="{% url 'peer_support:forum' %}" class="btn btn-sm btn-outline-warning">
+                    {% trans "Join Community" %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="text-center py-5 mt-5">
+        <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border-radius: 20px; padding: 3rem;">
+            <h2 style="color: var(--primary-color); font-weight: 600; margin-bottom: 1.5rem;">
+                {% trans "Ready to Get Started?" %}
+            </h2>
+            <p class="lead text-muted mb-4">
+                {% trans "Take the first step towards better mental health with our comprehensive platform" %}
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <a href="{% url 'assessments:list' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-play-circle me-2"></i>
+                    {% trans "Start Assessment" %}
+                </a>
+                <a href="{% url 'ai_support:chat' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-comment me-2"></i>
+                    {% trans "Talk to AI" %}
+                </a>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>
+                    {% trans "Create Account" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to navigation cards
+    const navCards = document.querySelectorAll('.nav-card');
+    navCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.features-hero');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+    });
+});
+</script>
+{% endblock %}

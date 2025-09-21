@@ -30,6 +30,7 @@ urlpatterns = [
 # Translated URLs
 urlpatterns += i18n_patterns(
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('features/', TemplateView.as_view(template_name='features_showcase.html'), name='features'),
     path('language-test/', TemplateView.as_view(template_name='language_test.html'), name='language_test'),
     
     # Friendly URL redirects
@@ -45,6 +46,11 @@ urlpatterns += i18n_patterns(
     path('resources/', include(('resources.urls', 'resources'), namespace='resources')),
     path('community/', include(('peer_support.urls', 'peer_support'), namespace='peer_support')),
     path('dashboard/', include(('admin_dashboard.urls', 'admin_dashboard'), namespace='admin_dashboard')),
+    
+    # New assessment and wellness features
+    path('assessments/', include('assessments.urls')),
+    path('recommendations/', include('recommendations.urls')),
+    path('wellness-dashboard/', include('wellness_dashboard.urls')),
     prefix_default_language=False,  # Don't add /en/ prefix for default language
 )
 

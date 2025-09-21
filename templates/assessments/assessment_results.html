@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Assessment Results" %} - {{ assessment.questionnaire.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .results-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .results-header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .score-card {
+        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    }
+    
+    .severity-badge {
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    
+    .severity-minimal { background: #10b981; color: white; }
+    .severity-mild { background: #f59e0b; color: white; }
+    .severity-moderate { background: #f97316; color: white; }
+    .severity-moderately-severe { background: #ef4444; color: white; }
+    .severity-severe { background: #dc2626; color: white; }
+    
+    .insight-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+    
+    .recommendation-preview {
+        background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .score-breakdown {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-ring {
+        width: 120px;
+        height: 120px;
+        position: relative;
+        margin: 0 auto 1rem;
+    }
+    
+    .progress-ring svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+    
+    .progress-ring-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 6;
+    }
+    
+    .progress-ring-progress {
+        fill: none;
+        stroke: white;
+        stroke-width: 6;
+        stroke-linecap: round;
+        transition: stroke-dasharray 0.5s ease-in-out;
+    }
+    
+    .next-steps-card {
+        background: linear-gradient(45deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+        border-radius: 12px;
+        padding: 2rem;
+        border-left: 4px solid var(--success-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="results-container">
+        <!-- Results Header -->
+        <div class="results-header">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                {% if assessment.questionnaire.questionnaire_type == 'PHQ9' %}
+                    🌧️
+                {% elif assessment.questionnaire.questionnaire_type == 'GAD7' %}
+                    😰
+                {% elif assessment.questionnaire.questionnaire_type == 'SQI' %}
+                    😴
+                {% else %}
+                    🧠
+                {% endif %}
+            </div>
+            <h2 class="mb-3" style="color: var(--primary-color);">
+                {{ assessment.questionnaire.title }} {% trans "Results" %}
+            </h2>
+            <p class="text-muted">
+                {% trans "Completed on" %} {{ assessment.completed_at|date:"F j, Y \a\t g:i A" }}
+            </p>
+        </div>
+        
+        <!-- Score Card -->
+        <div class="score-card">
+            <div class="progress-ring">
+                <svg>
+                    <circle class="progress-ring-bg" cx="60" cy="60" r="45"/>
+                    <circle class="progress-ring-progress" 
+                            cx="60" cy="60" r="45"
+                            stroke-dasharray="{{ score_percentage|floatformat:0 }}, 100"
+                            id="progress-circle"/>
+                </svg>
+                <div class="position-absolute top-50 start-50 translate-middle text-center">
+                    <div style="font-size: 1.5rem; font-weight: bold;">
+                        {{ assessment.total_score }}
+                    </div>
+                    <div style="font-size: 0.8rem; opacity: 0.9;">
+                        / {{ assessment.questionnaire.max_score }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="severity-badge severity-{{ assessment.severity_level }}">
+                {{ assessment.severity_level|title }} {% trans "Level" %}
+            </div>
+            
+            <h3>{% trans "Your Assessment Score" %}</h3>
+            <p class="mb-0" style="opacity: 0.9;">
+                {% if assessment.severity_level == 'minimal' %}
+                    {% trans "Your responses indicate minimal symptoms. This is a positive result." %}
+                {% elif assessment.severity_level == 'mild' %}
+                    {% trans "Your responses indicate mild symptoms. Consider monitoring your well-being." %}
+                {% elif assessment.severity_level == 'moderate' %}
+                    {% trans "Your responses indicate moderate symptoms. Consider seeking support." %}
+                {% elif assessment.severity_level == 'moderately_severe' %}
+                    {% trans "Your responses indicate moderately severe symptoms. Professional support is recommended." %}
+                {% elif assessment.severity_level == 'severe' %}
+                    {% trans "Your responses indicate severe symptoms. Please consider seeking professional help immediately." %}
+                {% endif %}
+            </p>
+        </div>
+        
+        <!-- Score Breakdown -->
+        <div class="insight-card">
+            <h4 class="mb-4" style="color: var(--primary-color);">
+                <i class="fas fa-chart-bar me-2"></i>
+                {% trans "Score Breakdown" %}
+            </h4>
+            
+            <div class="score-breakdown">
+                <div class="stat-item">
+                    <div class="stat-value">{{ assessment.total_score }}</div>
+                    <div class="text-muted">{% trans "Total Score" %}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ score_percentage|floatformat:0 }}%</div>
+                    <div class="text-muted">{% trans "Of Maximum" %}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ assessment.responses.count }}</div>
+                    <div class="text-muted">{% trans "Questions" %}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ average_per_question|floatformat:1 }}</div>
+                    <div class="text-muted">{% trans "Avg Per Question" %}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Analysis -->
+        <div class="insight-card">
+            <h4 class="mb-4" style="color: var(--primary-color);">
+                <i class="fas fa-brain me-2"></i>
+                {% trans "What This Means" %}
+            </h4>
+            
+            {% if assessment.questionnaire.questionnaire_type == 'PHQ9' %}
+                <div class="mb-3">
+                    <h6>{% trans "PHQ-9 Depression Scale Interpretation:" %}</h6>
+                    <ul class="list-unstyled">
+                        {% if assessment.severity_level == 'minimal' %}
+                            <li>✅ {% trans "Minimal depression symptoms detected" %}</li>
+                            <li>✅ {% trans "Continue maintaining good mental health practices" %}</li>
+                        {% elif assessment.severity_level == 'mild' %}
+                            <li>⚠️ {% trans "Mild depression symptoms present" %}</li>
+                            <li>📝 {% trans "Monitor symptoms and consider self-care strategies" %}</li>
+                        {% elif assessment.severity_level == 'moderate' %}
+                            <li>⚠️ {% trans "Moderate depression symptoms present" %}</li>
+                            <li>🩺 {% trans "Consider counseling or therapy" %}</li>
+                        {% else %}
+                            <li>🚨 {% trans "Severe depression symptoms detected" %}</li>
+                            <li>🏥 {% trans "Professional treatment is strongly recommended" %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% elif assessment.questionnaire.questionnaire_type == 'GAD7' %}
+                <div class="mb-3">
+                    <h6>{% trans "GAD-7 Anxiety Scale Interpretation:" %}</h6>
+                    <ul class="list-unstyled">
+                        {% if assessment.severity_level == 'minimal' %}
+                            <li>✅ {% trans "Minimal anxiety symptoms detected" %}</li>
+                            <li>✅ {% trans "Continue current stress management practices" %}</li>
+                        {% elif assessment.severity_level == 'mild' %}
+                            <li>⚠️ {% trans "Mild anxiety symptoms present" %}</li>
+                            <li>🧘 {% trans "Consider relaxation and mindfulness techniques" %}</li>
+                        {% elif assessment.severity_level == 'moderate' %}
+                            <li>⚠️ {% trans "Moderate anxiety symptoms present" %}</li>
+                            <li>🩺 {% trans "Professional support may be beneficial" %}</li>
+                        {% else %}
+                            <li>🚨 {% trans "Severe anxiety symptoms detected" %}</li>
+                            <li>🏥 {% trans "Professional treatment is strongly recommended" %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% elif assessment.questionnaire.questionnaire_type == 'SQI' %}
+                <div class="mb-3">
+                    <h6>{% trans "Sleep Quality Assessment Interpretation:" %}</h6>
+                    <ul class="list-unstyled">
+                        {% if assessment.severity_level == 'minimal' %}
+                            <li>✅ {% trans "Good sleep quality indicated" %}</li>
+                            <li>✅ {% trans "Maintain current sleep habits" %}</li>
+                        {% else %}
+                            <li>⚠️ {% trans "Sleep quality issues detected" %}</li>
+                            <li>😴 {% trans "Consider sleep hygiene improvements" %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>{% trans "Important Note:" %}</strong>
+                {% trans "This assessment is a screening tool and not a diagnostic instrument. For a comprehensive evaluation, please consult with a qualified mental health professional." %}
+            </div>
+        </div>
+        
+        <!-- Recommendations Preview -->
+        <div class="insight-card">
+            <h4 class="mb-4" style="color: var(--primary-color);">
+                <i class="fas fa-lightbulb me-2"></i>
+                {% trans "Personalized Recommendations" %}
+            </h4>
+            
+            <div class="recommendation-preview">
+                <h6>{% trans "Based on your results, we recommend:" %}</h6>
+                <p class="mb-3">
+                    {% trans "We've curated specific recommendations tailored to your assessment results to help support your mental health and well-being." %}
+                </p>
+                <a href="{% url 'recommendations:for_assessment' assessment.id %}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    {% trans "View Your Recommendations" %}
+                </a>
+            </div>
+        </div>
+        
+        <!-- Next Steps -->
+        <div class="next-steps-card">
+            <h5 style="color: var(--success-color);">
+                <i class="fas fa-route me-2"></i>
+                {% trans "Next Steps" %}
+            </h5>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3" style="color: var(--success-color); font-size: 1.5rem;">1️⃣</div>
+                        <div>
+                            <strong>{% trans "Review Recommendations" %}</strong>
+                            <br>
+                            <small class="text-muted">{% trans "Explore personalized suggestions based on your results" %}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3" style="color: var(--success-color); font-size: 1.5rem;">2️⃣</div>
+                        <div>
+                            <strong>{% trans "Track Progress" %}</strong>
+                            <br>
+                            <small class="text-muted">{% trans "Take assessments regularly to monitor changes" %}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3" style="color: var(--success-color); font-size: 1.5rem;">3️⃣</div>
+                        <div>
+                            <strong>{% trans "Seek Support" %}</strong>
+                            <br>
+                            <small class="text-muted">{% trans "Connect with professionals if needed" %}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3" style="color: var(--success-color); font-size: 1.5rem;">4️⃣</div>
+                        <div>
+                            <strong>{% trans "Stay Informed" %}</strong>
+                            <br>
+                            <small class="text-muted">{% trans "Learn about mental health resources" %}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <a href="{% url 'recommendations:for_assessment' assessment.id %}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-magic me-2"></i>
+                {% trans "Get Recommendations" %}
+            </a>
+            <a href="{% url 'assessments:list' %}" class="btn btn-outline-primary btn-lg me-3">
+                <i class="fas fa-redo me-2"></i>
+                {% trans "Take Another Assessment" %}
+            </a>
+            <a href="{% url 'assessments:history' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-history me-2"></i>
+                {% trans "View History" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress ring
+    const progressCircle = document.getElementById('progress-circle');
+    if (progressCircle) {
+        const scorePercentage = {{ score_percentage|floatformat:0 }};
+        const circumference = 2 * Math.PI * 45; // radius = 45
+        const offset = circumference - (scorePercentage / 100) * circumference;
+        
+        // Start from 0 and animate to target
+        progressCircle.style.strokeDasharray = `0, ${circumference}`;
+        
+        setTimeout(() => {
+            progressCircle.style.strokeDasharray = `${circumference - offset}, ${circumference}`;
+        }, 500);
+    }
+});
+</script>
+{% endblock %}
