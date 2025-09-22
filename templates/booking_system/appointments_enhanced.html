@@ -1,0 +1,568 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Book Appointment" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"></noscript>
+<link rel="stylesheet" href="{% static 'css/booking-smooth.css' %}">
+<style>
+/* Critical CSS for above-the-fold content */
+.booking-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+.stepper-header {
+  background: #ffffff;
+  padding: 2rem 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.step-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-container">
+    <!-- Stepper Header (Desktop) -->
+    <div class="stepper-header d-none d-lg-block">
+        <div class="stepper-wrapper">
+            <div class="stepper-item active" data-step="1">
+                <div class="stepper-counter">
+                    <i class="bi bi-person-heart"></i>
+                </div>
+                <div class="stepper-label">{% trans "Counselor" %}</div>
+            </div>
+            <div class="stepper-item" data-step="2">
+                <div class="stepper-counter">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+                <div class="stepper-label">{% trans "Date & Time" %}</div>
+            </div>
+            <div class="stepper-item" data-step="3">
+                <div class="stepper-counter">
+                    <i class="bi bi-clipboard-heart"></i>
+                </div>
+                <div class="stepper-label">{% trans "Details" %}</div>
+            </div>
+            <div class="stepper-item" data-step="4">
+                <div class="stepper-counter">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stepper-label">{% trans "Confirmation" %}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="booking-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Step 1: Choose Counselor -->
+                    <div class="booking-step active" id="step-1" data-step="1">
+                        <div class="step-header">
+                            <div class="step-title-wrapper">
+                                <h2 class="step-title">
+                                    <i class="bi bi-person-heart step-icon"></i>
+                                    {% trans "Choose Your Counselor" %}
+                                </h2>
+                                <p class="step-subtitle">{% trans "Select a professional who best matches your needs" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="counselors-grid">
+                            {% for counselor in counselors %}
+                            <div class="counselor-card" data-counselor-id="{{ counselor.id }}">
+                                <div class="counselor-photo">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='100%' height='100%' fill='%23f3f4f6'/%3E%3C/svg%3E" 
+                                         data-src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=120&h=120&fit=crop&crop=face" 
+                                         alt="Dr. {{ counselor.user.get_full_name }}" 
+                                         class="counselor-avatar lazy-image" 
+                                         loading="lazy">
+                                    <div class="availability-badge available">
+                                        <i class="bi bi-circle-fill"></i>
+                                        <span>{% trans "Available" %}</span>
+                                    </div>
+                                </div>
+                                <div class="counselor-info">
+                                    <h4 class="counselor-name">Dr. {{ counselor.user.get_full_name }}</h4>
+                                    <p class="counselor-title">{{ counselor.specialization }}</p>
+                                    
+                                    <div class="specialization-tags">
+                                        {% for spec in "Anxiety,Depression,PTSD"|make_list %}
+                                            {% if forloop.counter <= 3 %}
+                                            <span class="spec-tag">{{ spec }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="counselor-stats">
+                                        <div class="stat-item">
+                                            <div class="rating">
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-half"></i>
+                                                <span class="rating-value">4.8</span>
+                                            </div>
+                                            <span class="review-count">(127 reviews)</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="bi bi-award"></i>
+                                            <span>{% trans "8+ years exp" %}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="bi bi-translate"></i>
+                                            <span>{{ counselor.languages }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="select-counselor-btn">
+                                        <i class="bi bi-check-circle"></i>
+                                        {% trans "Select" %}
+                                    </button>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <div class="no-counselors-message">
+                                    <i class="bi bi-person-x"></i>
+                                    <h4>{% trans "No counselors available" %}</h4>
+                                    <p>{% trans "Please check back later or contact support." %}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Choose Date & Time -->
+                    <div class="booking-step" id="step-2" data-step="2">
+                        <div class="step-header">
+                            <div class="step-title-wrapper">
+                                <h2 class="step-title">
+                                    <i class="bi bi-calendar3 step-icon"></i>
+                                    {% trans "Choose Date & Time" %}
+                                </h2>
+                                <p class="step-subtitle">{% trans "Select your preferred appointment slot" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="datetime-container">
+                            <div class="row">
+                                <!-- Calendar Section -->
+                                <div class="col-lg-7">
+                                    <div class="calendar-section">
+                                        <div class="calendar-header">
+                                            <h4>{% trans "Select Date" %}</h4>
+                                            <div class="calendar-navigation">
+                                                <button class="calendar-nav-btn prev-month">
+                                                    <i class="bi bi-chevron-left"></i>
+                                                </button>
+                                                <h5 class="current-month-year"></h5>
+                                                <button class="calendar-nav-btn next-month">
+                                                    <i class="bi bi-chevron-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="calendar-legend">
+                                            <div class="legend-item">
+                                                <div class="legend-color available"></div>
+                                                <span>{% trans "Available" %}</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-color limited"></div>
+                                                <span>{% trans "Limited" %}</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-color booked"></div>
+                                                <span>{% trans "Booked" %}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="calendar-grid" id="calendar-grid">
+                                            <!-- Calendar will be generated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time Slots Section -->
+                                <div class="col-lg-5">
+                                    <div class="time-section">
+                                        <div class="time-header">
+                                            <h4>{% trans "Available Times" %}</h4>
+                                            <div class="time-filters">
+                                                <button class="time-filter-btn active" data-period="all">
+                                                    {% trans "All Day" %}
+                                                </button>
+                                                <button class="time-filter-btn" data-period="morning">
+                                                    <i class="bi bi-sunrise"></i>
+                                                    {% trans "Morning" %}
+                                                </button>
+                                                <button class="time-filter-btn" data-period="afternoon">
+                                                    <i class="bi bi-sun"></i>
+                                                    {% trans "Afternoon" %}
+                                                </button>
+                                                <button class="time-filter-btn" data-period="evening">
+                                                    <i class="bi bi-moon"></i>
+                                                    {% trans "Evening" %}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="time-slots-container" id="time-slots-container">
+                                            <div class="no-date-selected">
+                                                <i class="bi bi-calendar-x"></i>
+                                                <p>{% trans "Please select a date first" %}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="session-preferences">
+                                            <h5>{% trans "Session Options" %}</h5>
+                                            <div class="preference-grid">
+                                                <label class="preference-option">
+                                                    <input type="radio" name="session-duration" value="25" />
+                                                    <div class="option-content">
+                                                        <i class="bi bi-clock"></i>
+                                                        <span>25 min</span>
+                                                    </div>
+                                                </label>
+                                                <label class="preference-option">
+                                                    <input type="radio" name="session-duration" value="50" checked />
+                                                    <div class="option-content">
+                                                        <i class="bi bi-clock-history"></i>
+                                                        <span>50 min</span>
+                                                    </div>
+                                                </label>
+                                                <label class="preference-option">
+                                                    <input type="radio" name="session-type" value="video" checked />
+                                                    <div class="option-content">
+                                                        <i class="bi bi-camera-video"></i>
+                                                        <span>{% trans "Video" %}</span>
+                                                    </div>
+                                                </label>
+                                                <label class="preference-option">
+                                                    <input type="radio" name="session-type" value="phone" />
+                                                    <div class="option-content">
+                                                        <i class="bi bi-telephone"></i>
+                                                        <span>{% trans "Phone" %}</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Personal Details -->
+                    <div class="booking-step" id="step-3" data-step="3">
+                        <div class="step-header">
+                            <div class="step-title-wrapper">
+                                <h2 class="step-title">
+                                    <i class="bi bi-clipboard-heart step-icon"></i>
+                                    {% trans "Share Your Information" %}
+                                </h2>
+                                <p class="step-subtitle">{% trans "Help your counselor prepare for the best session" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="details-container">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="form-section">
+                                        <h4>{% trans "What brings you here today?" %}</h4>
+                                        <div class="concern-tags">
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="anxiety">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-heart-pulse"></i>
+                                                    {% trans "Anxiety" %}
+                                                </span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="depression">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-cloud-rain"></i>
+                                                    {% trans "Depression" %}
+                                                </span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="stress">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-exclamation-triangle"></i>
+                                                    {% trans "Stress" %}
+                                                </span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="relationships">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-people"></i>
+                                                    {% trans "Relationships" %}
+                                                </span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="sleep">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-moon-stars"></i>
+                                                    {% trans "Sleep" %}
+                                                </span>
+                                            </label>
+                                            <label class="concern-tag">
+                                                <input type="checkbox" name="concerns" value="academic">
+                                                <span class="tag-content">
+                                                    <i class="bi bi-book"></i>
+                                                    {% trans "Academic" %}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-section">
+                                        <label for="additional-notes">
+                                            <h4>{% trans "Additional Information" %} <span class="optional">(Optional)</span></h4>
+                                        </label>
+                                        <textarea 
+                                            class="form-control" 
+                                            id="additional-notes" 
+                                            rows="4" 
+                                            placeholder="{% trans 'Share any additional details that might help your counselor...' %}"></textarea>
+                                        <small class="form-text">
+                                            <i class="bi bi-shield-lock"></i>
+                                            {% trans "All information is encrypted and confidential" %}
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="form-section">
+                                        <h4>{% trans "Privacy Preferences" %}</h4>
+                                        <div class="privacy-options">
+                                            <label class="privacy-option">
+                                                <input type="radio" name="privacy" value="named" checked>
+                                                <div class="option-content">
+                                                    <i class="bi bi-person-check"></i>
+                                                    <div>
+                                                        <strong>{% trans "Use My Name" %}</strong>
+                                                        <p>{% trans "Counselor will know your identity" %}</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label class="privacy-option">
+                                                <input type="radio" name="privacy" value="anonymous">
+                                                <div class="option-content">
+                                                    <i class="bi bi-incognito"></i>
+                                                    <div>
+                                                        <strong>{% trans "Stay Anonymous" %}</strong>
+                                                        <p>{% trans "Identity revealed only during session" %}</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-4">
+                                    <div class="appointment-summary">
+                                        <h4><i class="bi bi-card-checklist"></i> {% trans "Appointment Summary" %}</h4>
+                                        <div class="summary-content">
+                                            <div class="summary-item counselor-summary" style="display: none;">
+                                                <div class="summary-icon">
+                                                    <img src="" alt="" class="summary-avatar">
+                                                </div>
+                                                <div class="summary-details">
+                                                    <strong class="counselor-name-summary"></strong>
+                                                    <p class="counselor-title-summary"></p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="summary-item date-summary" style="display: none;">
+                                                <div class="summary-icon">
+                                                    <i class="bi bi-calendar-event"></i>
+                                                </div>
+                                                <div class="summary-details">
+                                                    <strong class="selected-date"></strong>
+                                                    <p class="selected-time"></p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="summary-placeholder">
+                                                <i class="bi bi-info-circle"></i>
+                                                <p>{% trans "Complete the previous steps to see your appointment summary" %}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirmation -->
+                    <div class="booking-step" id="step-4" data-step="4">
+                        <div class="step-header">
+                            <div class="step-title-wrapper">
+                                <h2 class="step-title">
+                                    <i class="bi bi-check-circle step-icon"></i>
+                                    {% trans "Confirm Your Appointment" %}
+                                </h2>
+                                <p class="step-subtitle">{% trans "Please review your booking details" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="confirmation-container">
+                            <div class="confirmation-card">
+                                <div class="appointment-details">
+                                    <!-- Details will be populated by JavaScript -->
+                                </div>
+                                
+                                <div class="confirmation-actions">
+                                    <button type="button" class="btn-secondary edit-booking">
+                                        <i class="bi bi-pencil"></i>
+                                        {% trans "Edit Booking" %}
+                                    </button>
+                                    <button type="button" class="btn-primary confirm-appointment">
+                                        <i class="bi bi-check-circle"></i>
+                                        {% trans "Confirm Appointment" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation (Always Visible) -->
+                <div class="desktop-navigation d-none d-lg-block">
+                    <div class="navigation-container">
+                        <div class="nav-buttons">
+                            <button type="button" class="nav-btn btn-previous" style="display: none;">
+                                <i class="bi bi-arrow-left"></i>
+                                <span>{% trans "Previous" %}</span>
+                            </button>
+                            
+                            <div class="step-progress-info">
+                                <span class="step-text">Step <span class="current-step-number">1</span> of <span class="total-steps-number">4</span></span>
+                            </div>
+                            
+                            <button type="button" class="nav-btn btn-next">
+                                <span>{% trans "Next" %}</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                            
+                            <button type="button" class="nav-btn btn-confirm-desktop" style="display: none;">
+                                <i class="bi bi-check-circle"></i>
+                                <span>{% trans "Confirm Appointment" %}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation (Bottom) -->
+    <div class="mobile-navigation d-lg-none" role="navigation" aria-label="Booking step navigation">
+        <div class="mobile-nav-content">
+            <button class="mobile-nav-btn prev-btn" 
+                    style="display: none;" 
+                    aria-label="Go to previous step" 
+                    data-haptic="light">
+                <i class="bi bi-arrow-left"></i>
+                <span class="sr-only">{% trans "Previous" %}</span>
+            </button>
+            
+            <div class="mobile-step-indicator" aria-live="polite">
+                <span class="current-step">1</span> / <span class="total-steps">4</span>
+            </div>
+            
+            <button class="mobile-nav-btn next-btn" 
+                    aria-label="Go to next step" 
+                    data-haptic="medium">
+                <span>{% trans "Next" %}</span>
+                <i class="bi bi-arrow-right"></i>
+            </button>
+            
+            <button class="mobile-nav-btn confirm-btn" 
+                    style="display: none;" 
+                    aria-label="Confirm appointment booking" 
+                    data-haptic="heavy">
+                <i class="bi bi-check-circle"></i>
+                <span>{% trans "Confirm" %}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="success-modal">
+        <div class="success-content">
+            <div class="confetti-container" id="confetti-container"></div>
+            <div class="success-header">
+                <i class="bi bi-check-circle-fill success-icon"></i>
+                <h2>{% trans "Appointment Confirmed!" %}</h2>
+                <p>{% trans "Your appointment has been successfully booked" %}</p>
+            </div>
+            <div class="success-details">
+                <!-- Details will be populated by JavaScript -->
+            </div>
+            <div class="success-actions">
+                <button class="btn-primary" onclick="window.location.href='/booking/my-appointments/'">
+                    <i class="bi bi-calendar-check"></i>
+                    {% trans "View My Appointments" %}
+                </button>
+                <button class="btn-secondary" onclick="window.location.href='/'">
+                    <i class="bi bi-house"></i>
+                    {% trans "Back to Home" %}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Contact -->
+    <div class="emergency-contact">
+        <div class="container">
+            <div class="emergency-content">
+                <i class="bi bi-telephone-fill"></i>
+                <div class="emergency-text">
+                    <strong>{% trans "Need immediate help?" %}</strong>
+                    <span>{% trans "Crisis hotline:" %} <a href="tel:988">988</a> | {% trans "Campus:" %} <a href="tel:2345">Ext. 2345</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add progress indicator for smooth stepper transitions
+document.addEventListener('DOMContentLoaded', function() {
+    const stepperWrapper = document.querySelector('.stepper-wrapper');
+    if (stepperWrapper) {
+        stepperWrapper.setAttribute('data-step', '1');
+    }
+    
+    // Update progress indicator when steps change
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const activeStep = document.querySelector('.booking-step.active');
+                if (activeStep && stepperWrapper) {
+                    const stepNumber = activeStep.getAttribute('data-step');
+                    stepperWrapper.setAttribute('data-step', stepNumber);
+                }
+            }
+        });
+    });
+    
+    document.querySelectorAll('.booking-step').forEach(step => {
+        observer.observe(step, { attributes: true });
+    });
+});
+</script>
+<script src="{% static 'js/booking-optimized.js' %}" defer></script>
+{% endblock %}

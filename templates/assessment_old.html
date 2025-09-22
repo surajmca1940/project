@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Mental Health Assessment" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 mb-4">
+                    <i class="bi bi-clipboard-check text-primary me-3"></i>
+                    {% trans "Level of Problem through Standard Psychological Screening Tools" %}
+                </h1>
+                <p class="lead mb-4">
+                    {% trans "Complete standardized psychological assessments to identify your current mental health status and receive personalized recommendations." %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <!-- Assessment Introduction -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="bi bi-info-circle text-info me-2"></i>
+                        {% trans "About These Assessments" %}
+                    </h3>
+                    <p class="card-text">
+                        {% trans "These are standardized psychological screening tools used by mental health professionals worldwide. Complete all three assessments for a comprehensive evaluation of your mental health status." %}
+                    </p>
+                    <div class="row text-center mb-3">
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>PHQ-9</strong></h6>
+                                <small class="text-muted">{% trans "Depression Screening" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>GAD-7</strong></h6>
+                                <small class="text-muted">{% trans "Anxiety Screening" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>GHQ-12</strong></h6>
+                                <small class="text-muted">{% trans "General Health" %}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-shield-check me-2"></i>
+                        <strong>{% trans "Privacy Notice:" %}</strong> 
+                        {% trans "All responses are confidential and will only be used for personalized recommendations." %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Navigation Tabs -->
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-pills card-header-tabs" id="assessmentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="phq9-tab" data-bs-toggle="pill" data-bs-target="#phq9" type="button" role="tab" aria-controls="phq9" aria-selected="true">
+                                <i class="bi bi-1-circle me-2"></i>PHQ-9
+                                <span class="badge bg-secondary ms-2 phq9-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="gad7-tab" data-bs-toggle="pill" data-bs-target="#gad7" type="button" role="tab" aria-controls="gad7" aria-selected="false">
+                                <i class="bi bi-2-circle me-2"></i>GAD-7
+                                <span class="badge bg-secondary ms-2 gad7-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ghq-tab" data-bs-toggle="pill" data-bs-target="#ghq" type="button" role="tab" aria-controls="ghq" aria-selected="false">
+                                <i class="bi bi-3-circle me-2"></i>GHQ-12
+                                <span class="badge bg-secondary ms-2 ghq-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            <!-- Assessment Form Placeholder -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-clipboard-data me-2"></i>
+                        {% trans "Mental Health Assessment Form" %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form id="assessmentForm" method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Sample Questions -->
+                        <div class="mb-4">
+                            <h5>{% trans "Section 1: General Well-being" %}</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    {% trans "How would you rate your overall mood in the past week?" %}
+                                </label>
+                                <div class="rating-scale">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="mood_rating" id="mood1" value="1">
+                                        <label class="form-check-label" for="mood1">1 - {% trans "Very Poor" %}</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="mood_rating" id="mood2" value="2">
+                                        <label class="form-check-label" for="mood2">2 - {% trans "Poor" %}</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="mood_rating" id="mood3" value="3">
+                                        <label class="form-check-label" for="mood3">3 - {% trans "Neutral" %}</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="mood_rating" id="mood4" value="4">
+                                        <label class="form-check-label" for="mood4">4 - {% trans "Good" %}</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="mood_rating" id="mood5" value="5">
+                                        <label class="form-check-label" for="mood5">5 - {% trans "Excellent" %}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sleep_pattern" class="form-label">
+                                    {% trans "How many hours of sleep do you typically get per night?" %}
+                                </label>
+                                <select class="form-select" id="sleep_pattern" name="sleep_pattern">
+                                    <option value="">{% trans "Select hours..." %}</option>
+                                    <option value="<4">{% trans "Less than 4 hours" %}</option>
+                                    <option value="4-6">{% trans "4-6 hours" %}</option>
+                                    <option value="6-8">{% trans "6-8 hours" %}</option>
+                                    <option value="8-10">{% trans "8-10 hours" %}</option>
+                                    <option value=">10">{% trans "More than 10 hours" %}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>{% trans "Section 2: Stress and Anxiety" %}</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    {% trans "How often do you feel overwhelmed by stress?" %}
+                                </label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="stress_frequency" id="stress1" value="never">
+                                    <label class="form-check-label" for="stress1">{% trans "Never" %}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="stress_frequency" id="stress2" value="rarely">
+                                    <label class="form-check-label" for="stress2">{% trans "Rarely" %}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="stress_frequency" id="stress3" value="sometimes">
+                                    <label class="form-check-label" for="stress3">{% trans "Sometimes" %}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="stress_frequency" id="stress4" value="often">
+                                    <label class="form-check-label" for="stress4">{% trans "Often" %}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="stress_frequency" id="stress5" value="always">
+                                    <label class="form-check-label" for="stress5">{% trans "Always" %}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>{% trans "Section 3: Additional Comments" %}</h5>
+                            
+                            <div class="mb-3">
+                                <label for="additional_concerns" class="form-label">
+                                    {% trans "Is there anything specific you'd like to discuss or any concerns you have?" %}
+                                </label>
+                                <textarea class="form-control" id="additional_concerns" name="additional_concerns" rows="4" placeholder="{% trans 'Optional: Share any additional thoughts or concerns...' %}"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="submitAssessment()">
+                                <i class="bi bi-check-circle me-2"></i>
+                                {% trans "Complete Assessment" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Call-to-Action -->
+            <div class="card mt-4">
+                <div class="card-body text-center">
+                    <h5>{% trans "Need Immediate Support?" %}</h5>
+                    <p class="mb-3">{% trans "If you're experiencing a mental health crisis, please reach out for immediate help." %}</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{% url 'ai_support:chat' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-robot me-2"></i>
+                            {% trans "Chat with AI" %}
+                        </a>
+                        <a href="{% url 'booking_system:appointments' %}" class="btn btn-outline-success">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            {% trans "Book Appointment" %}
+                        </a>
+                        <button class="btn btn-outline-danger" onclick="showEmergencyModal()">
+                            <i class="bi bi-telephone me-2"></i>
+                            {% trans "Emergency Contacts" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function submitAssessment() {
+    // Simulate assessment processing
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    // Show loading state
+    btn.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>{% trans "Processing..." %}';
+    btn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Redirect to recommendations page
+        window.location.href = '{% url "recommendation" %}';
+    }, 2000);
+}
+</script>
+{% endblock %}

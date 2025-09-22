@@ -1,0 +1,958 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "My Appointments" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<link rel="stylesheet" href="{% static 'css/booking-enhanced.css' %}">
+<style>
+/* Additional styles for My Appointments page */
+.appointments-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 2rem 0;
+}
+
+.page-header {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.appointments-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-card.upcoming {
+    border-left-color: var(--primary-color);
+}
+
+.stat-card.completed {
+    border-left-color: var(--success-color);
+}
+
+.stat-card.cancelled {
+    border-left-color: var(--danger-color);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.925rem;
+}
+
+.appointments-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.appointment-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.appointment-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color);
+}
+
+.appointment-card.completed::before {
+    background: var(--success-color);
+}
+
+.appointment-card.cancelled::before {
+    background: var(--danger-color);
+}
+
+.appointment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.appointment-status {
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.appointment-status.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.appointment-status.confirmed {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.appointment-status.completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.appointment-status.cancelled {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.appointment-main {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.counselor-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counselor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.counselor-details h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.counselor-details p {
+    color: #6b7280;
+    margin: 0;
+    font-size: 0.925rem;
+}
+
+.appointment-datetime {
+    text-align: center;
+}
+
+.date-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.time-display {
+    color: #6b7280;
+    font-size: 0.925rem;
+    margin-bottom: 0.5rem;
+}
+
+.session-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.appointment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-reschedule {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.btn-reschedule:hover {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-cancel {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-cancel:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-join {
+    background: var(--success-color);
+    color: white;
+}
+
+.btn-join:hover {
+    background: #059669;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+}
+
+.empty-description {
+    color: #6b7280;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cta-button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: white;
+}
+
+/* Reschedule Modal */
+.reschedule-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reschedule-modal.show {
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+    color: #6b7280;
+}
+
+.reschedule-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.form-input,
+.form-select {
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-modal {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-modal-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-modal-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-modal-secondary {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.btn-modal-secondary:hover {
+    background: #e5e7eb;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .appointments-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .appointment-main {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .appointment-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: 90vh;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .appointments-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .appointments-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .appointment-card {
+        padding: 1rem;
+    }
+    
+    .appointment-actions {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="appointments-container">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-calendar-check"></i>
+                {% trans "My Appointments" %}
+            </h1>
+            <p class="page-subtitle">{% trans "Manage your counseling sessions and upcoming appointments" %}</p>
+        </div>
+
+        <!-- Appointments Stats -->
+        <div class="appointments-stats">
+            <div class="stat-card upcoming">
+                <div class="stat-number" id="upcoming-count">2</div>
+                <div class="stat-label">{% trans "Upcoming" %}</div>
+            </div>
+            <div class="stat-card completed">
+                <div class="stat-number" id="completed-count">3</div>
+                <div class="stat-label">{% trans "Completed" %}</div>
+            </div>
+            <div class="stat-card cancelled">
+                <div class="stat-number" id="cancelled-count">1</div>
+                <div class="stat-label">{% trans "Cancelled" %}</div>
+            </div>
+        </div>
+
+        <!-- Appointments List -->
+        <div class="appointments-list" id="appointments-list">
+            <!-- Sample appointments for demo -->
+            <div class="appointment-card confirmed" data-appointment-id="1">
+                <div class="appointment-header">
+                    <span class="appointment-status confirmed">{% trans "Confirmed" %}</span>
+                </div>
+                
+                <div class="appointment-main">
+                    <div class="counselor-info">
+                        <img src="https://images.unsplash.com/photo-1594824375155-38cfb4b3a2bf?w=60&h=60&fit=crop&crop=face" 
+                             alt="Dr. Sarah Johnson" class="counselor-avatar">
+                        <div class="counselor-details">
+                            <h4>Dr. Sarah Johnson</h4>
+                            <p>{% trans "Clinical Psychologist" %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-datetime">
+                        <div class="date-display">Dec 15, 2023</div>
+                        <div class="time-display">2:00 PM - 2:50 PM</div>
+                        <div class="session-info">
+                            <i class="bi bi-camera-video"></i>
+                            <span>{% trans "Video Session" %}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-actions">
+                        <button class="action-btn btn-join" onclick="joinSession(1)">
+                            <i class="bi bi-camera-video"></i>
+                            {% trans "Join Session" %}
+                        </button>
+                        <button class="action-btn btn-reschedule" onclick="openRescheduleModal(1)">
+                            <i class="bi bi-calendar-date"></i>
+                            {% trans "Reschedule" %}
+                        </button>
+                        <button class="action-btn btn-cancel" onclick="cancelAppointment(1)">
+                            <i class="bi bi-x-circle"></i>
+                            {% trans "Cancel" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="appointment-card confirmed" data-appointment-id="2">
+                <div class="appointment-header">
+                    <span class="appointment-status confirmed">{% trans "Confirmed" %}</span>
+                </div>
+                
+                <div class="appointment-main">
+                    <div class="counselor-info">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=60&h=60&fit=crop&crop=face" 
+                             alt="Dr. Michael Chen" class="counselor-avatar">
+                        <div class="counselor-details">
+                            <h4>Dr. Michael Chen</h4>
+                            <p>{% trans "Licensed Therapist" %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-datetime">
+                        <div class="date-display">Dec 20, 2023</div>
+                        <div class="time-display">10:00 AM - 10:50 AM</div>
+                        <div class="session-info">
+                            <i class="bi bi-telephone"></i>
+                            <span>{% trans "Phone Session" %}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-actions">
+                        <button class="action-btn btn-reschedule" onclick="openRescheduleModal(2)">
+                            <i class="bi bi-calendar-date"></i>
+                            {% trans "Reschedule" %}
+                        </button>
+                        <button class="action-btn btn-cancel" onclick="cancelAppointment(2)">
+                            <i class="bi bi-x-circle"></i>
+                            {% trans "Cancel" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="appointment-card completed" data-appointment-id="3">
+                <div class="appointment-header">
+                    <span class="appointment-status completed">{% trans "Completed" %}</span>
+                </div>
+                
+                <div class="appointment-main">
+                    <div class="counselor-info">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&crop=face" 
+                             alt="Dr. Lisa Rodriguez" class="counselor-avatar">
+                        <div class="counselor-details">
+                            <h4>Dr. Lisa Rodriguez</h4>
+                            <p>{% trans "Student Support Specialist" %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-datetime">
+                        <div class="date-display">Dec 8, 2023</div>
+                        <div class="time-display">3:00 PM - 3:50 PM</div>
+                        <div class="session-info">
+                            <i class="bi bi-camera-video"></i>
+                            <span>{% trans "Video Session" %}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-actions">
+                        <button class="action-btn btn-primary" onclick="viewNotes(3)">
+                            <i class="bi bi-journal-text"></i>
+                            {% trans "View Notes" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <div class="empty-icon">
+                <i class="bi bi-calendar-x"></i>
+            </div>
+            <h2 class="empty-title">{% trans "No Appointments Yet" %}</h2>
+            <p class="empty-description">
+                {% trans "You haven't booked any appointments yet. Start your mental health journey by scheduling your first session with one of our professional counselors." %}
+            </p>
+            <a href="/booking/" class="cta-button">
+                <i class="bi bi-calendar-plus"></i>
+                {% trans "Book Your First Appointment" %}
+            </a>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="text-center mt-4">
+            <a href="/booking/" class="cta-button">
+                <i class="bi bi-plus-circle"></i>
+                {% trans "Book New Appointment" %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Reschedule Modal -->
+<div class="reschedule-modal" id="reschedule-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">{% trans "Reschedule Appointment" %}</h3>
+            <p class="modal-subtitle">{% trans "Choose a new date and time for your session" %}</p>
+        </div>
+        
+        <form class="reschedule-form" id="reschedule-form">
+            <div class="form-group">
+                <label class="form-label">{% trans "Select New Date" %}</label>
+                <input type="date" class="form-input" id="new-date" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{% trans "Select New Time" %}</label>
+                <select class="form-select" id="new-time" required>
+                    <option value="">{% trans "Choose a time" %}</option>
+                    <option value="09:00">9:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="18:00">6:00 PM</option>
+                    <option value="19:00">7:00 PM</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{% trans "Reason for Rescheduling" %} ({% trans "Optional" %})</label>
+                <textarea class="form-input" id="reschedule-reason" rows="3" 
+                         placeholder="{% trans 'Please let us know why you need to reschedule...' %}"></textarea>
+            </div>
+        </form>
+        
+        <div class="modal-actions">
+            <button type="button" class="btn-modal btn-modal-secondary" onclick="closeRescheduleModal()">
+                {% trans "Cancel" %}
+            </button>
+            <button type="button" class="btn-modal btn-modal-primary" onclick="confirmReschedule()">
+                <i class="bi bi-calendar-check"></i>
+                {% trans "Reschedule Appointment" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// My Appointments JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('My Appointments page loaded');
+    
+    // Set minimum date to tomorrow
+    const dateInput = document.getElementById('new-date');
+    if (dateInput) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.min = tomorrow.toISOString().split('T')[0];
+    }
+    
+    // Update stats based on actual appointments
+    updateAppointmentStats();
+});
+
+let currentAppointmentId = null;
+
+function updateAppointmentStats() {
+    const appointments = document.querySelectorAll('.appointment-card');
+    let upcoming = 0, completed = 0, cancelled = 0;
+    
+    appointments.forEach(card => {
+        if (card.classList.contains('confirmed') || card.classList.contains('pending')) {
+            upcoming++;
+        } else if (card.classList.contains('completed')) {
+            completed++;
+        } else if (card.classList.contains('cancelled')) {
+            cancelled++;
+        }
+    });
+    
+    document.getElementById('upcoming-count').textContent = upcoming;
+    document.getElementById('completed-count').textContent = completed;
+    document.getElementById('cancelled-count').textContent = cancelled;
+    
+    // Show empty state if no appointments
+    if (appointments.length === 0) {
+        document.getElementById('appointments-list').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'block';
+    }
+}
+
+function openRescheduleModal(appointmentId) {
+    currentAppointmentId = appointmentId;
+    const modal = document.getElementById('reschedule-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 50);
+    
+    // Reset form
+    document.getElementById('reschedule-form').reset();
+    
+    showNotification('Select a new date and time for your appointment', 'info');
+}
+
+function closeRescheduleModal() {
+    const modal = document.getElementById('reschedule-modal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        currentAppointmentId = null;
+    }, 300);
+}
+
+function confirmReschedule() {
+    const newDate = document.getElementById('new-date').value;
+    const newTime = document.getElementById('new-time').value;
+    const reason = document.getElementById('reschedule-reason').value;
+    
+    if (!newDate || !newTime) {
+        showNotification('Please select both date and time', 'error');
+        return;
+    }
+    
+    // Show loading state
+    const confirmBtn = document.querySelector('.btn-modal-primary');
+    const originalText = confirmBtn.innerHTML;
+    confirmBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Rescheduling...';
+    confirmBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the appointment card
+        updateAppointmentDisplay(currentAppointmentId, newDate, newTime);
+        
+        closeRescheduleModal();
+        showNotification('✓ Appointment successfully rescheduled!', 'success');
+        
+        // Restore button
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+    }, 2000);
+}
+
+function updateAppointmentDisplay(appointmentId, newDate, newTime) {
+    const card = document.querySelector(`[data-appointment-id="${appointmentId}"]`);
+    if (!card) return;
+    
+    const dateObj = new Date(newDate);
+    const formattedDate = dateObj.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    
+    const timeObj = new Date(`2000-01-01T${newTime}:00`);
+    const formattedTime = timeObj.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+    
+    const dateDisplay = card.querySelector('.date-display');
+    const timeDisplay = card.querySelector('.time-display');
+    
+    if (dateDisplay) dateDisplay.textContent = formattedDate;
+    if (timeDisplay) timeDisplay.textContent = `${formattedTime} - ${addMinutes(formattedTime, 50)}`;
+}
+
+function addMinutes(timeStr, minutes) {
+    const [time, period] = timeStr.split(' ');
+    const [hours, mins] = time.split(':').map(Number);
+    
+    let totalMinutes = (period === 'PM' && hours !== 12 ? hours + 12 : hours) * 60 + mins + minutes;
+    
+    const newHours = Math.floor(totalMinutes / 60) % 24;
+    const newMins = totalMinutes % 60;
+    
+    const displayHours = newHours > 12 ? newHours - 12 : (newHours === 0 ? 12 : newHours);
+    const displayPeriod = newHours >= 12 ? 'PM' : 'AM';
+    
+    return `${displayHours}:${newMins.toString().padStart(2, '0')} ${displayPeriod}`;
+}
+
+function cancelAppointment(appointmentId) {
+    if (!confirm('Are you sure you want to cancel this appointment? This action cannot be undone.')) {
+        return;
+    }
+    
+    const card = document.querySelector(`[data-appointment-id="${appointmentId}"]`);
+    if (!card) return;
+    
+    // Show loading state
+    showNotification('Cancelling appointment...', 'info');
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the card appearance
+        card.classList.remove('confirmed', 'pending');
+        card.classList.add('cancelled');
+        
+        const statusBadge = card.querySelector('.appointment-status');
+        statusBadge.className = 'appointment-status cancelled';
+        statusBadge.textContent = 'Cancelled';
+        
+        // Remove action buttons
+        const actionsDiv = card.querySelector('.appointment-actions');
+        actionsDiv.innerHTML = '<span class="text-muted">Appointment Cancelled</span>';
+        
+        // Update stats
+        updateAppointmentStats();
+        
+        showNotification('✓ Appointment cancelled successfully', 'success');
+    }, 1500);
+}
+
+function joinSession(appointmentId) {
+    showNotification('Redirecting to video session...', 'info');
+    
+    // Simulate joining session
+    setTimeout(() => {
+        alert('Video session would open here. Integration with video conferencing platform required.');
+    }, 1000);
+}
+
+function viewNotes(appointmentId) {
+    showNotification('Loading session notes...', 'info');
+    
+    // Simulate viewing notes
+    setTimeout(() => {
+        alert('Session notes would be displayed here. This could be a modal or separate page.');
+    }, 1000);
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        padding: 12px 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 300px;
+        font-weight: 500;
+    `;
+    
+    const icon = type === 'success' ? 'bi-check-circle' : 
+                type === 'error' ? 'bi-exclamation-triangle' : 'bi-info-circle';
+    
+    notification.innerHTML = `
+        <i class="bi ${icon}" style="margin-right: 8px;"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('reschedule-modal');
+    if (e.target === modal) {
+        closeRescheduleModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeRescheduleModal();
+    }
+});
+</script>
+{% endblock %}

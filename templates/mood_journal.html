@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Mood Journal" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/mood_journal.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section text-center py-5">
+                <div class="container">
+                    <h1 class="display-4 fw-bold mb-3">{{ page_title }}</h1>
+                    <p class="lead mb-4">{{ page_description }}</p>
+                    <div class="hero-stats d-flex justify-content-center gap-4">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ recent_entries|length }}</div>
+                            <div class="stat-label">{% trans "Entries This Month" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{% if recent_entries %}{{ recent_entries.0.get_mood_emoji }}{% else %}🌟{% endif %}</div>
+                            <div class="stat-label">{% trans "Latest Mood" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">📊</div>
+                            <div class="stat-label">{% trans "AI Insights" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Mood Entry Form -->
+        <div class="col-lg-6">
+            <div class="mood-entry-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-journal-heart"></i> {% trans "How are you feeling today?" %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="moodForm">
+                        {% csrf_token %}
+                        
+                        <!-- Mood Selection -->
+                        <div class="mood-selector mb-4">
+                            <label class="form-label fw-bold mb-3">{% trans "Select your mood:" %}</label>
+                            <div class="mood-options">
+                                {% for mood_code, mood_label in mood_choices %}
+                                <div class="mood-option" data-mood="{{ mood_code }}">
+                                    <input type="radio" name="mood" value="{{ mood_code }}" id="mood_{{ mood_code }}">
+                                    <label for="mood_{{ mood_code }}">
+                                        <span class="mood-emoji">
+                                            {% if mood_code == 'happy' %}😊
+                                            {% elif mood_code == 'sad' %}😢
+                                            {% elif mood_code == 'angry' %}😡
+                                            {% elif mood_code == 'tired' %}😴
+                                            {% elif mood_code == 'anxious' %}😨
+                                            {% endif %}
+                                        </span>
+                                        <span class="mood-label">{{ mood_label|slice:"2:" }}</span>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Note Input -->
+                        <div class="note-input mb-4">
+                            <label for="note" class="form-label fw-bold">{% trans "Tell us more about your day:" %}</label>
+                            <textarea name="note" id="note" class="form-control" rows="4" 
+                                      placeholder="{% trans 'What happened today? What made you feel this way? (Optional)' %}" 
+                                      maxlength="500"></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/500 {% trans "characters" %}
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="bi bi-heart-fill"></i> {% trans "Save My Mood" %}
+                            </button>
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-primary" id="viewJournalBtn" data-bs-toggle="modal" data-bs-target="#journalModal">
+                                    <i class="bi bi-journal-text"></i> {% trans "View Journal" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights Panel -->
+        <div class="col-lg-6">
+            <div class="ai-insights-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-lightbulb"></i> {% trans "AI Reflection" %}</h3>
+                </div>
+                <div class="card-body">
+                    {% if ai_insights.status == 'insufficient_data' %}
+                        <div class="insufficient-data">
+                            <div class="illustration">🤖💭</div>
+                            <h5>{% trans "AI is Learning About You" %}</h5>
+                            <p>{{ ai_insights.message }}</p>
+                            <div class="suggestions">
+                                <h6>{% trans "Getting Started:" %}</h6>
+                                <ul>
+                                    {% for suggestion in ai_insights.suggestions %}
+                                    <li>{{ suggestion }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="ai-analysis">
+                            <!-- Patterns Section -->
+                            {% if ai_insights.patterns %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-graph-up"></i> {% trans "Patterns I've Noticed" %}</h5>
+                                {% for pattern in ai_insights.patterns %}
+                                <div class="insight-item pattern">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>{{ pattern }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Positive Notes Section -->
+                            {% if ai_insights.positive_notes %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-heart"></i> {% trans "Positive Observations" %}</h5>
+                                {% for note in ai_insights.positive_notes %}
+                                <div class="insight-item positive">
+                                    <i class="bi bi-star-fill"></i>
+                                    <span>{{ note }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Suggestions Section -->
+                            {% if ai_insights.suggestions %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-compass"></i> {% trans "Suggestions for You" %}</h5>
+                                {% for suggestion in ai_insights.suggestions %}
+                                <div class="insight-item suggestion">
+                                    <i class="bi bi-arrow-right-circle"></i>
+                                    <span>{{ suggestion }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Entries Section -->
+    {% if recent_entries %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="recent-entries-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-clock-history"></i> {% trans "Your Recent Entries" %}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="entries-timeline">
+                        {% for entry in recent_entries %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <span class="mood-emoji">{{ entry.get_mood_emoji }}</span>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <span class="mood-label">{{ entry.get_mood_label }}</span>
+                                    <span class="timestamp">{{ entry.created_at|date:"M d, Y" }}</span>
+                                </div>
+                                {% if entry.note %}
+                                <div class="timeline-note">{{ entry.note }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if recent_entries|length >= 10 %}
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary" id="loadMoreBtn">
+                            {% trans "Load More Entries" %}
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Mood Tracking Tips -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="tips-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-info-circle"></i> {% trans "Mood Tracking Tips" %}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="tip-item">
+                                <div class="tip-icon">📅</div>
+                                <h6>{% trans "Track Daily" %}</h6>
+                                <p>{% trans "Try to log your mood at the same time each day for better insights." %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="tip-item">
+                                <h6>{% trans "Be Honest" %}</h6>
+                                <div class="tip-icon">💭</div>
+                                <p>{% trans "There are no wrong feelings. Be authentic about how you're doing." %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="tip-item">
+                                <div class="tip-icon">📝</div>
+                                <h6>{% trans "Add Context" %}</h6>
+                                <p>{% trans "Include notes about what influenced your mood to spot patterns." %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Modal -->
+    <div class="modal fade" id="journalModal" tabindex="-1" aria-labelledby="journalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="journalModalLabel">
+                        <i class="bi bi-calendar-heart"></i> {% trans "My Mood Calendar" %}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" id="journalModalBody">
+                    <div class="text-center py-4" id="journalLoading">
+                        <div class="loading-spinner"></div>
+                        <p class="mt-2">{% trans "Loading your mood calendar..." %}</p>
+                    </div>
+                    
+                    <!-- Calendar View -->
+                    <div id="journalCalendar" class="calendar-container" style="display: none;">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav-btn" id="prevMonthBtn">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <div class="calendar-month-year" id="currentMonthYear">
+                                Loading...
+                            </div>
+                            <button type="button" class="calendar-nav-btn" id="nextMonthBtn">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendar will be rendered here -->
+                        </div>
+                    </div>
+                    
+                    <div id="noJournalEntries" class="text-center py-5" style="display: none; padding: 3rem !important;">
+                        <i class="bi bi-calendar-heart" style="font-size: 3rem; color: #ccc;"></i>
+                        <h5 class="mt-3">{% trans "No mood entries yet" %}</h5>
+                        <p class="text-muted">{% trans "Start tracking your moods to see them in the calendar view." %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/mood_journal.js' %}"></script>
+{% endblock %}

@@ -32,9 +32,74 @@
     
     <!-- Content Overlay -->
     <div class="content-overlay"></div>
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    
+    <!-- Sliding Drawer -->
+    <div class="sliding-drawer" id="slidingDrawer">
+        <div class="drawer-header">
+            <h3 class="drawer-title">{% trans "Menu" %}</h3>
+        </div>
+        <div class="drawer-menu">
+            <a href="/assessment/" class="drawer-menu-item">
+                <i class="bi bi-clipboard-check"></i>
+                <span>{% trans "Assessment" %}</span>
+            </a>
+            <a href="/recommendation/" class="drawer-menu-item">
+                <i class="bi bi-lightbulb"></i>
+                <span>{% trans "Recommendation" %}</span>
+            </a>
+            <a href="/games/" class="drawer-menu-item">
+                <i class="bi bi-controller"></i>
+                <span>{% trans "Games" %}</span>
+            </a>
+            <a href="/mood-journal/" class="drawer-menu-item">
+                <i class="bi bi-journal-heart"></i>
+                <span>{% trans "Mood Journal" %}</span>
+            </a>
+            <a href="/sleep-tracker/" class="drawer-menu-item">
+                <i class="bi bi-moon-stars"></i>
+                <span>{% trans "Sleep Tracker" %}</span>
+            </a>
+            <a href="{% url 'home' %}" class="drawer-menu-item">
+                <i class="bi bi-house-door"></i>
+                <span>{% trans "Home" %}</span>
+            </a>
+            <a href="{% url 'ai_support:chat' %}" class="drawer-menu-item">
+                <i class="bi bi-robot"></i>
+                <span>{% trans "AI Support" %}</span>
+            </a>
+            <a href="{% url 'booking_system:appointments' %}" class="drawer-menu-item">
+                <i class="bi bi-calendar-check"></i>
+                <span>{% trans "Book Appointment" %}</span>
+            </a>
+            <a href="{% url 'resources:list' %}" class="drawer-menu-item">
+                <i class="bi bi-book"></i>
+                <span>{% trans "Resources" %}</span>
+            </a>
+            <a href="{% url 'peer_support:forum' %}" class="drawer-menu-item">
+                <i class="bi bi-people"></i>
+                <span>{% trans "Peer Support" %}</span>
+            </a>
+            {% if user.is_staff %}
+            <a href="{% url 'admin_dashboard:dashboard' %}" class="drawer-menu-item">
+                <i class="bi bi-graph-up"></i>
+                <span>{% trans "Dashboard" %}</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background: rgba(247, 248, 251, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 2px 20px rgba(124, 147, 195, 0.15); border-bottom: 1px solid rgba(124, 147, 195, 0.1);">
         <div class="container">
+            <!-- Hamburger Menu (Mobile) -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+            
             <a class="navbar-brand" href="{% url 'home' %}">{% trans "Mental Health Platform" %}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -100,6 +165,14 @@
                         </ul>
                     </li>
                     
+                    <!-- Menu Button (Always Visible) -->
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link menu-button" id="desktopMenuButton">
+                            <i class="bi bi-list"></i>
+                            <span>{% trans "Menu" %}</span>
+                        </button>
+                    </li>
+                    
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <span class="navbar-text">{% trans "Hello" %}, {{ user.username }}</span>
@@ -120,9 +193,6 @@
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
                         </li>
                     {% endif %}
                 </ul>

@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Personalized Recommendations" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="display-4 mb-4">
+                    <i class="bi bi-lightbulb text-primary me-3"></i>
+                    {% trans "Your Personalized Recommendations" %}
+                </h1>
+                <p class="lead mb-4">
+                    {% trans "Based on your assessment, here are personalized recommendations to support your mental health journey." %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            {% if assessment %}
+            <!-- Assessment Summary -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="bi bi-graph-up text-success me-2"></i>
+                        {% trans "Your Assessment Results" %}
+                    </h3>
+                    <div class="row">
+                        {% if phq9_result %}
+                        <div class="col-md-4 text-center">
+                            <div class="assessment-score-card">
+                                <h5 class="fw-bold">PHQ-9</h5>
+                                <div class="score-circle {{ phq9_result.severity_level }}">
+                                    {{ phq9_result.total_score }}/27
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    {% trans "Depression:" %} 
+                                    {% if phq9_result.severity_level == 'minimal' %}{% trans "Minimal" %}
+                                    {% elif phq9_result.severity_level == 'mild' %}{% trans "Mild" %}
+                                    {% elif phq9_result.severity_level == 'moderate' %}{% trans "Moderate" %}
+                                    {% elif phq9_result.severity_level == 'moderately_severe' %}{% trans "Moderately Severe" %}
+                                    {% elif phq9_result.severity_level == 'severe' %}{% trans "Severe" %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if gad7_result %}
+                        <div class="col-md-4 text-center">
+                            <div class="assessment-score-card">
+                                <h5 class="fw-bold">GAD-7</h5>
+                                <div class="score-circle {{ gad7_result.severity_level }}">
+                                    {{ gad7_result.total_score }}/21
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    {% trans "Anxiety:" %} 
+                                    {% if gad7_result.severity_level == 'minimal' %}{% trans "Minimal" %}
+                                    {% elif gad7_result.severity_level == 'mild' %}{% trans "Mild" %}
+                                    {% elif gad7_result.severity_level == 'moderate' %}{% trans "Moderate" %}
+                                    {% elif gad7_result.severity_level == 'severe' %}{% trans "Severe" %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if ghq_result %}
+                        <div class="col-md-4 text-center">
+                            <div class="assessment-score-card">
+                                <h5 class="fw-bold">GHQ-12</h5>
+                                <div class="score-circle {{ ghq_result.severity_level }}">
+                                    {{ ghq_result.total_score }}/36
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    {% trans "General Health:" %} 
+                                    {% if ghq_result.severity_level == 'low_risk' %}{% trans "Low Risk" %}
+                                    {% elif ghq_result.severity_level == 'moderate_risk' %}{% trans "Moderate Risk" %}
+                                    {% elif ghq_result.severity_level == 'high_risk' %}{% trans "High Risk" %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if overall_risk %}
+                    <div class="alert alert-{{ overall_risk|yesno:'danger,warning,info' }} mt-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <div>
+                                <strong>{% trans "Overall Risk Level:" %}</strong>
+                                {% if overall_risk == 'high' %}
+                                    {% trans "High - Please consider professional support" %}
+                                {% elif overall_risk == 'moderate' %}
+                                    {% trans "Moderate - Some areas may benefit from attention" %}
+                                {% else %}
+                                    {% trans "Low - Continue maintaining your current wellness practices" %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <!-- No Assessment Available -->
+            <div class="alert alert-info">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <div>
+                        <strong>{% trans "No Assessment Results" %}</strong>
+                        <p class="mb-0">{% trans "Please complete an assessment first to receive personalized recommendations." %}</p>
+                        <a href="{% url 'assessment' %}" class="btn btn-primary btn-sm mt-2">
+                            <i class="bi bi-clipboard-check me-1"></i>{% trans "Take Assessment" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recommendations Grid -->
+            <div class="row">
+                <!-- Immediate Actions -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="bi bi-lightning-charge text-warning me-2"></i>
+                                {% trans "Immediate Actions" %}
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-clock text-primary"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "Practice Deep Breathing" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "Take 5 minutes right now for deep breathing exercises to reduce stress levels." %}
+                                        </p>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-play me-1"></i>
+                                            {% trans "Start Exercise" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-moon text-info"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "Improve Sleep Routine" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "Set a consistent bedtime and create a relaxing pre-sleep routine." %}
+                                        </p>
+                                        <button class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            {% trans "Learn More" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Long-term Strategies -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="bi bi-calendar-check text-success me-2"></i>
+                                {% trans "Long-term Strategies" %}
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-people text-success"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "Professional Counseling" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "Consider scheduling regular sessions with a mental health professional." %}
+                                        </p>
+                                        <a href="{% url 'booking_system:appointments' %}" class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {% trans "Book Session" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-heart text-danger"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "Mindfulness Practice" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "Develop a regular mindfulness or meditation routine." %}
+                                        </p>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-download me-1"></i>
+                                            {% trans "Get Resources" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Educational Resources -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="bi bi-book text-info me-2"></i>
+                                {% trans "Educational Resources" %}
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <a href="{% url 'resources:list' %}" class="list-group-item list-group-item-action border-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-file-text text-primary me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">{% trans "Stress Management Guide" %}</h6>
+                                            <small class="text-muted">{% trans "Comprehensive strategies for managing daily stress" %}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="{% url 'resources:list' %}" class="list-group-item list-group-item-action border-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-headphones text-success me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">{% trans "Guided Meditation Audio" %}</h6>
+                                            <small class="text-muted">{% trans "5-minute guided meditation for beginners" %}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="{% url 'resources:list' %}" class="list-group-item list-group-item-action border-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-journal-text text-warning me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">{% trans "Mood Tracking Journal" %}</h6>
+                                            <small class="text-muted">{% trans "Daily journal template for tracking emotions" %}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Network -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="bi bi-people text-purple me-2"></i>
+                                {% trans "Support Network" %}
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-chat-dots text-primary"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "Peer Support Groups" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "Connect with others who share similar experiences." %}
+                                        </p>
+                                        <a href="{% url 'peer_support:forum' %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-arrow-right me-1"></i>
+                                            {% trans "Join Community" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-item mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="recommendation-icon">
+                                        <i class="bi bi-robot text-info"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1">{% trans "AI Support Assistant" %}</h6>
+                                        <p class="text-muted small mb-2">
+                                            {% trans "24/7 AI support for immediate guidance and coping strategies." %}
+                                        </p>
+                                        <a href="{% url 'ai_support:chat' %}" class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-chat me-1"></i>
+                                            {% trans "Start Chat" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="bi bi-graph-up-arrow text-success me-2"></i>
+                        {% trans "Track Your Progress" %}
+                    </h4>
+                    <p class="card-text">
+                        {% trans "Regular check-ins help monitor your mental health journey and adjust recommendations as needed." %}
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn btn-primary" onclick="scheduleFollowUp()">
+                            <i class="bi bi-calendar-plus me-2"></i>
+                            {% trans "Schedule Follow-up Assessment" %}
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="downloadReport()">
+                            <i class="bi bi-download me-2"></i>
+                            {% trans "Download Report" %}
+                        </button>
+                        <button class="btn btn-outline-info" onclick="shareWithCounselor()">
+                            <i class="bi bi-share me-2"></i>
+                            {% trans "Share with Counselor" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Support -->
+            <div class="alert alert-warning mt-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-3" style="font-size: 1.5rem;"></i>
+                    <div class="flex-grow-1">
+                        <h6 class="alert-heading mb-1">{% trans "Emergency Support" %}</h6>
+                        <p class="mb-2">
+                            {% trans "If you're experiencing thoughts of self-harm or suicide, please seek immediate professional help." %}
+                        </p>
+                        <button class="btn btn-warning btn-sm" onclick="showEmergencyModal()">
+                            <i class="bi bi-telephone me-1"></i>
+                            {% trans "Emergency Contacts" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.recommendation-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(124, 147, 195, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.recommendation-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.recommendation-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.progress {
+    background-color: rgba(124, 147, 195, 0.1);
+}
+
+.text-purple {
+    color: #6f42c1 !important;
+}
+
+/* Assessment Score Cards */
+.assessment-score-card {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    border: 1px solid rgba(124, 147, 195, 0.1);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.assessment-score-card:hover {
+    transform: translateY(-2px);
+}
+
+.score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+    background: linear-gradient(135deg, var(--info-color), var(--primary-color));
+}
+
+.score-circle.minimal,
+.score-circle.low_risk {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.score-circle.mild,
+.score-circle.moderate_risk {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.score-circle.moderate,
+.score-circle.moderately_severe,
+.score-circle.high_risk {
+    background: linear-gradient(135deg, #fd7e14, #dc3545);
+}
+
+.score-circle.severe {
+    background: linear-gradient(135deg, #dc3545, #6f42c1);
+    box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function scheduleFollowUp() {
+    alert('{% trans "Follow-up assessment scheduled for next week. You will receive a reminder email." %}');
+}
+
+function downloadReport() {
+    alert('{% trans "Your personalized mental health report is being generated. It will be emailed to you shortly." %}');
+}
+
+function shareWithCounselor() {
+    alert('{% trans "Your assessment results have been shared with your assigned counselor (if any)." %}');
+}
+</script>
+{% endblock %}

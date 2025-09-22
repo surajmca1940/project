@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Assessments - Digital Psychological Intervention System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #a855f7;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --bg-light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+            min-height: 100vh;
+        }
+        
+        .assessments-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .assessments-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        }
+        
+        .assessment-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .assessment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        }
+        
+        .assessment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .assessment-type {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .assessment-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .assessment-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .assessment-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .meta-item i {
+            color: var(--primary-color);
+        }
+        
+        .assessment-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn-take-assessment {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-take-assessment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .spinner-border {
+            color: var(--primary-color);
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .assessment-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .assessment-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn-take-assessment {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background: rgba(247, 248, 251, 0.95); backdrop-filter: blur(20px);">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Mental Health Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="assessments.html">Assessments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recommendations.html">Recommendations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-5">
+        <div class="assessments-container">
+            <!-- Header -->
+            <div class="assessments-header">
+                <h1 class="display-4 mb-3" style="color: var(--primary-color); font-weight: 600;">
+                    📋 Mental Health Assessments
+                </h1>
+                <p class="lead mb-0" style="color: var(--text-muted);">
+                    Take validated psychological assessments to understand your mental health status and receive personalized recommendations
+                </p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 text-muted">Loading assessments...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <!-- Assessments List -->
+            <div id="assessmentsList" class="row">
+                <!-- Assessments will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase and Assessment Logic -->
+    <script type="module">
+        import { initializeSampleData } from '../js/firebase-config.js';
+        import { assessmentsService } from '../js/firebase-assessments.js';
+
+        class AssessmentsPage {
+            constructor() {
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.showLoading(true);
+                    
+                    // Initialize Firebase and sample data
+                    await initializeSampleData();
+                    
+                    // Load assessments
+                    await this.loadAssessments();
+                    
+                } catch (error) {
+                    console.error('Error initializing assessments page:', error);
+                    this.showError('Failed to load assessments. Please refresh the page.');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async loadAssessments() {
+                try {
+                    const questionnaires = await assessmentsService.getQuestionnaires();
+                    this.renderAssessments(questionnaires);
+                } catch (error) {
+                    console.error('Error loading assessments:', error);
+                    this.showError('Failed to load assessments.');
+                }
+            }
+
+            renderAssessments(questionnaires) {
+                const container = document.getElementById('assessmentsList');
+                
+                if (questionnaires.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-clipboard" style="font-size: 4rem; color: var(--text-muted); opacity: 0.5;"></i>
+                            <h4 class="mt-3 text-muted">No Assessments Available</h4>
+                            <p class="text-muted">Please check back later for available assessments.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = questionnaires.map(questionnaire => {
+                    const questionCount = questionnaire.questions ? questionnaire.questions.length : 0;
+                    const estimatedTime = Math.max(questionCount * 30, 300); // 30 seconds per question, minimum 5 minutes
+                    
+                    return `
+                        <div class="col-lg-6 col-xl-4">
+                            <div class="assessment-card">
+                                <div class="assessment-type">${questionnaire.questionnaire_type}</div>
+                                <h3 class="assessment-title">${questionnaire.title}</h3>
+                                <p class="assessment-description">${questionnaire.description}</p>
+                                
+                                <div class="assessment-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-question-circle"></i>
+                                        <span>${questionCount} Questions</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>~${Math.ceil(estimatedTime / 60)} mins</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Max Score: ${questionnaire.max_score}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="assessment-actions">
+                                    <a href="take-assessment.html?id=${questionnaire.id}" class="btn-take-assessment">
+                                        <i class="fas fa-play"></i>
+                                        Start Assessment
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            showLoading(show) {
+                const spinner = document.getElementById('loadingSpinner');
+                const assessmentsList = document.getElementById('assessmentsList');
+                
+                if (show) {
+                    spinner.style.display = 'block';
+                    assessmentsList.style.display = 'none';
+                } else {
+                    spinner.style.display = 'none';
+                    assessmentsList.style.display = 'flex';
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                
+                errorText.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                // Hide error after 10 seconds
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 10000);
+            }
+        }
+
+        // Initialize page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new AssessmentsPage();
+        });
+    </script>
+</body>
+</html>

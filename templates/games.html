@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Games" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/games.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section text-center py-5">
+                <div class="container">
+                    <h1 class="display-4 fw-bold mb-3">{{ page_title }}</h1>
+                    <p class="lead mb-4">{{ page_description }}</p>
+                    <div class="hero-stats d-flex justify-content-center gap-4">
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">{% trans "Interactive Games" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">∞</div>
+                            <div class="stat-label">{% trans "Practice Sessions" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">{% trans "Available" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Games Grid -->
+    <div class="row g-4 mb-5">
+        <!-- Breathing Exercise Game -->
+        <div class="col-lg-6 col-md-6">
+            <div class="game-card h-100">
+                <div class="game-icon">
+                    <i class="bi bi-lungs"></i>
+                </div>
+                <div class="game-content">
+                    <h3>{% trans "Breathing Garden" %}</h3>
+                    <p>{% trans "Guide a virtual garden to bloom through mindful breathing exercises. Practice 4-7-8 breathing technique." %}</p>
+                    <div class="game-tags">
+                        <span class="tag">{% trans "Anxiety Relief" %}</span>
+                        <span class="tag">{% trans "Mindfulness" %}</span>
+                    </div>
+                </div>
+                <div class="game-action">
+                    <button class="btn btn-primary" onclick="startBreathingGame()">
+                        <i class="bi bi-play-circle"></i> {% trans "Start Game" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mood Tracker Game -->
+        <div class="col-lg-6 col-md-6">
+            <div class="game-card h-100">
+                <div class="game-icon">
+                    <i class="bi bi-emoji-smile"></i>
+                </div>
+                <div class="game-content">
+                    <h3>{% trans "Mood Constellation" %}</h3>
+                    <p>{% trans "Track your daily emotions by connecting stars in a personal constellation. Build patterns over time." %}</p>
+                    <div class="game-tags">
+                        <span class="tag">{% trans "Mood Tracking" %}</span>
+                        <span class="tag">{% trans "Self-Awareness" %}</span>
+                    </div>
+                </div>
+                <div class="game-action">
+                    <button class="btn btn-primary" onclick="startMoodGame()">
+                        <i class="bi bi-play-circle"></i> {% trans "Start Game" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gratitude Tree Game -->
+        <div class="col-lg-6 col-md-6">
+            <div class="game-card h-100">
+                <div class="game-icon">
+                    <i class="bi bi-tree"></i>
+                </div>
+                <div class="game-content">
+                    <h3>{% trans "Gratitude Tree" %}</h3>
+                    <p>{% trans "Grow a beautiful tree by adding daily gratitudes. Watch your appreciation garden flourish over time." %}</p>
+                    <div class="game-tags">
+                        <span class="tag">{% trans "Gratitude" %}</span>
+                        <span class="tag">{% trans "Positivity" %}</span>
+                    </div>
+                </div>
+                <div class="game-action">
+                    <button class="btn btn-primary" onclick="startGratitudeGame()">
+                        <i class="bi bi-play-circle"></i> {% trans "Start Game" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Worry Stone Game -->
+        <div class="col-lg-6 col-md-6">
+            <div class="game-card h-100">
+                <div class="game-icon">
+                    <i class="bi bi-gem"></i>
+                </div>
+                <div class="game-content">
+                    <h3>{% trans "Digital Worry Stone" %}</h3>
+                    <p>{% trans "Transform anxious thoughts by 'polishing' a worry stone. Learn cognitive reframing techniques through interaction." %}</p>
+                    <div class="game-tags">
+                        <span class="tag">{% trans "Anxiety Management" %}</span>
+                        <span class="tag">{% trans "Coping Skills" %}</span>
+                    </div>
+                </div>
+                <div class="game-action">
+                    <button class="btn btn-primary" onclick="startWorryStoneGame()">
+                        <i class="bi bi-play-circle"></i> {% trans "Start Game" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Palace Game -->
+        <div class="col-lg-12">
+            <div class="game-card h-100 featured-game">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <div class="game-icon large">
+                            <i class="bi bi-house-heart"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="game-content">
+                            <h3>{% trans "Mindful Memory Palace" %}</h3>
+                            <p>{% trans "Build a virtual safe space in your mind. Create and explore a calming environment you can return to during stressful moments." %}</p>
+                            <div class="game-tags">
+                                <span class="tag">{% trans "Stress Relief" %}</span>
+                                <span class="tag">{% trans "Visualization" %}</span>
+                                <span class="tag">{% trans "Safe Space" %}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="game-action">
+                            <button class="btn btn-primary btn-lg" onclick="startMemoryPalaceGame()">
+                                <i class="bi bi-play-circle"></i> {% trans "Explore Palace" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Progress Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="progress-section">
+                <h2 class="text-center mb-4">{% trans "Your Wellness Journey" %}</h2>
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="progress-item">
+                            <div class="progress-circle">
+                                <span class="progress-text">0</span>
+                            </div>
+                            <p class="mt-2">{% trans "Games Played" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="progress-item">
+                            <div class="progress-circle">
+                                <span class="progress-text">0</span>
+                            </div>
+                            <p class="mt-2">{% trans "Minutes Practiced" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="progress-item">
+                            <div class="progress-circle">
+                                <span class="progress-text">0</span>
+                            </div>
+                            <p class="mt-2">{% trans "Streak Days" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="progress-item">
+                            <div class="progress-circle">
+                                <span class="progress-text">✨</span>
+                            </div>
+                            <p class="mt-2">{% trans "Achievement Level" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal Container -->
+    <div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gameModalLabel">{% trans "Game" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="gameModalBody">
+                    <!-- Game content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+                    <button type="button" class="btn btn-primary" id="gameActionBtn">{% trans "Continue" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/games.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Sleep Tracker" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/sleep_tracker.css' %}" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section text-center py-5">
+                <div class="container">
+                    <h1 class="display-4 fw-bold mb-3">{{ page_title }}</h1>
+                    <p class="lead mb-4">{{ page_description }}</p>
+                    <div class="hero-stats d-flex justify-content-center gap-4">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ recent_entries|length }}</div>
+                            <div class="stat-label">{% trans "Sleep Logs" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{% if ai_insights.sleep_score %}{{ ai_insights.sleep_score }}{% else %}--{% endif %}</div>
+                            <div class="stat-label">{% trans "Sleep Score" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">🌙</div>
+                            <div class="stat-label">{% trans "Better Rest" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Sleep Logging Form -->
+        <div class="col-lg-6">
+            <div class="sleep-entry-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-moon-stars"></i> {% trans "Log Your Sleep" %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="sleepForm">
+                        {% csrf_token %}
+                        
+                        <!-- Sleep Date -->
+                        <div class="mb-3">
+                            <label for="sleep_date" class="form-label fw-bold">{% trans "Sleep Date:" %}</label>
+                            <input type="date" name="sleep_date" id="sleep_date" class="form-control" required>
+                        </div>
+
+                        <!-- Sleep Times -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="bedtime" class="form-label fw-bold">{% trans "Bedtime:" %}</label>
+                                <input type="time" name="bedtime" id="bedtime" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="wake_time" class="form-label fw-bold">{% trans "Wake Time:" %}</label>
+                                <input type="time" name="wake_time" id="wake_time" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <!-- Sleep Quality -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold mb-3">{% trans "Sleep Quality:" %}</label>
+                            <div class="quality-selector">
+                                {% for value, label in quality_choices %}
+                                <div class="quality-option" data-quality="{{ value }}">
+                                    <input type="radio" name="quality" value="{{ value }}" id="quality_{{ value }}" required>
+                                    <label for="quality_{{ value }}">
+                                        <div class="quality-stars">
+                                            {% for i in "12345" %}
+                                                <span class="star {% if forloop.counter <= value %}filled{% endif %}">★</span>
+                                            {% endfor %}
+                                        </div>
+                                        <span class="quality-label">{{ label }}</span>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="accordion mb-4" id="sleepDetailsAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sleepDetails">
+                                        {% trans "Additional Details (Optional)" %}
+                                    </button>
+                                </h2>
+                                <div id="sleepDetails" class="accordion-collapse collapse" data-bs-parent="#sleepDetailsAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="time_to_fall_asleep" class="form-label">{% trans "Time to fall asleep (minutes):" %}</label>
+                                                <input type="number" name="time_to_fall_asleep" id="time_to_fall_asleep" class="form-control" min="0" max="120">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="times_woken" class="form-label">{% trans "Times woken up:" %}</label>
+                                                <input type="number" name="times_woken" id="times_woken" class="form-control" min="0" max="20" value="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="stress_level" class="form-label">{% trans "Stress level (1-5):" %}</label>
+                                                <select name="stress_level" id="stress_level" class="form-control">
+                                                    <option value="">{% trans "Select..." %}</option>
+                                                    <option value="1">1 - {% trans "Very Low" %}</option>
+                                                    <option value="2">2 - {% trans "Low" %}</option>
+                                                    <option value="3">3 - {% trans "Medium" %}</option>
+                                                    <option value="4">4 - {% trans "High" %}</option>
+                                                    <option value="5">5 - {% trans "Very High" %}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check mt-4">
+                                                    <input class="form-check-input" type="checkbox" name="feeling_rested" id="feeling_rested" checked>
+                                                    <label class="form-check-label" for="feeling_rested">
+                                                        {% trans "Felt rested when waking up" %}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sleep Factors -->
+                                        <div class="sleep-factors mb-3">
+                                            <label class="form-label fw-bold">{% trans "Sleep Factors:" %}</label>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="screen_time_before_bed" id="screen_time_before_bed">
+                                                        <label class="form-check-label" for="screen_time_before_bed">
+                                                            📱 {% trans "Screen time before bed" %}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="caffeine_intake" id="caffeine_intake">
+                                                        <label class="form-check-label" for="caffeine_intake">
+                                                            ☕ {% trans "Evening caffeine" %}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="exercise_today" id="exercise_today">
+                                                        <label class="form-check-label" for="exercise_today">
+                                                            🏃 {% trans "Exercised today" %}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sleep Notes -->
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">{% trans "Sleep Notes:" %}</label>
+                                            <textarea name="notes" id="notes" class="form-control" rows="3" 
+                                                      placeholder="{% trans 'Any thoughts about your sleep? Dreams, interruptions, etc.' %}" 
+                                                      maxlength="500"></textarea>
+                                            <div class="char-counter">
+                                                <span id="noteCharCount">0</span>/500 {% trans "characters" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitSleepBtn">
+                                <i class="bi bi-moon-stars-fill"></i> {% trans "Log Sleep" %}
+                            </button>
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-primary" id="viewSleepJournalBtn" data-bs-toggle="modal" data-bs-target="#sleepJournalModal">
+                                    <i class="bi bi-journal-bookmark"></i> {% trans "View Sleep Journal" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleep Charts and AI Insights -->
+        <div class="col-lg-6">
+            <!-- Sleep Chart -->
+            {% if recent_entries %}
+            <div class="sleep-chart-card mb-4">
+                <div class="card-header">
+                    <h3><i class="bi bi-graph-up"></i> {% trans "Sleep Patterns" %}</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- AI Insights -->
+            <div class="ai-insights-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-lightbulb"></i> {% trans "AI Sleep Coach" %}</h3>
+                </div>
+                <div class="card-body">
+                    {% if ai_insights.status == 'insufficient_data' %}
+                        <div class="insufficient-data">
+                            <div class="illustration">🤖🌙</div>
+                            <h5>{% trans "Learning Your Sleep Patterns" %}</h5>
+                            <p>{{ ai_insights.message }}</p>
+                            <div class="general-tips">
+                                <h6>{% trans "Sleep Tips to Get Started:" %}</h6>
+                                <ul>
+                                    {% for tip in ai_insights.general_tips %}
+                                    <li>{{ tip }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="ai-analysis">
+                            <!-- Sleep Score -->
+                            <div class="sleep-score-section mb-4">
+                                <div class="sleep-score-circle">
+                                    <div class="score-value">{{ ai_insights.sleep_score }}</div>
+                                    <div class="score-label">{% trans "Sleep Score" %}</div>
+                                </div>
+                                <div class="score-description">
+                                    {% if ai_insights.sleep_score >= 85 %}
+                                        <p class="text-success">{% trans "Excellent sleep patterns! Keep it up!" %}</p>
+                                    {% elif ai_insights.sleep_score >= 70 %}
+                                        <p class="text-primary">{% trans "Good sleep habits with room for improvement." %}</p>
+                                    {% elif ai_insights.sleep_score >= 50 %}
+                                        <p class="text-warning">{% trans "Fair sleep patterns. Let's work on improvement." %}</p>
+                                    {% else %}
+                                        <p class="text-danger">{% trans "Sleep needs attention. Follow our recommendations." %}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Patterns -->
+                            {% if ai_insights.patterns %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-graph-up"></i> {% trans "Sleep Patterns" %}</h5>
+                                {% for pattern in ai_insights.patterns %}
+                                <div class="insight-item pattern">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>{{ pattern }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Positive Notes -->
+                            {% if ai_insights.positive_notes %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-heart"></i> {% trans "What's Working Well" %}</h5>
+                                {% for note in ai_insights.positive_notes %}
+                                <div class="insight-item positive">
+                                    <i class="bi bi-star-fill"></i>
+                                    <span>{{ note }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Recommendations -->
+                            {% if ai_insights.recommendations %}
+                            <div class="insight-section">
+                                <h5><i class="bi bi-compass"></i> {% trans "Personalized Recommendations" %}</h5>
+                                {% for recommendation in ai_insights.recommendations %}
+                                <div class="insight-item recommendation">
+                                    <i class="bi bi-arrow-right-circle"></i>
+                                    <span>{{ recommendation }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sleep Sounds Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="sleep-sounds-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-music-note-beamed"></i> {% trans "Sleep Sounds" %}</h3>
+                    <p class="mb-0">{% trans "Calming sounds to help you fall asleep peacefully" %}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Rain Sound -->
+                        <div class="col-md-3">
+                            <div class="sound-card" data-sound="rain">
+                                <div class="sound-icon">🌧️</div>
+                                <h6>{% trans "Gentle Rain" %}</h6>
+                                <p>{% trans "Soft rainfall on leaves" %}</p>
+                                <button class="btn btn-outline-primary play-btn" data-sound="rain">
+                                    <i class="bi bi-play-fill"></i> {% trans "Play" %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ocean Sound -->
+                        <div class="col-md-3">
+                            <div class="sound-card" data-sound="ocean">
+                                <div class="sound-icon">🌊</div>
+                                <h6>{% trans "Ocean Waves" %}</h6>
+                                <p>{% trans "Peaceful waves on shore" %}</p>
+                                <button class="btn btn-outline-primary play-btn" data-sound="ocean">
+                                    <i class="bi bi-play-fill"></i> {% trans "Play" %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- White Noise -->
+                        <div class="col-md-3">
+                            <div class="sound-card" data-sound="whitenoise">
+                                <div class="sound-icon">📻</div>
+                                <h6>{% trans "White Noise" %}</h6>
+                                <p>{% trans "Consistent background sound" %}</p>
+                                <button class="btn btn-outline-primary play-btn" data-sound="whitenoise">
+                                    <i class="bi bi-play-fill"></i> {% trans "Play" %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Forest Sound -->
+                        <div class="col-md-3">
+                            <div class="sound-card" data-sound="forest">
+                                <div class="sound-icon">🌲</div>
+                                <h6>{% trans "Forest Night" %}</h6>
+                                <p>{% trans "Crickets and gentle breeze" %}</p>
+                                <button class="btn btn-outline-primary play-btn" data-sound="forest">
+                                    <i class="bi bi-play-fill"></i> {% trans "Play" %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Player Controls -->
+                    <div class="audio-controls mt-4" id="audioControls" style="display: none;">
+                        <div class="d-flex align-items-center justify-content-center gap-3">
+                            <button class="btn btn-outline-secondary" id="stopBtn">
+                                <i class="bi bi-stop-fill"></i> {% trans "Stop" %}
+                            </button>
+                            <div class="volume-control d-flex align-items-center gap-2">
+                                <i class="bi bi-volume-down"></i>
+                                <input type="range" class="form-range" min="0" max="100" value="50" id="volumeSlider">
+                                <i class="bi bi-volume-up"></i>
+                            </div>
+                            <div class="timer-control">
+                                <select class="form-select form-select-sm" id="sleepTimer" style="width: auto;">
+                                    <option value="0">{% trans "No Timer" %}</option>
+                                    <option value="15">{% trans "15 minutes" %}</option>
+                                    <option value="30">{% trans "30 minutes" %}</option>
+                                    <option value="60">{% trans "1 hour" %}</option>
+                                    <option value="120">{% trans "2 hours" %}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="now-playing text-center mt-2">
+                            <small class="text-muted">{% trans "Now playing:" %} <span id="nowPlayingTitle"></span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Sleep Entries -->
+    {% if recent_entries %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="recent-entries-card">
+                <div class="card-header">
+                    <h3><i class="bi bi-clock-history"></i> {% trans "Recent Sleep Log" %}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Date" %}</th>
+                                    <th>{% trans "Bedtime" %}</th>
+                                    <th>{% trans "Wake Time" %}</th>
+                                    <th>{% trans "Duration" %}</th>
+                                    <th>{% trans "Quality" %}</th>
+                                    <th>{% trans "Rested" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in recent_entries %}
+                                <tr>
+                                    <td>{{ entry.sleep_date|date:"M d" }}</td>
+                                    <td>{{ entry.bedtime|time:"g:i A" }}</td>
+                                    <td>{{ entry.wake_time|time:"g:i A" }}</td>
+                                    <td>{{ entry.duration_hours|floatformat:1 }}h</td>
+                                    <td>
+                                        <span class="quality-badge" style="background-color: {{ entry.get_quality_color }}">
+                                            {{ entry.get_quality_label }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if entry.feeling_rested %}
+                                            <i class="bi bi-check-circle text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle text-danger"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Sleep Journal Modal -->
+    <div class="modal fade" id="sleepJournalModal" tabindex="-1" aria-labelledby="sleepJournalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sleepJournalModalLabel">
+                        <i class="bi bi-calendar3"></i> {% trans "My Sleep Calendar" %}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" id="sleepJournalModalBody">
+                    <div class="text-center py-4" id="sleepJournalLoading">
+                        <div class="loading-spinner"></div>
+                        <p class="mt-2">{% trans "Loading your sleep calendar..." %}</p>
+                    </div>
+                    
+                    <!-- Calendar View -->
+                    <div id="sleepJournalCalendar" class="calendar-container" style="display: none;">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav-btn" id="sleepPrevMonthBtn">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <div class="calendar-month-year" id="sleepCurrentMonthYear">
+                                Loading...
+                            </div>
+                            <button type="button" class="calendar-nav-btn" id="sleepNextMonthBtn">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-grid" id="sleepCalendarGrid">
+                            <!-- Sleep calendar will be rendered here -->
+                        </div>
+                    </div>
+                    
+                    <div id="noSleepJournalEntries" class="text-center py-5" style="display: none; padding: 3rem !important;">
+                        <div class="mb-3">
+                            <i class="bi bi-calendar3" style="font-size: 3rem; color: #6c757d;"></i>
+                        </div>
+                        <h5 class="text-muted">{% trans "No sleep entries yet" %}</h5>
+                        <p class="text-muted">{% trans "Start by logging your first sleep session to see it in the calendar view!" %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Audio Elements for Sleep Sounds -->
+<audio id="rainAudio" loop>
+    <!-- Rain sound would be loaded here in production -->
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABgAZGF0YQQAAAAAAAABAAA=" type="audio/wav">
+</audio>
+<audio id="oceanAudio" loop>
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABgAZGF0YQQAAAAAAAABAAA=" type="audio/wav">
+</audio>
+<audio id="whitenoiseAudio" loop>
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABgAZGF0YQQAAAAAAAABAAA=" type="audio/wav">
+</audio>
+<audio id="forestAudio" loop>
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABgAZGF0YQQAAAAAAAABAAA=" type="audio/wav">
+</audio>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pass chart data to JavaScript
+    const chartData = {{ chart_data|safe }};
+</script>
+<script src="{% static 'js/sleep_tracker.js' %}"></script>
+{% endblock %}

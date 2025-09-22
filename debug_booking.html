@@ -3,149 +3,444 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Debug Test</title>
+    <title>Debug Enhanced Booking System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="static/css/booking-enhanced.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
-        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px; }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
+        body { 
+            padding: 20px; 
+            background: #f8f9fa;
+        }
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #212529;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 9999;
+        }
+        .debug-panel h6 {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        .debug-item {
+            margin-bottom: 5px;
+        }
+        .debug-item strong {
+            color: #17a2b8;
+        }
+        .test-buttons {
+            margin-top: 10px;
+        }
+        .test-buttons .btn {
+            margin: 2px;
+            padding: 2px 8px;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Enhanced Booking System - Debug Test</h1>
-    
-    <div class="test-section">
-        <h2>Server Status Test</h2>
-        <div id="server-test" class="result">Testing server connection...</div>
+    <!-- Enhanced Debug Panel -->
+    <div class="debug-panel">
+        <h6><i class="bi bi-bug"></i> Debug Info</h6>
+        <div class="debug-item"><strong>Current Step:</strong> <span id="debug-step">1</span></div>
+        <div class="debug-item"><strong>Counselor:</strong> <span id="debug-counselor">None</span></div>
+        <div class="debug-item"><strong>Date:</strong> <span id="debug-date">None</span></div>
+        <div class="debug-item"><strong>Time:</strong> <span id="debug-time">None</span></div>
+        <div class="debug-item"><strong>Valid:</strong> <span id="debug-valid">false</span></div>
+        <div class="test-buttons">
+            <button onclick="debugBooking()" class="btn btn-outline-light">Debug</button>
+            <button onclick="testNextStep()" class="btn btn-outline-warning">Test Next</button>
+            <button onclick="testButtonClick()" class="btn btn-outline-info">Test Click</button>
+        </div>
     </div>
-    
-    <div class="test-section">
-        <h2>Static Files Test</h2>
-        <div id="css-test" class="result">Testing CSS load...</div>
-        <div id="js-test" class="result">Testing JavaScript load...</div>
-    </div>
-    
-    <div class="test-section">
-        <h2>Booking Page Elements Test</h2>
-        <div id="elements-test" class="result">Testing page elements...</div>
-    </div>
-    
-    <div class="test-section">
-        <h2>JavaScript Functionality Test</h2>
-        <div id="js-functionality" class="result">Testing JavaScript functionality...</div>
-    </div>
-    
-    <div class="test-section">
-        <h2>Quick Access Links</h2>
-        <p><a href="http://127.0.0.1:8000/" target="_blank">🏠 Home Page</a></p>
-        <p><a href="http://127.0.0.1:8000/booking/" target="_blank">📅 Booking Page</a></p>
-        <p><a href="http://127.0.0.1:8000/ai-support/" target="_blank">🤖 AI Support</a></p>
-        <p><a href="http://127.0.0.1:8000/admin/" target="_blank">⚙️ Admin</a></p>
-    </div>
-    
-    <script>
-        // Test server connection
-        fetch('http://127.0.0.1:8000/')
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('server-test').textContent = '✅ Server is running successfully';
-                    document.getElementById('server-test').className = 'result success';
-                } else {
-                    document.getElementById('server-test').textContent = '❌ Server connection failed';
-                    document.getElementById('server-test').className = 'result error';
-                }
-            })
-            .catch(error => {
-                document.getElementById('server-test').textContent = '❌ Server not accessible: ' + error.message;
-                document.getElementById('server-test').className = 'result error';
-            });
-        
-        // Test CSS loading
-        fetch('http://127.0.0.1:8000/static/css/style.css')
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('css-test').textContent = '✅ CSS file loads successfully';
-                    document.getElementById('css-test').className = 'result success';
-                } else {
-                    document.getElementById('css-test').textContent = '❌ CSS file failed to load';
-                    document.getElementById('css-test').className = 'result error';
-                }
-            })
-            .catch(error => {
-                document.getElementById('css-test').textContent = '❌ CSS file error: ' + error.message;
-                document.getElementById('css-test').className = 'result error';
-            });
-        
-        // Test JavaScript loading
-        fetch('http://127.0.0.1:8000/static/js/booking.js')
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('js-test').textContent = '✅ Booking JavaScript loads successfully';
-                    document.getElementById('js-test').className = 'result success';
-                } else {
-                    document.getElementById('js-test').textContent = '❌ Booking JavaScript failed to load';
-                    document.getElementById('js-test').className = 'result error';
-                }
-            })
-            .catch(error => {
-                document.getElementById('js-test').textContent = '❌ Booking JavaScript error: ' + error.message;
-                document.getElementById('js-test').className = 'result error';
-            });
-        
-        // Test booking page elements
-        fetch('http://127.0.0.1:8000/booking/')
-            .then(response => response.text())
-            .then(html => {
-                const hasProgressSteps = html.includes('progress-step');
-                const hasCounselorCards = html.includes('counselor-card');
-                const hasTimeSlots = html.includes('time-slot');
-                const hasNavigationButtons = html.includes('btn-next');
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">Enhanced Booking System Debug</h1>
                 
-                let message = '';
-                if (hasProgressSteps && hasCounselorCards && hasTimeSlots && hasNavigationButtons) {
-                    message = '✅ All essential booking elements found in HTML';
-                    document.getElementById('elements-test').className = 'result success';
-                } else {
-                    message = '❌ Missing booking elements: ';
-                    if (!hasProgressSteps) message += 'progress-steps ';
-                    if (!hasCounselorCards) message += 'counselor-cards ';
-                    if (!hasTimeSlots) message += 'time-slots ';
-                    if (!hasNavigationButtons) message += 'navigation-buttons ';
-                    document.getElementById('elements-test').className = 'result error';
-                }
-                document.getElementById('elements-test').textContent = message;
-            })
-            .catch(error => {
-                document.getElementById('elements-test').textContent = '❌ Failed to check elements: ' + error.message;
-                document.getElementById('elements-test').className = 'result error';
-            });
-        
-        // Open booking page in iframe to test JavaScript
-        setTimeout(() => {
-            const iframe = document.createElement('iframe');
-            iframe.src = 'http://127.0.0.1:8000/booking/';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-            
-            iframe.onload = function() {
+                <!-- Stepper -->
+                <div class="stepper-container mb-4">
+                    <div class="stepper">
+                        <div class="stepper-item active" data-step="1">
+                            <div class="stepper-counter">1</div>
+                            <div class="stepper-content">
+                                <h6>Select Counselor</h6>
+                                <p>Choose your counselor</p>
+                            </div>
+                        </div>
+                        <div class="stepper-item" data-step="2">
+                            <div class="stepper-counter">2</div>
+                            <div class="stepper-content">
+                                <h6>Date & Time</h6>
+                                <p>Pick appointment slot</p>
+                            </div>
+                        </div>
+                        <div class="stepper-item" data-step="3">
+                            <div class="stepper-counter">3</div>
+                            <div class="stepper-content">
+                                <h6>Preferences</h6>
+                                <p>Session details</p>
+                            </div>
+                        </div>
+                        <div class="stepper-item" data-step="4">
+                            <div class="stepper-counter">4</div>
+                            <div class="stepper-content">
+                                <h6>Confirm</h6>
+                                <p>Review booking</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Steps -->
+                <div class="booking-container">
+                    <!-- Step 1: Counselor Selection -->
+                    <div class="booking-step active" id="step-1">
+                        <h3>Select Your Counselor</h3>
+                        <p class="text-muted mb-4">Choose a counselor who specializes in your area of concern</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="counselor-card" data-counselor-id="1">
+                                    <div class="counselor-header">
+                                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100" alt="Dr. Sarah Johnson" class="counselor-avatar">
+                                        <div class="counselor-info">
+                                            <h5 class="counselor-name">Dr. Sarah Johnson</h5>
+                                            <p class="counselor-title">Licensed Clinical Psychologist</p>
+                                            <div class="rating">
+                                                <span class="rating-value">4.9</span>
+                                                <div class="stars">
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="counselor-body">
+                                        <div class="specializations">
+                                            <span class="specialization-tag">Anxiety</span>
+                                            <span class="specialization-tag">Depression</span>
+                                            <span class="specialization-tag">Stress</span>
+                                        </div>
+                                        <div class="counselor-stats">
+                                            <div class="stat-item">
+                                                <i class="bi bi-people"></i>
+                                                <span>500+ sessions</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <i class="bi bi-clock"></i>
+                                                <span>8+ years</span>
+                                            </div>
+                                        </div>
+                                        <button class="select-counselor-btn">Select Dr. Johnson</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="counselor-card" data-counselor-id="2">
+                                    <div class="counselor-header">
+                                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100" alt="Dr. Michael Chen" class="counselor-avatar">
+                                        <div class="counselor-info">
+                                            <h5 class="counselor-name">Dr. Michael Chen</h5>
+                                            <p class="counselor-title">Cognitive Behavioral Therapist</p>
+                                            <div class="rating">
+                                                <span class="rating-value">4.8</span>
+                                                <div class="stars">
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="counselor-body">
+                                        <div class="specializations">
+                                            <span class="specialization-tag">ADHD</span>
+                                            <span class="specialization-tag">Academic Stress</span>
+                                            <span class="specialization-tag">Social Anxiety</span>
+                                        </div>
+                                        <div class="counselor-stats">
+                                            <div class="stat-item">
+                                                <i class="bi bi-people"></i>
+                                                <span>300+ sessions</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <i class="bi bi-clock"></i>
+                                                <span>5+ years</span>
+                                            </div>
+                                        </div>
+                                        <button class="select-counselor-btn">Select Dr. Chen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Date & Time Selection -->
+                    <div class="booking-step" id="step-2">
+                        <h3>Select Date & Time</h3>
+                        <p class="text-muted mb-4">Choose your preferred appointment slot</p>
+                        
+                        <!-- Quick Date Selection -->
+                        <div class="quick-dates mb-4">
+                            <button class="quick-date-btn" data-date="2024-01-15">Today</button>
+                            <button class="quick-date-btn" data-date="2024-01-16">Tomorrow</button>
+                            <button class="quick-date-btn" data-date="2024-01-17">Wed</button>
+                            <button class="quick-date-btn" data-date="2024-01-18">Thu</button>
+                        </div>
+                        
+                        <!-- Time Filter -->
+                        <div class="time-filter-container mb-4">
+                            <h6>Preferred Time</h6>
+                            <div class="time-filter-buttons">
+                                <button class="time-filter-btn active" data-filter="all">All Day</button>
+                                <button class="time-filter-btn" data-filter="morning">Morning</button>
+                                <button class="time-filter-btn" data-filter="afternoon">Afternoon</button>
+                                <button class="time-filter-btn" data-filter="evening">Evening</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Time Slots -->
+                        <div class="time-slots-container">
+                            <h6>Available Times</h6>
+                            <div class="time-slots" id="time-slots">
+                                <div class="time-slot available" data-time="09:00">
+                                    <span class="time">9:00 AM</span>
+                                    <span class="status">Available</span>
+                                </div>
+                                <div class="time-slot available" data-time="10:00">
+                                    <span class="time">10:00 AM</span>
+                                    <span class="status">Available</span>
+                                </div>
+                                <div class="time-slot available" data-time="14:00">
+                                    <span class="time">2:00 PM</span>
+                                    <span class="status">Available</span>
+                                </div>
+                                <div class="time-slot available" data-time="16:00">
+                                    <span class="time">4:00 PM</span>
+                                    <span class="status">Available</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Preferences -->
+                    <div class="booking-step" id="step-3">
+                        <h3>Session Preferences</h3>
+                        <p class="text-muted mb-4">Tell us more about your needs</p>
+                        
+                        <div class="form-group mb-4">
+                            <label class="form-label">Main Concerns (Optional)</label>
+                            <div class="concern-tags">
+                                <label class="concern-tag">
+                                    <input type="checkbox" value="anxiety">
+                                    <span>Anxiety</span>
+                                </label>
+                                <label class="concern-tag">
+                                    <input type="checkbox" value="depression">
+                                    <span>Depression</span>
+                                </label>
+                                <label class="concern-tag">
+                                    <input type="checkbox" value="stress">
+                                    <span>Stress</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label for="additional-notes" class="form-label">Additional Notes (Optional)</label>
+                            <textarea id="additional-notes" class="form-control" rows="3" placeholder="Anything else you'd like your counselor to know?"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirmation -->
+                    <div class="booking-step" id="step-4">
+                        <h3>Confirm Your Appointment</h3>
+                        <p class="text-muted mb-4">Please review your booking details</p>
+                        
+                        <div class="appointment-summary">
+                            <div class="summary-section">
+                                <h6>Counselor</h6>
+                                <div id="summary-counselor">Please select a counselor</div>
+                            </div>
+                            <div class="summary-section">
+                                <h6>Date & Time</h6>
+                                <div id="summary-datetime">Please select date and time</div>
+                            </div>
+                            <div class="summary-section">
+                                <h6>Session Type</h6>
+                                <div>Video Call (50 minutes)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="booking-navigation mt-4">
+                    <button class="btn btn-secondary btn-previous" style="display: none;">
+                        <i class="bi bi-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-primary btn-next">
+                        Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-success btn-confirm-desktop" style="display: none;">
+                        <i class="bi bi-check-circle"></i> Confirm Booking
+                    </button>
+                </div>
+
+                <!-- Mobile Navigation -->
+                <div class="mobile-navigation">
+                    <div class="mobile-step-indicator">
+                        <span>Step <span class="current-step">1</span> of 4</span>
+                    </div>
+                    <div class="mobile-nav-buttons">
+                        <button class="mobile-nav-btn prev-btn" style="display: none;">
+                            <i class="bi bi-arrow-left"></i> Previous
+                        </button>
+                        <button class="mobile-nav-btn next-btn">
+                            Next <i class="bi bi-arrow-right"></i>
+                        </button>
+                        <button class="mobile-nav-btn confirm-btn" style="display: none;">
+                            <i class="bi bi-check-circle"></i> Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/booking-enhanced.js"></script>
+    <script>
+        // Debug updates
+        function updateDebugPanel() {
+            if (window.BookingSystem) {
+                document.getElementById('debug-step').textContent = window.BookingSystem.currentStep;
+                document.getElementById('debug-counselor').textContent = window.BookingSystem.selectedCounselor?.name || 'None';
+                document.getElementById('debug-date').textContent = window.BookingSystem.selectedDate || 'None';
+                document.getElementById('debug-time').textContent = window.BookingSystem.selectedTime || 'None';
+                document.getElementById('debug-valid').textContent = 'Unknown';
+                
+                // Try to call validation if available
                 try {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const hasJS = iframeDoc.querySelector('#step-1') !== null;
-                    
-                    if (hasJS) {
-                        document.getElementById('js-functionality').textContent = '✅ Booking page loads with proper structure';
-                        document.getElementById('js-functionality').className = 'result success';
-                    } else {
-                        document.getElementById('js-functionality').textContent = '❌ Booking page structure issues detected';
-                        document.getElementById('js-functionality').className = 'result error';
+                    if (typeof validateCurrentStep === 'function') {
+                        document.getElementById('debug-valid').textContent = validateCurrentStep();
                     }
                 } catch (e) {
-                    document.getElementById('js-functionality').textContent = '⚠️ Cannot access iframe content (CORS), but page is loading';
-                    document.getElementById('js-functionality').className = 'result';
+                    document.getElementById('debug-valid').textContent = 'Error';
                 }
-            };
-        }, 2000);
+            }
+        }
+        
+        // Update debug panel every 500ms
+        setInterval(updateDebugPanel, 500);
+        
+        // Enhanced debug helper with button testing
+        window.debugBooking = function() {
+            console.log('🔍 Debug Booking System:');
+            console.log('Current Step:', window.BookingSystem?.currentStep);
+            console.log('Selected Counselor:', window.BookingSystem?.selectedCounselor);
+            console.log('Selected Date:', window.BookingSystem?.selectedDate);
+            console.log('Selected Time:', window.BookingSystem?.selectedTime);
+            
+            // Try validation
+            try {
+                console.log('Validation:', typeof validateCurrentStep === 'function' ? validateCurrentStep() : 'Function not available');
+            } catch (e) {
+                console.log('Validation Error:', e);
+            }
+            
+            // Check buttons
+            const nextBtn = document.querySelector('.btn-next');
+            const mobileNextBtn = document.querySelector('.mobile-nav-btn.next-btn');
+            const prevBtn = document.querySelector('.btn-previous');
+            const mobilePrevBtn = document.querySelector('.mobile-nav-btn.prev-btn');
+            const confirmBtn = document.querySelector('.btn-confirm-desktop');
+            const mobileConfirmBtn = document.querySelector('.mobile-nav-btn.confirm-btn');
+            
+            console.log('🔲 Buttons found:', {
+                nextBtn: !!nextBtn,
+                mobileNextBtn: !!mobileNextBtn,
+                prevBtn: !!prevBtn,
+                mobilePrevBtn: !!mobilePrevBtn,
+                confirmBtn: !!confirmBtn,
+                mobileConfirmBtn: !!mobileConfirmBtn
+            });
+            
+            // Check event listeners by testing click handlers
+            if (nextBtn) {
+                console.log('Desktop Next button:', nextBtn);
+                console.log('Has click listener:', nextBtn.onclick !== null || nextBtn.addEventListener !== undefined);
+            }
+            if (mobileNextBtn) {
+                console.log('Mobile Next button:', mobileNextBtn);
+                console.log('Has click listener:', mobileNextBtn.onclick !== null || mobileNextBtn.addEventListener !== undefined);
+            }
+        };
+        
+        // Test next step function directly
+        window.testNextStep = function() {
+            console.log('🧪 Testing nextStep function directly...');
+            try {
+                if (typeof nextStep === 'function') {
+                    nextStep();
+                    console.log('nextStep function called successfully');
+                } else {
+                    console.error('nextStep function not available in global scope');
+                }
+            } catch (e) {
+                console.error('Error calling nextStep:', e);
+            }
+        };
+        
+        // Test button click simulation
+        window.testButtonClick = function() {
+            console.log('🖱️ Simulating button click...');
+            const nextBtn = document.querySelector('.btn-next');
+            if (nextBtn) {
+                try {
+                    nextBtn.click();
+                    console.log('Desktop Next button clicked programmatically');
+                } catch (e) {
+                    console.error('Error clicking button:', e);
+                }
+            } else {
+                console.error('Next button not found');
+            }
+        };
+        
+        // Auto-select a counselor for testing
+        window.selectTestCounselor = function() {
+            console.log('🤖 Auto-selecting first counselor for testing...');
+            const firstCounselor = document.querySelector('.counselor-card');
+            if (firstCounselor) {
+                firstCounselor.click();
+                console.log('First counselor selected automatically');
+            } else {
+                console.error('No counselor cards found');
+            }
+        };
+        
+        console.log('🎯 Debug page loaded!');
+        console.log('📋 Available debug commands:');
+        console.log('  - debugBooking() - inspect current state');
+        console.log('  - testNextStep() - test nextStep function directly');
+        console.log('  - testButtonClick() - simulate button click');
+        console.log('  - selectTestCounselor() - auto-select first counselor');
+        console.log('');
+        console.log('💡 Open browser console to see debug output!');
     </script>
 </body>
 </html>

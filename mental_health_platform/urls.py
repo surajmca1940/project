@@ -20,6 +20,8 @@ from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
+from .views import (AssessmentView, RecommendationView, GamesView, MoodJournalView, SleepTrackerView, 
+                    mood_journal_entries_api, sleep_journal_entries_api)
 
 # Non-translated URLs (like admin, language switching)
 urlpatterns = [
@@ -31,6 +33,17 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('language-test/', TemplateView.as_view(template_name='language_test.html'), name='language_test'),
+    
+    # Assessment and recommendation pages
+    path('assessment/', AssessmentView.as_view(), name='assessment'),
+    path('recommendation/', RecommendationView.as_view(), name='recommendation'),
+    path('games/', GamesView.as_view(), name='games'),
+    path('mood-journal/', MoodJournalView.as_view(), name='mood_journal'),
+    path('sleep-tracker/', SleepTrackerView.as_view(), name='sleep_tracker'),
+    
+    # API endpoints for journal data
+    path('api/mood-journal-entries/', mood_journal_entries_api, name='mood_journal_entries_api'),
+    path('api/sleep-journal-entries/', sleep_journal_entries_api, name='sleep_journal_entries_api'),
     
     # Friendly URL redirects
     path('appointments/', RedirectView.as_view(url='/booking/', permanent=True), name='appointments_redirect'),

@@ -1,0 +1,903 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Mental Health Assessment" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 mb-4">
+                    <i class="bi bi-clipboard-check text-primary me-3"></i>
+                    {% trans "Level of Problem through Standard Psychological Screening Tools" %}
+                </h1>
+                <p class="lead mb-4">
+                    {% trans "Complete standardized psychological assessments to identify your current mental health status and receive personalized recommendations." %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <!-- Assessment Introduction -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="bi bi-info-circle text-info me-2"></i>
+                        {% trans "About These Assessments" %}
+                    </h3>
+                    <p class="card-text">
+                        {% trans "These are standardized psychological screening tools used by mental health professionals worldwide. Complete all three assessments for a comprehensive evaluation of your mental health status." %}
+                    </p>
+                    <div class="row text-center mb-3">
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>PHQ-9</strong></h6>
+                                <small class="text-muted">{% trans "Depression Screening" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>GAD-7</strong></h6>
+                                <small class="text-muted">{% trans "Anxiety Screening" %}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="assessment-info">
+                                <h6><strong>GHQ-12</strong></h6>
+                                <small class="text-muted">{% trans "General Health" %}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-shield-check me-2"></i>
+                        <strong>{% trans "Privacy Notice:" %}</strong> 
+                        {% trans "All responses are confidential and will only be used for personalized recommendations." %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">{% trans "Assessment Progress" %}</h6>
+                        <span class="progress-text">0/3 {% trans "Completed" %}</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" id="assessmentProgress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Navigation Tabs -->
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-pills card-header-tabs" id="assessmentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="phq9-tab" data-bs-toggle="pill" data-bs-target="#phq9" type="button" role="tab" aria-controls="phq9" aria-selected="true">
+                                <i class="bi bi-1-circle me-2"></i>PHQ-9
+                                <span class="badge bg-secondary ms-2 phq9-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="gad7-tab" data-bs-toggle="pill" data-bs-target="#gad7" type="button" role="tab" aria-controls="gad7" aria-selected="false">
+                                <i class="bi bi-2-circle me-2"></i>GAD-7
+                                <span class="badge bg-secondary ms-2 gad7-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ghq-tab" data-bs-toggle="pill" data-bs-target="#ghq" type="button" role="tab" aria-controls="ghq" aria-selected="false">
+                                <i class="bi bi-3-circle me-2"></i>GHQ-12
+                                <span class="badge bg-secondary ms-2 ghq-status">{% trans "Pending" %}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <form id="comprehensiveAssessmentForm" method="post">
+                        {% csrf_token %}
+                        <div class="tab-content" id="assessmentTabContent">
+                            
+                            <!-- PHQ-9 Depression Assessment -->
+                            <div class="tab-pane fade show active" id="phq9" role="tabpanel" aria-labelledby="phq9-tab">
+                                <div class="assessment-header mb-4">
+                                    <h4>{% trans "PHQ-9: Depression Screening" %}</h4>
+                                    <p class="text-muted">{% trans "Over the last 2 weeks, how often have you been bothered by any of the following problems?" %}</p>
+                                </div>
+
+                                <div class="phq9-questions">
+                                    <!-- PHQ-9 Question 1 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">1. {% trans "Little interest or pleasure in doing things" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q1" id="phq9_q1_0" value="0">
+                                                <label class="form-check-label" for="phq9_q1_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q1" id="phq9_q1_1" value="1">
+                                                <label class="form-check-label" for="phq9_q1_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q1" id="phq9_q1_2" value="2">
+                                                <label class="form-check-label" for="phq9_q1_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q1" id="phq9_q1_3" value="3">
+                                                <label class="form-check-label" for="phq9_q1_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 2 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">2. {% trans "Feeling down, depressed, or hopeless" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q2" id="phq9_q2_0" value="0">
+                                                <label class="form-check-label" for="phq9_q2_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q2" id="phq9_q2_1" value="1">
+                                                <label class="form-check-label" for="phq9_q2_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q2" id="phq9_q2_2" value="2">
+                                                <label class="form-check-label" for="phq9_q2_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q2" id="phq9_q2_3" value="3">
+                                                <label class="form-check-label" for="phq9_q2_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 3 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">3. {% trans "Trouble falling or staying asleep, or sleeping too much" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q3" id="phq9_q3_0" value="0">
+                                                <label class="form-check-label" for="phq9_q3_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q3" id="phq9_q3_1" value="1">
+                                                <label class="form-check-label" for="phq9_q3_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q3" id="phq9_q3_2" value="2">
+                                                <label class="form-check-label" for="phq9_q3_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q3" id="phq9_q3_3" value="3">
+                                                <label class="form-check-label" for="phq9_q3_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 4 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">4. {% trans "Feeling tired or having little energy" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q4" id="phq9_q4_0" value="0">
+                                                <label class="form-check-label" for="phq9_q4_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q4" id="phq9_q4_1" value="1">
+                                                <label class="form-check-label" for="phq9_q4_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q4" id="phq9_q4_2" value="2">
+                                                <label class="form-check-label" for="phq9_q4_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q4" id="phq9_q4_3" value="3">
+                                                <label class="form-check-label" for="phq9_q4_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 5 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">5. {% trans "Poor appetite or overeating" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q5" id="phq9_q5_0" value="0">
+                                                <label class="form-check-label" for="phq9_q5_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q5" id="phq9_q5_1" value="1">
+                                                <label class="form-check-label" for="phq9_q5_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q5" id="phq9_q5_2" value="2">
+                                                <label class="form-check-label" for="phq9_q5_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q5" id="phq9_q5_3" value="3">
+                                                <label class="form-check-label" for="phq9_q5_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 6 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">6. {% trans "Feeling bad about yourself — or that you are a failure or have let yourself or your family down" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q6" id="phq9_q6_0" value="0">
+                                                <label class="form-check-label" for="phq9_q6_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q6" id="phq9_q6_1" value="1">
+                                                <label class="form-check-label" for="phq9_q6_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q6" id="phq9_q6_2" value="2">
+                                                <label class="form-check-label" for="phq9_q6_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q6" id="phq9_q6_3" value="3">
+                                                <label class="form-check-label" for="phq9_q6_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 7 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">7. {% trans "Trouble concentrating on things, such as reading the newspaper or watching television" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q7" id="phq9_q7_0" value="0">
+                                                <label class="form-check-label" for="phq9_q7_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q7" id="phq9_q7_1" value="1">
+                                                <label class="form-check-label" for="phq9_q7_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q7" id="phq9_q7_2" value="2">
+                                                <label class="form-check-label" for="phq9_q7_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q7" id="phq9_q7_3" value="3">
+                                                <label class="form-check-label" for="phq9_q7_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PHQ-9 Question 8 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">8. {% trans "Moving or speaking so slowly that other people could have noticed. Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q8" id="phq9_q8_0" value="0">
+                                                <label class="form-check-label" for="phq9_q8_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q8" id="phq9_q8_1" value="1">
+                                                <label class="form-check-label" for="phq9_q8_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q8" id="phq9_q8_2" value="2">
+                                                <label class="form-check-label" for="phq9_q8_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q8" id="phq9_q8_3" value="3">
+                                                <label class="form-check-label" for="phq9_q8_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- PHQ-9 Question 9 (Critical) -->
+                                    <div class="question-group mb-4 critical-question">
+                                        <label class="form-label fw-bold text-danger">9. {% trans "Thoughts that you would be better off dead, or of hurting yourself" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q9" id="phq9_q9_0" value="0">
+                                                <label class="form-check-label" for="phq9_q9_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q9" id="phq9_q9_1" value="1">
+                                                <label class="form-check-label" for="phq9_q9_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q9" id="phq9_q9_2" value="2">
+                                                <label class="form-check-label" for="phq9_q9_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="phq9_q9" id="phq9_q9_3" value="3">
+                                                <label class="form-check-label" for="phq9_q9_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="assessment-footer">
+                                    <button type="button" class="btn btn-primary" onclick="submitPHQ9()">
+                                        <i class="bi bi-check-circle me-2"></i>{% trans "Complete PHQ-9" %}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- GAD-7 Anxiety Assessment -->
+                            <div class="tab-pane fade" id="gad7" role="tabpanel" aria-labelledby="gad7-tab">
+                                <div class="assessment-header mb-4">
+                                    <h4>{% trans "GAD-7: Anxiety Screening" %}</h4>
+                                    <p class="text-muted">{% trans "Over the last 2 weeks, how often have you been bothered by the following problems?" %}</p>
+                                </div>
+
+                                <div class="gad7-questions">
+                                    <!-- GAD-7 Question 1 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">1. {% trans "Feeling nervous, anxious, or on edge" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q1" id="gad7_q1_0" value="0">
+                                                <label class="form-check-label" for="gad7_q1_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q1" id="gad7_q1_1" value="1">
+                                                <label class="form-check-label" for="gad7_q1_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q1" id="gad7_q1_2" value="2">
+                                                <label class="form-check-label" for="gad7_q1_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q1" id="gad7_q1_3" value="3">
+                                                <label class="form-check-label" for="gad7_q1_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 2 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">2. {% trans "Not being able to stop or control worrying" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q2" id="gad7_q2_0" value="0">
+                                                <label class="form-check-label" for="gad7_q2_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q2" id="gad7_q2_1" value="1">
+                                                <label class="form-check-label" for="gad7_q2_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q2" id="gad7_q2_2" value="2">
+                                                <label class="form-check-label" for="gad7_q2_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q2" id="gad7_q2_3" value="3">
+                                                <label class="form-check-label" for="gad7_q2_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 3 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">3. {% trans "Worrying too much about different things" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q3" id="gad7_q3_0" value="0">
+                                                <label class="form-check-label" for="gad7_q3_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q3" id="gad7_q3_1" value="1">
+                                                <label class="form-check-label" for="gad7_q3_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q3" id="gad7_q3_2" value="2">
+                                                <label class="form-check-label" for="gad7_q3_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q3" id="gad7_q3_3" value="3">
+                                                <label class="form-check-label" for="gad7_q3_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 4 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">4. {% trans "Trouble relaxing" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q4" id="gad7_q4_0" value="0">
+                                                <label class="form-check-label" for="gad7_q4_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q4" id="gad7_q4_1" value="1">
+                                                <label class="form-check-label" for="gad7_q4_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q4" id="gad7_q4_2" value="2">
+                                                <label class="form-check-label" for="gad7_q4_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q4" id="gad7_q4_3" value="3">
+                                                <label class="form-check-label" for="gad7_q4_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 5 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">5. {% trans "Being so restless that it is hard to sit still" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q5" id="gad7_q5_0" value="0">
+                                                <label class="form-check-label" for="gad7_q5_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q5" id="gad7_q5_1" value="1">
+                                                <label class="form-check-label" for="gad7_q5_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q5" id="gad7_q5_2" value="2">
+                                                <label class="form-check-label" for="gad7_q5_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q5" id="gad7_q5_3" value="3">
+                                                <label class="form-check-label" for="gad7_q5_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 6 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">6. {% trans "Becoming easily annoyed or irritable" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q6" id="gad7_q6_0" value="0">
+                                                <label class="form-check-label" for="gad7_q6_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q6" id="gad7_q6_1" value="1">
+                                                <label class="form-check-label" for="gad7_q6_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q6" id="gad7_q6_2" value="2">
+                                                <label class="form-check-label" for="gad7_q6_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q6" id="gad7_q6_3" value="3">
+                                                <label class="form-check-label" for="gad7_q6_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GAD-7 Question 7 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">7. {% trans "Feeling afraid, as if something awful might happen" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q7" id="gad7_q7_0" value="0">
+                                                <label class="form-check-label" for="gad7_q7_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q7" id="gad7_q7_1" value="1">
+                                                <label class="form-check-label" for="gad7_q7_1">{% trans "Several days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q7" id="gad7_q7_2" value="2">
+                                                <label class="form-check-label" for="gad7_q7_2">{% trans "More than half the days" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gad7_q7" id="gad7_q7_3" value="3">
+                                                <label class="form-check-label" for="gad7_q7_3">{% trans "Nearly every day" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="assessment-footer">
+                                    <button type="button" class="btn btn-primary" onclick="submitGAD7()">
+                                        <i class="bi bi-check-circle me-2"></i>{% trans "Complete GAD-7" %}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- GHQ-12 General Health Assessment -->
+                            <div class="tab-pane fade" id="ghq" role="tabpanel" aria-labelledby="ghq-tab">
+                                <div class="assessment-header mb-4">
+                                    <h4>{% trans "GHQ-12: General Health Questionnaire" %}</h4>
+                                    <p class="text-muted">{% trans "We would like to know how your health has been in general over the past few weeks." %}</p>
+                                </div>
+
+                                <div class="ghq-questions">
+                                    <!-- GHQ Question 1 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">1. {% trans "Have you been able to concentrate on whatever you're doing?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q1" id="ghq_q1_0" value="0">
+                                                <label class="form-check-label" for="ghq_q1_0">{% trans "Better than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q1" id="ghq_q1_1" value="1">
+                                                <label class="form-check-label" for="ghq_q1_1">{% trans "Same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q1" id="ghq_q1_2" value="2">
+                                                <label class="form-check-label" for="ghq_q1_2">{% trans "Less than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q1" id="ghq_q1_3" value="3">
+                                                <label class="form-check-label" for="ghq_q1_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GHQ Question 2 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">2. {% trans "Have you lost much sleep over worry?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q2" id="ghq_q2_0" value="0">
+                                                <label class="form-check-label" for="ghq_q2_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q2" id="ghq_q2_1" value="1">
+                                                <label class="form-check-label" for="ghq_q2_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q2" id="ghq_q2_2" value="2">
+                                                <label class="form-check-label" for="ghq_q2_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q2" id="ghq_q2_3" value="3">
+                                                <label class="form-check-label" for="ghq_q2_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GHQ Question 3 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">3. {% trans "Have you felt that you are playing a useful part in things?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q3" id="ghq_q3_0" value="0">
+                                                <label class="form-check-label" for="ghq_q3_0">{% trans "More so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q3" id="ghq_q3_1" value="1">
+                                                <label class="form-check-label" for="ghq_q3_1">{% trans "Same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q3" id="ghq_q3_2" value="2">
+                                                <label class="form-check-label" for="ghq_q3_2">{% trans "Less so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q3" id="ghq_q3_3" value="3">
+                                                <label class="form-check-label" for="ghq_q3_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GHQ Question 4 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">4. {% trans "Have you felt capable of making decisions about things?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q4" id="ghq_q4_0" value="0">
+                                                <label class="form-check-label" for="ghq_q4_0">{% trans "More so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q4" id="ghq_q4_1" value="1">
+                                                <label class="form-check-label" for="ghq_q4_1">{% trans "Same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q4" id="ghq_q4_2" value="2">
+                                                <label class="form-check-label" for="ghq_q4_2">{% trans "Less so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q4" id="ghq_q4_3" value="3">
+                                                <label class="form-check-label" for="ghq_q4_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GHQ Question 5 -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">5. {% trans "Have you felt constantly under strain?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q5" id="ghq_q5_0" value="0">
+                                                <label class="form-check-label" for="ghq_q5_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q5" id="ghq_q5_1" value="1">
+                                                <label class="form-check-label" for="ghq_q5_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q5" id="ghq_q5_2" value="2">
+                                                <label class="form-check-label" for="ghq_q5_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q5" id="ghq_q5_3" value="3">
+                                                <label class="form-check-label" for="ghq_q5_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GHQ Questions 6-12 continue in the same pattern... -->
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">6. {% trans "Have you felt you couldn't overcome your difficulties?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q6" id="ghq_q6_0" value="0">
+                                                <label class="form-check-label" for="ghq_q6_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q6" id="ghq_q6_1" value="1">
+                                                <label class="form-check-label" for="ghq_q6_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q6" id="ghq_q6_2" value="2">
+                                                <label class="form-check-label" for="ghq_q6_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q6" id="ghq_q6_3" value="3">
+                                                <label class="form-check-label" for="ghq_q6_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">7. {% trans "Have you been able to enjoy your normal day-to-day activities?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q7" id="ghq_q7_0" value="0">
+                                                <label class="form-check-label" for="ghq_q7_0">{% trans "More so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q7" id="ghq_q7_1" value="1">
+                                                <label class="form-check-label" for="ghq_q7_1">{% trans "Same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q7" id="ghq_q7_2" value="2">
+                                                <label class="form-check-label" for="ghq_q7_2">{% trans "Less so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q7" id="ghq_q7_3" value="3">
+                                                <label class="form-check-label" for="ghq_q7_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">8. {% trans "Have you been able to face up to your problems?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q8" id="ghq_q8_0" value="0">
+                                                <label class="form-check-label" for="ghq_q8_0">{% trans "More so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q8" id="ghq_q8_1" value="1">
+                                                <label class="form-check-label" for="ghq_q8_1">{% trans "Same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q8" id="ghq_q8_2" value="2">
+                                                <label class="form-check-label" for="ghq_q8_2">{% trans "Less so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q8" id="ghq_q8_3" value="3">
+                                                <label class="form-check-label" for="ghq_q8_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">9. {% trans "Have you been feeling unhappy and depressed?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q9" id="ghq_q9_0" value="0">
+                                                <label class="form-check-label" for="ghq_q9_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q9" id="ghq_q9_1" value="1">
+                                                <label class="form-check-label" for="ghq_q9_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q9" id="ghq_q9_2" value="2">
+                                                <label class="form-check-label" for="ghq_q9_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q9" id="ghq_q9_3" value="3">
+                                                <label class="form-check-label" for="ghq_q9_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">10. {% trans "Have you been losing confidence in yourself?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q10" id="ghq_q10_0" value="0">
+                                                <label class="form-check-label" for="ghq_q10_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q10" id="ghq_q10_1" value="1">
+                                                <label class="form-check-label" for="ghq_q10_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q10" id="ghq_q10_2" value="2">
+                                                <label class="form-check-label" for="ghq_q10_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q10" id="ghq_q10_3" value="3">
+                                                <label class="form-check-label" for="ghq_q10_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">11. {% trans "Have you been thinking of yourself as a worthless person?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q11" id="ghq_q11_0" value="0">
+                                                <label class="form-check-label" for="ghq_q11_0">{% trans "Not at all" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q11" id="ghq_q11_1" value="1">
+                                                <label class="form-check-label" for="ghq_q11_1">{% trans "No more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q11" id="ghq_q11_2" value="2">
+                                                <label class="form-check-label" for="ghq_q11_2">{% trans "Rather more than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q11" id="ghq_q11_3" value="3">
+                                                <label class="form-check-label" for="ghq_q11_3">{% trans "Much more than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="question-group mb-4">
+                                        <label class="form-label fw-bold">12. {% trans "Have you been feeling reasonably happy, all things considered?" %}</label>
+                                        <div class="likert-scale">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q12" id="ghq_q12_0" value="0">
+                                                <label class="form-check-label" for="ghq_q12_0">{% trans "More so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q12" id="ghq_q12_1" value="1">
+                                                <label class="form-check-label" for="ghq_q12_1">{% trans "About the same as usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q12" id="ghq_q12_2" value="2">
+                                                <label class="form-check-label" for="ghq_q12_2">{% trans "Less so than usual" %}</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="ghq_q12" id="ghq_q12_3" value="3">
+                                                <label class="form-check-label" for="ghq_q12_3">{% trans "Much less than usual" %}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="assessment-footer">
+                                    <button type="button" class="btn btn-primary" onclick="submitGHQ()">
+                                        <i class="bi bi-check-circle me-2"></i>{% trans "Complete GHQ-12" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Final Submit Button (appears when all assessments are complete) -->
+                        <div class="text-center mt-4" id="finalSubmitSection" style="display: none;">
+                            <div class="alert alert-success">
+                                <h5>{% trans "All Assessments Complete!" %}</h5>
+                                <p>{% trans "You have successfully completed all three psychological screenings. Click below to get your personalized recommendations." %}</p>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-arrow-right-circle me-2"></i>{% trans "Get My Recommendations" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Emergency Support Alert -->
+            <div class="alert alert-warning mt-4" id="emergencyAlert" style="display: none;">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-3" style="font-size: 1.5rem;"></i>
+                    <div class="flex-grow-1">
+                        <h6 class="alert-heading mb-1">{% trans "Immediate Support Available" %}</h6>
+                        <p class="mb-2">
+                            {% trans "If you're having thoughts of self-harm, please reach out for immediate professional help." %}
+                        </p>
+                        <button class="btn btn-warning btn-sm" onclick="showEmergencyModal()">
+                            <i class="bi bi-telephone me-1"></i>{% trans "Emergency Contacts" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.assessment-info {
+    padding: 1rem;
+    border: 1px solid rgba(124, 147, 195, 0.2);
+    border-radius: 10px;
+    background: rgba(124, 147, 195, 0.05);
+    margin-bottom: 1rem;
+}
+
+.question-group {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(124, 147, 195, 0.1);
+}
+
+.critical-question {
+    border-left: 4px solid #dc3545;
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.likert-scale {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.likert-scale .form-check {
+    flex: 1;
+    min-width: 120px;
+}
+
+.assessment-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(124, 147, 195, 0.2);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.progress {
+    height: 8px;
+    background-color: rgba(124, 147, 195, 0.2);
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .likert-scale {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .nav-pills .nav-link {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/assessment.js' %}"></script>
+{% endblock %}

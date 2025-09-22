@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize spotlight cards
     initSpotlightCards();
     
+    // Initialize hamburger menu
+    initHamburgerMenu();
+    
     // Initialize tooltips and popovers
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -470,10 +473,193 @@ function initSpotlightCards() {
     return null;
 }
 
+// Hamburger Menu functionality
+class HamburgerMenu {
+    constructor() {
+        this.hamburgerButton = document.getElementById('hamburgerMenu');
+        this.desktopMenuButton = document.getElementById('desktopMenuButton');
+        this.drawer = document.getElementById('slidingDrawer');
+        this.overlay = document.getElementById('drawerOverlay');
+        this.menuItems = document.querySelectorAll('.drawer-menu-item');
+        this.isOpen = false;
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.drawer || !this.overlay) {
+            return; // Essential elements not found, skip initialization
+        }
+        
+        // Hamburger button click (mobile)
+        if (this.hamburgerButton) {
+            this.hamburgerButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggle();
+            });
+        }
+        
+        // Desktop menu button click
+        if (this.desktopMenuButton) {
+            this.desktopMenuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggle();
+            });
+        }
+        
+        // Overlay click - close drawer
+        this.overlay.addEventListener('click', () => {
+            this.close();
+        });
+        
+        // Close drawer when clicking outside
+        document.addEventListener('click', (e) => {
+            if (this.isOpen && !this.drawer.contains(e.target) && 
+                !(this.hamburgerButton && this.hamburgerButton.contains(e.target)) &&
+                !(this.desktopMenuButton && this.desktopMenuButton.contains(e.target))) {
+                this.close();
+            }
+        });
+        
+        // Close drawer on menu item click
+        this.menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Add a slight delay to allow the click navigation to process
+                setTimeout(() => {
+                    this.close();
+                }, 150);
+            });
+        });
+        
+        // Handle escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.close();
+            }
+        });
+        
+        // Prevent scroll when drawer is open
+        this.setupScrollLock();
+    }
+    
+    toggle() {
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+    
+    open() {
+        this.isOpen = true;
+        if (this.hamburgerButton) {
+            this.hamburgerButton.classList.add('active');
+        }
+        if (this.desktopMenuButton) {
+            this.desktopMenuButton.classList.add('active');
+        }
+        this.drawer.classList.add('active');
+        this.overlay.classList.add('active');
+        
+        // Lock body scroll
+        document.body.style.overflow = 'hidden';
+        
+        // Animate menu items
+        this.animateMenuItems('in');
+        
+        // Focus management for accessibility
+        setTimeout(() => {
+            const firstMenuItem = this.drawer.querySelector('.drawer-menu-item');
+            if (firstMenuItem) {
+                firstMenuItem.focus();
+            }
+        }, 400);
+    }
+    
+    close() {
+        this.isOpen = false;
+        if (this.hamburgerButton) {
+            this.hamburgerButton.classList.remove('active');
+        }
+        if (this.desktopMenuButton) {
+            this.desktopMenuButton.classList.remove('active');
+        }
+        this.drawer.classList.remove('active');
+        this.overlay.classList.remove('active');
+        
+        // Unlock body scroll
+        document.body.style.overflow = '';
+        
+        // Animate menu items
+        this.animateMenuItems('out');
+    }
+    
+    animateMenuItems(direction) {
+        this.menuItems.forEach((item, index) => {
+            if (direction === 'in') {
+                item.style.transform = 'translateX(-30px)';
+                item.style.opacity = '0';
+                
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                    item.style.transform = 'translateX(0)';
+                    item.style.opacity = '1';
+                }, index * 50 + 200); // Stagger animation
+                
+                // Reset transition after animation
+                setTimeout(() => {
+                    item.style.transition = '';
+                }, index * 50 + 500);
+            } else {
+                item.style.transform = 'translateX(-30px)';
+                item.style.opacity = '0';
+                
+                // Reset after close animation
+                setTimeout(() => {
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                }, 400);
+            }
+        });
+    }
+    
+    setupScrollLock() {
+        // Store original body overflow style
+        this.originalOverflow = document.body.style.overflow;
+        
+        // Handle iOS Safari scroll lock
+        let startY = 0;
+        
+        const preventScroll = (e) => {
+            if (this.isOpen) {
+                const currentY = e.touches[0].clientY;
+                
+                if (e.type === 'touchstart') {
+                    startY = currentY;
+                } else if (e.type === 'touchmove') {
+                    // Prevent scrolling unless within the drawer
+                    if (!this.drawer.contains(e.target)) {
+                        e.preventDefault();
+                    }
+                }
+            }
+        };
+        
+        document.addEventListener('touchstart', preventScroll, { passive: false });
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+    }
+}
+
+// Initialize hamburger menu
+function initHamburgerMenu() {
+    return new HamburgerMenu();
+}
+
 // Export classes and functions for use in other files
 window.ChatInterface = ChatInterface;
 window.AppointmentBooking = AppointmentBooking;
 window.SpotlightCards = SpotlightCards;
+window.HamburgerMenu = HamburgerMenu;
 window.validateForm = validateForm;
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
@@ -483,3 +669,4 @@ window.formatTime = formatTime;
 window.initPillNavigation = initPillNavigation;
 window.initSpotlightCards = initSpotlightCards;
 window.initBokehEffect = initBokehEffect;
+window.initHamburgerMenu = initHamburgerMenu;

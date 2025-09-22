@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "generated": "2024-01-01",
+  "files": {
+    "static/css/booking-smooth.css": "static/css/booking-smooth.min.css",
+    "static/css/style.css": "static/css/style.min.css",
+    "static/js/main.js": "static/js/main.min.js",
+    "static/js/booking-sw.js": "static/js/booking-sw.min.js",
+    "static/js/booking-optimized.js": "static/js/booking-optimized.min.js"
+  }
+}

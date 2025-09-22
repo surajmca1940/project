@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Psychological Intervention System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #a855f7;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-muted: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+            min-height: 100vh;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .spotlight-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spotlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        }
+        
+        .spotlight-card.featured {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .spotlight-card.featured .card-title,
+        .spotlight-card.featured .card-text {
+            color: white;
+        }
+        
+        .spotlight-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .spotlight-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .spotlight-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        
+        .feature-slider-container {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(168, 85, 247, 0.05) 50%, 
+                rgba(6, 182, 212, 0.05) 100%);
+            border-radius: 24px;
+            margin: 2rem 0;
+        }
+        
+        .emergency-card {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background: rgba(247, 248, 251, 0.95); backdrop-filter: blur(20px);">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Mental Health Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assessments.html">Assessments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recommendations.html">Recommendations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-4 fw-bold mb-4" style="color: var(--primary-color);">
+                            Digital Psychological Intervention System
+                        </h1>
+                        <p class="lead mb-4" style="color: var(--text-muted);">
+                            A comprehensive platform supporting mental health and well-being in higher education institutions
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="assessments.html" class="btn btn-primary">
+                                <i class="fas fa-clipboard-check me-2"></i>
+                                Take Assessment
+                            </a>
+                            <a href="recommendations.html" class="btn btn-outline-primary">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                View Recommendations
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <i class="bi bi-heart-pulse" style="font-size: 8rem; color: var(--primary-color); opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Slider -->
+        <div class="feature-slider-container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 mb-3" style="color: var(--primary-color); font-weight: 600;">
+                    🚀 Platform Features
+                </h2>
+                <p class="lead text-muted">
+                    Comprehensive mental health support with modern, user-friendly interfaces
+                </p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="spotlight-card text-center">
+                        <i class="fas fa-clipboard-check spotlight-icon" style="color: var(--primary-color);"></i>
+                        <h5 class="card-title">Assessment Templates</h5>
+                        <p class="card-text">User-friendly interfaces for taking mental health assessments with real-time progress tracking.</p>
+                        <a href="assessments.html" class="btn btn-primary">Explore</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="spotlight-card text-center">
+                        <i class="fas fa-lightbulb spotlight-icon" style="color: var(--warning-color);"></i>
+                        <h5 class="card-title">Recommendation Pages</h5>
+                        <p class="card-text">Personalized suggestions and actionable insights based on your assessment results.</p>
+                        <a href="recommendations.html" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="spotlight-card text-center">
+                        <i class="fas fa-chart-line spotlight-icon" style="color: var(--info-color);"></i>
+                        <h5 class="card-title">Dashboard Visualization</h5>
+                        <p class="card-text">Comprehensive analytics with Chart.js for monitoring mental health trends.</p>
+                        <a href="dashboard.html" class="btn btn-primary">Analyze</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Services -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Featured Services</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="spotlight-card featured h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-robot spotlight-icon text-light"></i>
+                        <h5 class="card-title">AI-Guided Support</h5>
+                        <p class="card-text">Get immediate help with our interactive AI chatbot that provides coping strategies and professional referrals.</p>
+                        <a href="#" class="spotlight-btn">Start Chat</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="spotlight-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check spotlight-icon" style="color: var(--success-color);"></i>
+                        <h5 class="card-title">Confidential Booking</h5>
+                        <p class="card-text">Schedule appointments with campus counselors or mental health professionals in complete confidentiality.</p>
+                        <a href="#" class="btn btn-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="spotlight-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-book spotlight-icon" style="color: var(--info-color);"></i>
+                        <h5 class="card-title">Resource Hub</h5>
+                        <p class="card-text">Access videos, audio content, and wellness guides in multiple regional languages.</p>
+                        <a href="#" class="btn btn-primary">Explore Resources</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="spotlight-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-people spotlight-icon" style="color: var(--warning-color);"></i>
+                        <h5 class="card-title">Peer Support</h5>
+                        <p class="card-text">Connect with fellow students in a moderated, safe environment with trained volunteers.</p>
+                        <a href="#" class="btn btn-primary">Join Community</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="emergency-card">
+                    <h3>🚨 Need immediate help?</h3>
+                    <p class="mb-3">If you're experiencing a mental health emergency, please contact:</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Campus Counseling Center</strong><br>
+                            <span class="h5">Extension: 2345</span>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>National Helpline</strong><br>
+                            <span class="h5">1-800-HELP-NOW</span>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Emergency Services</strong><br>
+                            <span class="h5">911</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5">
+        <div class="container">
+            <p>&copy; 2025 Digital Psychological Intervention System. All rights reserved.</p>
+            <p class="mb-0">Supporting mental health in higher education institutions</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase Initialization -->
+    <script type="module">
+        import { initializeSampleData } from '../js/firebase-config.js';
+        
+        // Initialize Firebase and sample data when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('Initializing Firebase...');
+                await initializeSampleData();
+                console.log('Firebase initialized successfully!');
+            } catch (error) {
+                console.error('Error initializing Firebase:', error);
+            }
+        });
+    </script>
+</body>
+</html>

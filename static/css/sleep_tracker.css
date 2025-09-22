@@ -1,0 +1,1339 @@
+/* Sleep Tracker Page Styles */
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #9b59b6 100%);
+    color: white;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="40%"><stop offset="0%" style="stop-color:white;stop-opacity:0.1"/><stop offset="100%" style="stop-color:white;stop-opacity:0"/></radialGradient></defs><ellipse cx="50" cy="10" rx="50" ry="10" fill="url(%23a)"/></svg>') repeat-x;
+    opacity: 0.3;
+}
+
+.hero-stats {
+    flex-wrap: wrap;
+    gap: 2rem !important;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: block;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+}
+
+/* Card Styles */
+.sleep-entry-card,
+.sleep-chart-card,
+.ai-insights-card,
+.sleep-sounds-card,
+.recent-entries-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e3f2fd;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.card-header i {
+    margin-right: 0.5rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Sleep Quality Selector */
+.quality-selector {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.quality-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.quality-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.quality-option label {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.quality-option label:hover {
+    background: #e3f2fd;
+    border-color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.quality-option input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: var(--primary-color);
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.quality-stars {
+    margin-right: 1rem;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: #ddd;
+    margin-right: 0.2rem;
+    transition: color 0.3s ease;
+}
+
+.star.filled {
+    color: #ffd700;
+}
+
+.quality-option input[type="radio"]:checked + label .star {
+    color: #fff;
+}
+
+.quality-label {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+}
+
+.char-counter {
+    text-align: right;
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* Sleep Chart */
+.sleep-chart-card {
+    min-height: 400px;
+}
+
+#sleepChart {
+    max-height: 300px;
+}
+
+/* AI Sleep Score */
+.sleep-score-section {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.sleep-score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.score-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+
+.score-label {
+    font-size: 0.8rem;
+    color: white;
+    opacity: 0.9;
+}
+
+.score-description {
+    margin-top: 1rem;
+}
+
+/* Insight Items */
+.insight-section {
+    margin-bottom: 2rem;
+}
+
+.insight-section:last-child {
+    margin-bottom: 0;
+}
+
+.insight-section h5 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.insight-section h5 i {
+    margin-right: 0.5rem;
+}
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.insight-item i {
+    margin-right: 0.75rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.insight-item.pattern {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+}
+
+.insight-item.positive {
+    background: #e8f5e8;
+    border-left: 4px solid #4caf50;
+}
+
+.insight-item.recommendation {
+    background: #fff3e0;
+    border-left: 4px solid #ff9800;
+}
+
+.insight-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Sleep Sounds */
+.sleep-sounds-card .card-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.sound-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.sound-card:hover {
+    background: #e3f2fd;
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.sound-card.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.sound-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.sound-card h6 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.sound-card p {
+    margin-bottom: 1.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.sound-card.active p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.play-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+    transform: translateY(-2px);
+}
+
+.sound-card.active .play-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+/* Audio Controls */
+.audio-controls {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem;
+    border: 2px solid #e9ecef;
+}
+
+.volume-control {
+    min-width: 150px;
+}
+
+.form-range {
+    width: 100px;
+}
+
+.timer-control {
+    min-width: 120px;
+}
+
+.now-playing {
+    font-style: italic;
+}
+
+#nowPlayingTitle {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Recent Entries Table */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--light-bg);
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+    transform: scale(1.01);
+    transition: all 0.3s ease;
+}
+
+.quality-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Form Accordion */
+.accordion-button {
+    background: var(--light-bg);
+    border: none;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.accordion-body {
+    background: #f8f9fa;
+}
+
+/* Submit Button */
+#submitSleepBtn {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+}
+
+#submitSleepBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+#submitSleepBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Sleep Factors */
+.sleep-factors .form-check {
+    margin-bottom: 0.75rem;
+}
+
+.sleep-factors .form-check-label {
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.sleep-factors .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Pulse Animation for Active Sound */
+.sound-card.active {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(var(--primary-color-rgb), 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0);
+    }
+}
+
+/* Insufficient Data Illustration */
+.insufficient-data {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.insufficient-data .illustration {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.insufficient-data h5 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.general-tips {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.general-tips ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.general-tips li {
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem !important;
+    }
+    
+    .stat-item {
+        padding: 0.5rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .quality-selector {
+        gap: 0.75rem;
+    }
+    
+    .quality-option label {
+        padding: 0.75rem;
+    }
+    
+    .quality-stars {
+        margin-right: 0.5rem;
+    }
+    
+    .star {
+        font-size: 1.2rem;
+    }
+    
+    .sleep-score-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .score-value {
+        font-size: 1.5rem;
+    }
+    
+    .sound-card {
+        padding: 1.5rem 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .sound-icon {
+        font-size: 2.5rem;
+    }
+    
+    .audio-controls {
+        padding: 1rem;
+    }
+    
+    .audio-controls > div {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .volume-control,
+    .timer-control {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .form-range {
+        width: 100%;
+    }
+    
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    .insufficient-data .illustration {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .card-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .quality-option label {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem 0.5rem;
+    }
+    
+    .quality-stars {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .row.g-4 {
+        gap: 1rem;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .sleep-entry-card,
+    .sleep-chart-card,
+    .ai-insights-card,
+    .sleep-sounds-card,
+    .recent-entries-card {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .form-control, .form-select {
+        background: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .quality-option label {
+        background: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .sound-card {
+        background: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .table {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .table thead th {
+        background: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .audio-controls {
+        background: #4a5568;
+        border-color: #718096;
+    }
+}
+
+/* Sleep Diary Journal Styles */
+.diary-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.diary-entry {
+    background: #ffffff;
+    border: 1px solid #e3f2fd;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.diary-entry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+}
+
+.diary-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.diary-entry-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.diary-date {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.diary-date i {
+    margin-right: 0.5rem;
+    color: #3498db;
+}
+
+.diary-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.diary-entry-body {
+    padding: 1.5rem;
+}
+
+/* Sleep specific diary styles */
+.diary-sleep-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sleep-stat {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    border-left: 4px solid #3498db;
+}
+
+.sleep-stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    display: block;
+}
+
+.sleep-stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.sleep-quality-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.sleep-quality-stars {
+    display: flex;
+    gap: 0.25rem;
+    margin-right: 0.75rem;
+}
+
+.sleep-quality-star {
+    font-size: 1.2rem;
+    color: #ddd;
+}
+
+.sleep-quality-star.filled {
+    color: #ffd700;
+}
+
+.sleep-quality-label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.sleep-times {
+    background: #e8f4fd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sleep-time-item {
+    text-align: center;
+    flex: 1;
+}
+
+.sleep-time-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.sleep-time-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.sleep-time-arrow {
+    color: #3498db;
+    font-size: 1.5rem;
+    margin: 0 1rem;
+}
+
+.diary-sleep-note {
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    padding: 1rem 1.5rem;
+    border-radius: 0 10px 10px 0;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text-color);
+    position: relative;
+}
+
+.diary-sleep-note::before {
+    content: '💤';
+    font-size: 1.5rem;
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    opacity: 0.5;
+}
+
+/* Sleep factors indicators */
+.sleep-factors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.sleep-factor {
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.sleep-factor.negative {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.sleep-factor.positive {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Timeline styles for sleep diary */
+.diary-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.diary-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #2c3e50, #3498db);
+}
+
+.diary-timeline .diary-entry {
+    position: relative;
+    margin-left: 2rem;
+}
+
+.diary-timeline .diary-entry::before {
+    content: '🌙';
+    position: absolute;
+    left: -3.8rem;
+    top: 1.2rem;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
+    border: 3px solid #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    z-index: 2;
+}
+
+/* Responsive design for sleep diary */
+@media (max-width: 768px) {
+    .diary-sleep-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .sleep-stat {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .sleep-stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .sleep-times {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .sleep-time-arrow {
+        transform: rotate(90deg);
+        margin: 0.5rem 0;
+    }
+    
+    .diary-sleep-note {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .sleep-factors {
+        justify-content: center;
+    }
+}
+
+/* Sleep journal modal specific styles */
+.modal-body .diary-container {
+    max-height: 60vh;
+}
+
+#sleepJournalModal .modal-header {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    border-bottom: none;
+}
+
+#sleepJournalModal .modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* Empty state for sleep journal */
+.diary-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.diary-empty i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Calendar View Styles */
+.calendar-container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.calendar-nav-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.calendar-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.calendar-month-year {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: white;
+}
+
+.calendar-day-header {
+    background: #f8f9fa;
+    padding: 1rem 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: #6c757d;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+
+.calendar-date {
+    aspect-ratio: 1;
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    min-height: 60px;
+}
+
+.calendar-date:hover {
+    background: #f8f9fa;
+    transform: scale(1.05);
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.calendar-date.other-month {
+    color: #dee2e6;
+    background: #f8f9fa;
+}
+
+.calendar-date.today {
+    font-weight: bold;
+    border: 2px solid var(--primary-color);
+}
+
+.calendar-date.has-entry {
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Sleep quality-based colors */
+.calendar-date.sleep-excellent {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.calendar-date.sleep-good {
+    background: linear-gradient(135deg, #17a2b8, #6610f2);
+}
+
+.calendar-date.sleep-fair {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.calendar-date.sleep-poor {
+    background: linear-gradient(135deg, #dc3545, #e83e8c);
+}
+
+.calendar-date.sleep-very-poor {
+    background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.calendar-date-number {
+    font-size: 1rem;
+    z-index: 1;
+}
+
+.calendar-date.has-entry::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Entry Detail Popup */
+.entry-detail-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1070;
+    max-width: 500px;
+    width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.entry-detail-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+}
+
+.entry-detail-date {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.entry-detail-time {
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.entry-detail-body {
+    padding: 1.5rem;
+}
+
+.entry-detail-sleep {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.entry-detail-sleep-quality {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.entry-detail-sleep-duration {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.entry-detail-note {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: #495057;
+}
+
+.entry-detail-mood-data {
+    background: linear-gradient(135deg, #fff3cd, #f8d7da);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.entry-detail-mood-data h6 {
+    color: #856404;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.mood-detail-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.mood-detail-emoji {
+    font-size: 2rem;
+}
+
+.mood-detail-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #856404;
+}
+
+.entry-detail-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.entry-detail-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1060;
+    animation: backdropFadeIn 0.3s ease;
+}
+
+@keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Calendar mobile styles for sleep tracker */
+@media (max-width: 768px) {
+    .calendar-header {
+        padding: 1rem;
+    }
+
+    .calendar-month-year {
+        font-size: 1.25rem;
+    }
+
+    .calendar-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .calendar-date {
+        min-height: 50px;
+        font-size: 0.9rem;
+    }
+
+    .calendar-day-header {
+        padding: 0.75rem 0.25rem;
+        font-size: 0.8rem;
+    }
+
+    .entry-detail-popup {
+        width: 95vw;
+        max-height: 90vh;
+    }
+
+    .entry-detail-header {
+        padding: 1rem;
+    }
+
+    .entry-detail-body {
+        padding: 1rem;
+    }
+
+    .entry-detail-sleep-duration {
+        font-size: 1.5rem;
+    }
+
+    .mood-detail-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
