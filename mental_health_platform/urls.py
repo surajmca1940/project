@@ -22,11 +22,13 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from .views import (AssessmentView, RecommendationView, GamesView, MoodJournalView, SleepTrackerView, 
                     mood_journal_entries_api, sleep_journal_entries_api)
+from .admin_stats import admin_stats_api
 
 # Non-translated URLs (like admin, language switching)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin/booking_system/', include('booking_system.admin_urls')),  # Enhanced booking admin
+    path('admin/api/stats/', admin_stats_api, name='admin_stats_api'),
     path('i18n/', include('django.conf.urls.i18n')),  # Language switching
 ]
 

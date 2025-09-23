@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from .models import Region, Institution, LanguageSupport, UserProfile, Counselor, CounselorAvailability, OfflineSupportTicket
 
 
@@ -82,3 +84,32 @@ class OfflineSupportTicketAdmin(admin.ModelAdmin):
     search_fields = ['subject', 'description', 'created_by__username']
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'created_at'
+
+
+# Define an inline admin descriptor for UserProfile model
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+    fields = ['institution', 'preferred_language', 'is_anonymous', 'show_in_peer_support', 'cultural_preferences']
+
+
+# Define a new User admin
+class CustomUserAdmin(BaseUserAdmin):
+    inlines = [UserProfileInline]
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined', 'get_institution')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'date_joined', 'userprofile__institution')
+    search_fields = ('username', 'first_name', 'last_name', 'email')
+    
+    def get_institution(self, obj):
+        try:
+            return obj.userprofile.institution.name if obj.userprofile else 'No Institution'
+        except UserProfile.DoesNotExist:
+            return 'No Profile'
+    get_institution.short_description = 'Institution'
+
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
