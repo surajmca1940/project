@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']  # Allow all hosts for development
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Custom apps
-    'mental_health_platform',
+    'mental_health_platform.apps.MentalHealthPlatformConfig',
     'accounts',
     'ai_support',
     'booking_system',
@@ -158,3 +160,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Admin Interface Configuration
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SILKY_PYTHON_PROFILER = True
+
+# Admin Interface Theme Settings
+ADMIN_INTERFACE = {
+    'TITLE': 'Mental Health Platform Admin',
+    'WELCOME_SIGN': 'Welcome to Mental Health Platform Administration',
+    'COPYRIGHT': 'Mental Health Platform © 2024',
+    'SUPPORT_URL': '#',
+    'CHECK_PERMISSIONS': True,
+    'LANGUAGE_SELECTOR': True,
+    'THEME_PRIMARY_COLOR': '#2c5aa0',
+    'THEME_SECONDARY_COLOR': '#5cb85c',
+    'THEME_ACCENT_COLOR': '#f39c12',
+    'THEME_SUCCESS_COLOR': '#5cb85c',
+    'THEME_INFO_COLOR': '#5bc0de',
+    'THEME_WARNING_COLOR': '#f0ad4e',
+    'THEME_DANGER_COLOR': '#d9534f',
+    'RELATED_MODAL_ACTIVE': True,
+    'ENVIRONMENT': 'Mental Health Admin',
+    'ENVIRONMENT_COLOR': '#5cb85c',
+    'SHOW_RECENT_ACTIONS': True,
+    'SHOW_UI_BUILDER': True
+}

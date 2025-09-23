@@ -1,0 +1,491 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+<style>
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+}
+
+body.admin {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Hide default Django admin elements */
+#header {
+    display: none !important;
+}
+
+#nav-sidebar {
+    display: none !important;
+}
+
+.breadcrumbs {
+    display: none !important;
+}
+
+#content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+}
+
+#container {
+    padding: 0 !important;
+}
+
+/* Custom Admin Sidebar */
+:root {
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 60px;
+}
+
+.admin-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.admin-sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.sidebar-logo:hover {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.sidebar-logo i {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.collapsed .sidebar-logo span {
+    display: none;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.nav-section {
+    margin-bottom: 1.5rem;
+}
+
+.nav-section-title {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.5rem;
+}
+
+.collapsed .nav-section-title {
+    display: none;
+}
+
+.nav-item {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #3498db;
+    text-decoration: none;
+}
+
+.nav-item.active {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border-right: 3px solid #3498db;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.collapsed .nav-item span {
+    display: none;
+}
+
+.collapsed .nav-item {
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.nav-badge {
+    background: #e74c3c;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+.collapsed .nav-badge {
+    display: none;
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 1rem;
+    left: calc(var(--sidebar-width) - 20px);
+    background: #3498db;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-toggle:hover {
+    background: #2980b9;
+    transform: scale(1.1);
+}
+
+.collapsed .sidebar-toggle {
+    left: calc(var(--sidebar-collapsed-width) - 20px);
+}
+
+/* Main Content */
+.main-content {
+    margin-left: var(--sidebar-width);
+    transition: all 0.3s ease;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    width: calc(100% - var(--sidebar-width));
+    position: relative;
+}
+
+.collapsed ~ .main-content,
+body.sidebar-collapsed .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+}
+
+.content-header {
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+/* Content Area */
+.content-wrapper {
+    padding: 2rem;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Django admin form fixes */
+.main-content .form-row,
+.main-content .results,
+.main-content .paginator {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.main-content table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.main-content .actions {
+    margin: 1rem 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .admin-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    .sidebar-toggle {
+        left: 1rem;
+        background: #e74c3c;
+    }
+    
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+    
+    .mobile-overlay.active {
+        display: block;
+    }
+    
+    .content-wrapper {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    const mobileOverlay = document.querySelector('.mobile-overlay');
+    const mainContent = document.querySelector('.main-content');
+    const isMobile = window.innerWidth <= 768;
+    
+    // Ensure main content is positioned correctly
+    if (mainContent) {
+        mainContent.style.position = 'relative';
+        mainContent.style.zIndex = '1';
+    }
+    
+    // Toggle sidebar
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            if (isMobile) {
+                sidebar.classList.toggle('mobile-open');
+                if (mobileOverlay) {
+                    mobileOverlay.classList.toggle('active');
+                }
+            } else {
+                sidebar.classList.toggle('collapsed');
+                document.body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+            }
+        });
+    }
+    
+    // Close mobile sidebar on overlay click
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+        });
+    }
+    
+    // Restore sidebar state
+    if (!isMobile && localStorage.getItem('sidebarCollapsed') === 'true') {
+        sidebar.classList.add('collapsed');
+        document.body.classList.add('sidebar-collapsed');
+    }
+    
+    // Mark active nav item
+    const currentPath = window.location.pathname;
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && (href === currentPath || 
+            (currentPath.includes(href) && href !== '/admin/' && href !== '#'))) {
+            item.classList.add('active');
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const newIsMobile = window.innerWidth <= 768;
+        if (newIsMobile !== isMobile) {
+            location.reload(); // Simple solution for layout changes
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block branding %}
+<!-- Custom Sidebar -->
+<nav class="admin-sidebar">
+    <div class="sidebar-header">
+<a href="{% url 'admin:index' %}" class="sidebar-logo">
+            <i class="fas fa-chart-line"></i>
+            <span>Admin Panel</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-nav">
+        <!-- Dashboard Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Dashboard</div>
+            <a href="{% url 'admin:index' %}" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Overview</span>
+            </a>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Authentication</div>
+            <a href="{% url 'admin:auth_user_changelist' %}" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+                <span class="nav-badge">{{ user_count|default:"0" }}</span>
+            </a>
+            <a href="{% url 'admin:auth_group_changelist' %}" class="nav-item">
+                <i class="fas fa-users-cog"></i>
+                <span>Groups</span>
+            </a>
+        </div>
+        
+        <!-- Content Management -->
+        {% if model_admin_urls %}
+        <div class="nav-section">
+            <div class="nav-section-title">Content</div>
+            {% for model_url in model_admin_urls %}
+            <a href="{{ model_url.url }}" class="nav-item">
+                <i class="{{ model_url.icon|default:'fas fa-database' }}"></i>
+                <span>{{ model_url.name }}</span>
+                {% if model_url.count %}
+                <span class="nav-badge">{{ model_url.count }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- System Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">System</div>
+            <a href="{% url 'admin:admin_logentry_changelist' %}" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Activity Log</span>
+            </a>
+            <a href="/admin/doc/" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Documentation</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar Toggle Button -->
+<button class="sidebar-toggle" aria-label="Toggle Sidebar">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay"></div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+<!-- Main Content Area -->
+<div class="main-content">
+    <div class="content-header">
+        <h1 class="content-title">
+            {% block content_title %}
+                {% if title %}{{ title }}{% else %}Dashboard{% endif %}
+            {% endblock %}
+        </h1>
+        
+        <div class="user-menu">
+            {% if user.is_authenticated %}
+                <span class="text-muted">Welcome, {{ user.get_full_name|default:user.username }}</span>
+                <div class="user-avatar">
+                    {{ user.first_name.0|default:user.username.0|upper }}
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'admin:password_change' %}">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="content-wrapper">
+        {{ block.super }}
+    </div>
+</div>
+{% endblock %}

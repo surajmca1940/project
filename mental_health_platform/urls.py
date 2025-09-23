@@ -26,6 +26,7 @@ from .views import (AssessmentView, RecommendationView, GamesView, MoodJournalVi
 # Non-translated URLs (like admin, language switching)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/booking_system/', include('booking_system.admin_urls')),  # Enhanced booking admin
     path('i18n/', include('django.conf.urls.i18n')),  # Language switching
 ]
 

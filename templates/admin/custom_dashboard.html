@@ -1,0 +1,456 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'admin/css/custom-dashboard.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block nav-breadcrumbs %}
+<nav aria-label="breadcrumb" class="custom-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <i class="fas fa-home me-1"></i>
+            <a href="{% url 'custom_admin:index' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-chart-bar me-1"></i>
+            Dashboard
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    {{ site_header }}
+                </h1>
+                <p class="dashboard-subtitle text-muted">
+                    Welcome back! Here's what's happening with your application.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="dashboard-actions">
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt me-1"></i>
+                        Refresh
+                    </button>
+                    <span class="text-muted small">
+                        <i class="fas fa-clock me-1"></i>
+                        Last updated: <span id="last-updated">{{ request.timestamp|date:"M d, H:i" }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <!-- User Statistics -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-3">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="card-title text-muted mb-1">Total Users</h6>
+                            <h3 class="card-value mb-0">{{ user_stats.total|default:0 }}</h3>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up"></i>
+                                {{ user_stats.active|default:0 }} active
+                            </small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="stats-icon bg-primary">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Users -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-3">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="card-title text-muted mb-1">Staff Users</h6>
+                            <h3 class="card-value mb-0">{{ user_stats.staff|default:0 }}</h3>
+                            <small class="text-info">
+                                <i class="fas fa-shield-alt"></i>
+                                {{ user_stats.superusers|default:0 }} superusers
+                            </small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="stats-icon bg-success">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Models -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-3">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="card-title text-muted mb-1">Data Models</h6>
+                            <h3 class="card-value mb-0">{{ total_models|default:0 }}</h3>
+                            <small class="text-warning">
+                                <i class="fas fa-database"></i>
+                                Registered models
+                            </small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="stats-icon bg-warning">
+                                <i class="fas fa-cubes"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Records -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-3">
+            <div class="stats-card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="card-title text-muted mb-1">Total Records</h6>
+                            <h3 class="card-value mb-0">
+                                {% for stat in model_stats %}{{ stat.count|add:0 }}{% if not forloop.last %}+{% endif %}{% empty %}0{% endfor %}
+                            </h3>
+                            <small class="text-danger">
+                                <i class="fas fa-chart-line"></i>
+                                Database entries
+                            </small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="stats-icon bg-danger">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Model Statistics -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-database me-2"></i>
+                        Model Statistics
+                    </h5>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary active" onclick="toggleView('grid')">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleView('list')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="models-grid" class="models-grid">
+                        <div class="row">
+                            {% for stat in model_stats %}
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-3">
+                                <div class="model-card" onclick="navigateToModel('{{ stat.app_label }}', '{{ stat.model_name }}')">
+                                    <div class="model-icon">
+                                        <i class="{{ stat.icon }}"></i>
+                                    </div>
+                                    <div class="model-info">
+                                        <h6 class="model-name">{{ stat.name }}</h6>
+                                        <div class="model-count">{{ stat.count }} record{{ stat.count|pluralize }}</div>
+                                        <small class="text-muted">{{ stat.app_label|title }}</small>
+                                    </div>
+                                    <div class="model-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-database fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No models registered</h6>
+                                    <p class="text-muted">Register your models in admin.py to see them here.</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div id="models-list" class="models-list" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>App</th>
+                                        <th>Records</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stat in model_stats %}
+                                    <tr onclick="navigateToModel('{{ stat.app_label }}', '{{ stat.model_name }}')">
+                                        <td>
+                                            <i class="{{ stat.icon }} me-2"></i>
+                                            {{ stat.name }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">{{ stat.app_label|title }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ stat.count }}</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">
+                                            No models registered
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Recent Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_actions %}
+                        <div class="recent-actions">
+                            {% for action in recent_actions %}
+                            <div class="action-item">
+                                <div class="action-icon">
+                                    {% if action.is_addition %}
+                                        <i class="fas fa-plus text-success"></i>
+                                    {% elif action.is_change %}
+                                        <i class="fas fa-edit text-warning"></i>
+                                    {% elif action.is_deletion %}
+                                        <i class="fas fa-trash text-danger"></i>
+                                    {% else %}
+                                        <i class="fas fa-eye text-info"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="action-content">
+                                    <div class="action-title">
+                                        {{ action.object_repr|truncatechars:30 }}
+                                    </div>
+                                    <div class="action-details">
+                                        <small class="text-muted">
+                                            {{ action.get_change_message }}
+                                            by {{ action.user.get_full_name|default:action.user.username }}
+                                        </small>
+                                    </div>
+                                    <div class="action-time">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ action.action_time|timesince }} ago
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-history fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No recent actions</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'admin:auth_user_add' %}" class="quick-action-btn">
+                                <div class="quick-action-icon bg-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="quick-action-text">
+                                    <strong>Add User</strong>
+                                    <small>Create new user account</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'admin:auth_user_changelist' %}" class="quick-action-btn">
+                                <div class="quick-action-icon bg-success">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="quick-action-text">
+                                    <strong>Manage Users</strong>
+                                    <small>View and edit users</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'admin:auth_group_changelist' %}" class="quick-action-btn">
+                                <div class="quick-action-icon bg-warning">
+                                    <i class="fas fa-users-cog"></i>
+                                </div>
+                                <div class="quick-action-text">
+                                    <strong>User Groups</strong>
+                                    <small>Manage permissions</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'admin:admin_logentry_changelist' %}" class="quick-action-btn">
+                                <div class="quick-action-icon bg-info">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <div class="quick-action-text">
+                                    <strong>View Logs</strong>
+                                    <small>System activity log</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Update timestamp
+    updateTimestamp();
+    setInterval(updateTimestamp, 60000); // Update every minute
+});
+
+function navigateToModel(appLabel, modelName) {
+    window.location.href = `/admin/${appLabel}/${modelName}/`;
+}
+
+function toggleView(viewType) {
+    const gridView = document.getElementById('models-grid');
+    const listView = document.getElementById('models-list');
+    const buttons = document.querySelectorAll('.btn-group button');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (viewType === 'grid') {
+        gridView.style.display = 'block';
+        listView.style.display = 'none';
+        buttons[0].classList.add('active');
+    } else {
+        gridView.style.display = 'none';
+        listView.style.display = 'block';
+        buttons[1].classList.add('active');
+    }
+    
+    // Store preference
+    localStorage.setItem('dashboardView', viewType);
+}
+
+function refreshDashboard() {
+    location.reload();
+}
+
+function updateTimestamp() {
+    const now = new Date();
+    const timestamp = now.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    const element = document.getElementById('last-updated');
+    if (element) {
+        element.textContent = timestamp;
+    }
+}
+
+// Restore view preference
+document.addEventListener('DOMContentLoaded', function() {
+    const savedView = localStorage.getItem('dashboardView');
+    if (savedView) {
+        toggleView(savedView);
+    }
+});
+
+// Add smooth animations
+document.querySelectorAll('.model-card, .quick-action-btn').forEach(element => {
+    element.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+    });
+    
+    element.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
+{% endblock %}

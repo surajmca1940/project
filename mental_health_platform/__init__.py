@@ -1,0 +1,1 @@
+default_app_config = 'mental_health_platform.apps.MentalHealthPlatformConfig'

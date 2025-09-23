@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 
 class Counselor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialization = models.CharField(max_length=200)
-    bio = models.TextField(blank=True)
-    languages = models.CharField(max_length=200, help_text="Comma-separated list of languages")
+    specialization = models.CharField(max_length=200, blank=True, default="General Counseling", help_text="e.g., Anxiety, Depression, Stress Management")
+    bio = models.TextField(blank=True, default="Experienced mental health counselor")
+    languages = models.CharField(max_length=200, blank=True, default="English", help_text="e.g., English, Hindi, Tamil")
     is_available = models.BooleanField(default=True)
     
     def __str__(self):

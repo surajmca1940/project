@@ -1,0 +1,257 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrahead %}{{ block.super }}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.login-form {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    padding: 3rem;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.login-header p {
+    color: #7f8c8d;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.submit-row {
+    margin-top: 2rem;
+}
+
+.submit-row input[type="submit"] {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.submit-row input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.submit-row input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.errornote {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #e74c3c;
+    font-size: 0.9rem;
+}
+
+.errornote ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.password-reset {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.password-reset a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.password-reset a:hover {
+    color: #5a67d8;
+    text-decoration: underline;
+}
+
+/* Hide Django's default styling */
+#content {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    min-height: 100vh;
+}
+
+#header {
+    display: none;
+}
+
+#footer {
+    display: none;
+}
+
+.breadcrumbs {
+    display: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .login-form {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+    
+    .login-header h1 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="login">
+    <form class="login-form" action="{{ app_path }}" method="post" id="login-form">
+        <div class="login-header">
+            <h1><i class="fas fa-shield-alt"></i>{{ site_header|default:_('Django Administration') }}</h1>
+            <p>{% blocktranslate %}Welcome back! Please sign in to your account.{% endblocktranslate %}</p>
+        </div>
+
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="errornote">
+            {% if form.errors.items|length == 1 %}
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            {% else %}
+                <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{% if field != '__all__' %}{{ field|title }}: {% endif %}{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            {{ form.password }}
+        </div>
+
+        {{ form.non_field_errors }}
+
+        <div class="submit-row">
+            <input type="submit" value="{% translate 'Log in' %}" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+
+        {% if user.is_authenticated %}
+        <p class="errornote">
+            {% blocktranslate trimmed %}
+                You are authenticated as {{ username }}, but are not authorized to
+                access this page. Would you like to login to a different account?
+            {% endblocktranslate %}
+        </p>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}
