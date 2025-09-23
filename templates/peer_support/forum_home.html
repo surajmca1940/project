@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Peer Support Forum" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Forum Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 style="color: var(--primary-color);">
+                <i class="bi bi-people"></i> {% trans "Peer Support Forum" %}
+            </h2>
+            {% if user.is_authenticated %}
+            <a href="{% url 'peer_support:thread_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> {% trans "New Thread" %}
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-primary">
+                <i class="bi bi-box-arrow-in-right"></i> {% trans "Login to Post" %}
+            </a>
+            {% endif %}
+        </div>
+        
+        <!-- Safety Notice -->
+        <div class="alert alert-info mb-4">
+            <i class="bi bi-shield-check"></i>
+            {% trans "This is a safe, moderated space. Please respect privacy and avoid sharing personal identifying information." %}
+        </div>
+        
+        <!-- Search and Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">{% trans "Search" %}</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               value="{{ current_search }}" placeholder="{% trans 'Search threads, content, or author...' %}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tag" class="form-label">{% trans "Filter by Tag" %}</label>
+                        <select class="form-select" id="tag" name="tag">
+                            <option value="">{% trans "All Tags" %}</option>
+                            {% for tag in tags %}
+                            <option value="{{ tag.name }}" {% if tag.name == current_tag %}selected{% endif %}>
+                                {{ tag.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sort" class="form-label">{% trans "Sort by" %}</label>
+                        <select class="form-select" id="sort" name="sort">
+                            <option value="recent" {% if current_sort == 'recent' %}selected{% endif %}>
+                                {% trans "Most Recent" %}
+                            </option>
+                            <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>
+                                {% trans "Most Popular" %}
+                            </option>
+                            <option value="views" {% if current_sort == 'views' %}selected{% endif %}>
+                                {% trans "Most Viewed" %}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-search"></i> {% trans "Filter" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Active Tags -->
+        {% if tags %}
+        <div class="mb-4">
+            <div class="d-flex flex-wrap gap-2">
+                {% for tag in tags %}
+                <a href="?tag={{ tag.name }}" class="badge bg-light text-dark text-decoration-none border">
+                    <span style="color: {{ tag.color }};">●</span> {{ tag.name }}
+                    <small class="text-muted">({{ tag.get_thread_count }})</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Thread List -->
+        {% if threads %}
+        <div class="thread-list">
+            {% for thread in threads %}
+            <div class="card mb-3 thread-card" data-thread-id="{{ thread.id }}">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="thread-meta">
+                                    <span class="badge bg-secondary me-2">{{ thread.get_display_author }}</span>
+                                    <small class="text-muted">
+                                        {{ thread.created_at|timesince }} ago
+                                        {% if thread.created_at != thread.updated_at %}
+                                        • {% trans "updated" %} {{ thread.updated_at|timesince }} ago
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                {% if thread.is_pinned %}
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-pin"></i> {% trans "Pinned" %}
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <h5 class="card-title">
+                                <a href="{{ thread.get_absolute_url }}" class="text-decoration-none">
+                                    {{ thread.title }}
+                                    {% if thread.is_locked %}
+                                    <i class="bi bi-lock text-muted"></i>
+                                    {% endif %}
+                                </a>
+                            </h5>
+                            
+                            <p class="card-text text-muted">
+                                {{ thread.content|truncatewords:30 }}
+                            </p>
+                            
+                            {% if thread.tags.all %}
+                            <div class="thread-tags mb-2">
+                                {% for tag in thread.tags.all %}
+                                <a href="?tag={{ tag.name }}" class="badge text-decoration-none" 
+                                   style="background-color: {{ tag.color }}20; color: {{ tag.color }}; border: 1px solid {{ tag.color }};">
+                                    {{ tag.name }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="thread-stats text-end">
+                                <div class="d-flex justify-content-end align-items-center mb-2">
+                                    {% if user.is_authenticated %}
+                                    <div class="vote-buttons me-3" data-thread-id="{{ thread.id }}">
+                                        <button class="btn btn-sm btn-outline-success vote-btn" 
+                                                data-vote-type="up" title="{% trans 'Upvote' %}">
+                                            <i class="bi bi-arrow-up"></i>
+                                        </button>
+                                        <span class="vote-score mx-1">{{ thread.get_vote_score }}</span>
+                                        <button class="btn btn-sm btn-outline-danger vote-btn" 
+                                                data-vote-type="down" title="{% trans 'Downvote' %}">
+                                            <i class="bi bi-arrow-down"></i>
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <span class="me-3">
+                                        <i class="bi bi-arrow-up text-muted"></i>
+                                        {{ thread.get_vote_score }}
+                                        <i class="bi bi-arrow-down text-muted"></i>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="thread-info">
+                                    <small class="text-muted d-block">
+                                        <i class="bi bi-chat"></i> {{ thread.get_reply_count }} {% trans "replies" %}
+                                    </small>
+                                    <small class="text-muted d-block">
+                                        <i class="bi bi-eye"></i> {{ thread.view_count }} {% trans "views" %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Thread pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">
+                        {% trans "First" %}
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">
+                        {% trans "Previous" %}
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">
+                        {% trans "Next" %}
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}">
+                        {% trans "Last" %}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-chat-quote display-1 text-muted"></i>
+            <h3 class="mt-3 text-muted">{% trans "No threads found" %}</h3>
+            <p class="text-muted">
+                {% if current_search or current_tag or current_author %}
+                    {% trans "Try adjusting your search or filter criteria." %}
+                {% else %}
+                    {% trans "Be the first to start a conversation!" %}
+                {% endif %}
+            </p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'peer_support:thread_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> {% trans "Create First Thread" %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.thread-card {
+    transition: box-shadow 0.2s;
+}
+.thread-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.vote-buttons {
+    display: flex;
+    align-items: center;
+}
+.vote-btn {
+    border: none !important;
+    padding: 0.25rem 0.5rem;
+}
+.vote-btn:hover {
+    background-color: var(--bs-gray-100);
+}
+.vote-btn.active-up {
+    color: #198754 !important;
+    background-color: rgba(25, 135, 84, 0.1);
+}
+.vote-btn.active-down {
+    color: #dc3545 !important;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+.thread-stats {
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // AJAX voting functionality
+    const voteButtons = document.querySelectorAll('.vote-btn');
+    
+    voteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const threadId = this.closest('.vote-buttons').dataset.threadId;
+            const voteType = this.dataset.voteType;
+            
+            fetch(`{% url 'peer_support:vote_thread' 0 %}`.replace('0', threadId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}'
+                },
+                body: `vote_type=${voteType}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update vote score
+                    const scoreElement = this.parentElement.querySelector('.vote-score');
+                    scoreElement.textContent = data.vote_score;
+                    
+                    // Update button states
+                    const voteContainer = this.parentElement;
+                    const upBtn = voteContainer.querySelector('[data-vote-type="up"]');
+                    const downBtn = voteContainer.querySelector('[data-vote-type="down"]');
+                    
+                    // Remove active states
+                    upBtn.classList.remove('active-up');
+                    downBtn.classList.remove('active-down');
+                    
+                    // Add active state based on response
+                    if (data.action !== 'removed') {
+                        if (data.vote_type === 'up') {
+                            upBtn.classList.add('active-up');
+                        } else {
+                            downBtn.classList.add('active-down');
+                        }
+                    }
+                } else {
+                    alert(data.error || '{% trans "Error voting. Please try again." %}');
+                }
+            })
+            .catch(error => {
+                console.error('Voting error:', error);
+                alert('{% trans "Error voting. Please try again." %}');
+            });
+        });
+    });
+    
+    // Auto-submit search form on filter change
+    const sortSelect = document.getElementById('sort');
+    const tagSelect = document.getElementById('tag');
+    
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+    
+    if (tagSelect) {
+        tagSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+});
+</script>
+{% endblock %}

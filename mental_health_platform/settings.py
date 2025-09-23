@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party apps
+    'widget_tweaks',
     # Custom apps
     'mental_health_platform.apps.MentalHealthPlatformConfig',
     'accounts',
@@ -186,3 +188,6 @@ ADMIN_INTERFACE = {
     'SHOW_RECENT_ACTIONS': True,
     'SHOW_UI_BUILDER': True
 }
+
+# Google Gemini AI Configuration
+GEMINI_API_KEY = 'AIzaSyDIFQWXh2K5ZT_jpPwZdqIS4q6krobwIw0'

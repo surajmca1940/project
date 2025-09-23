@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block title %}{% trans "Edit Thread" %} - {{ object.title|truncatechars:50 }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'peer_support:forum_home' %}">{% trans "Forum" %}</a></li>
+                <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|truncatechars:30 }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+            </ol>
+        </nav>
+        
+        <!-- Page Header -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title mb-0">
+                    <i class="bi bi-pencil"></i> {% trans "Edit Thread" %}
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle"></i>
+                    {% trans "You are editing your thread. Changes will be visible to all users immediately." %}
+                </div>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Title Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.title.id_for_label }}" class="form-label required">
+                            <strong>{% trans "Thread Title" %}</strong>
+                        </label>
+                        {{ form.title|add_class:"form-control" }}
+                        {% if form.title.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.title.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            {% trans "Choose a clear, descriptive title that summarizes your topic (minimum 5 characters)." %}
+                        </div>
+                    </div>
+                    
+                    <!-- Content Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.content.id_for_label }}" class="form-label required">
+                            <strong>{% trans "Content" %}</strong>
+                        </label>
+                        {{ form.content|add_class:"form-control"|attr:"rows:8" }}
+                        {% if form.content.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.content.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            {% trans "Write your full message here. Be detailed and clear (minimum 10 characters)." %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted" id="char-count">0 {% trans "characters" %}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Tags Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.tags.id_for_label }}" class="form-label">
+                            <strong>{% trans "Tags" %}</strong>
+                        </label>
+                        {{ form.tags|add_class:"form-control" }}
+                        {% if form.tags.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.tags.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            {% trans "Select relevant tags to help others find your thread." %}
+                        </div>
+                    </div>
+                    
+                    <!-- Anonymous Option -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.is_anonymous|add_class:"form-check-input" }}
+                            <label class="form-check-label" for="{{ form.is_anonymous.id_for_label }}">
+                                {% trans "Post anonymously" %}
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            {% trans "Your username will be hidden and displayed as 'Anonymous' instead." %}
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ object.get_absolute_url }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> {% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> {% trans "Update Thread" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Thread Info Card -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="bi bi-info-circle"></i> {% trans "Thread Information" %}
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>{% trans "Created:" %}</strong> {{ object.created_at }}</p>
+                        <p class="mb-1"><strong>{% trans "Last Updated:" %}</strong> {{ object.updated_at }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>{% trans "Views:" %}</strong> {{ object.view_count }}</p>
+                        <p class="mb-1"><strong>{% trans "Replies:" %}</strong> {{ object.get_reply_count }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+#char-count {
+    font-family: monospace;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contentTextarea = document.getElementById('{{ form.content.id_for_label }}');
+    const charCount = document.getElementById('char-count');
+    
+    // Character count
+    if (contentTextarea && charCount) {
+        function updateCharCount() {
+            const count = contentTextarea.value.length;
+            charCount.textContent = count + ' {% trans "characters" %}';
+            
+            if (count < 10) {
+                charCount.classList.add('text-danger');
+                charCount.classList.remove('text-success');
+            } else if (count >= 50) {
+                charCount.classList.add('text-success');
+                charCount.classList.remove('text-danger');
+            } else {
+                charCount.classList.remove('text-danger', 'text-success');
+            }
+        }
+        
+        contentTextarea.addEventListener('input', updateCharCount);
+        updateCharCount(); // Initial count
+    }
+});
+</script>
+{% endblock %}

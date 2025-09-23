@@ -66,6 +66,17 @@
     </div>
     
     <div class="col-md-6 col-lg-3 mb-4">
+        <div class="spotlight-card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-clipboard-check spotlight-icon text-danger"></i>
+                <h5 class="card-title">{% trans "Mental Health Assessment" %}</h5>
+                <p class="card-text">{% trans "Complete standardized psychological screening tools (PHQ-9, GAD-7, GHQ-12) for personalized recommendations." %}</p>
+                <a href="{% url 'assessment' %}" class="spotlight-btn">{% trans "Take Assessment" %}</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
         <div class="spotlight-card pulsing h-100 text-center">
             <div class="card-body">
                 <i class="bi bi-people spotlight-icon text-warning"></i>
@@ -90,7 +101,7 @@
                     </div>
                     <div class="col-md-4">
                         <strong>{% trans "National Helpline" %}</strong><br>
-                        <span class="h5">1-800-HELP-NOW</span>
+                        <span class="h5">800-599-0019</span>
                     </div>
                     <div class="col-md-4">
                         <strong>{% trans "Emergency Services" %}</strong><br>
