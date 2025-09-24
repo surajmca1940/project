@@ -1,8 +1,8 @@
-# Digital Psychological Intervention System
+# IndAid - Mental Health Support Platform
 
 ## Overview
 
-The Digital Psychological Intervention System is a comprehensive web-based and mobile application designed to address the growing mental health challenges among college students. This system provides scalable, stigma-free psychological intervention tools specifically tailored for higher education institutions.
+IndAid is a comprehensive web-based and mobile application designed to address the growing mental health challenges among college students. This system provides scalable, stigma-free psychological intervention tools specifically tailored for higher education institutions.
 
 ## Problem Statement
 

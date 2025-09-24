@@ -1,7 +1,7 @@
 {
-  "name": "digital-psychological-intervention-system",
+  "name": "indaid",
   "version": "1.0.0",
-  "description": "A comprehensive digital platform for psychological intervention and mental health support in educational institutions",
+  "description": "IndAid - A comprehensive mental health support platform for educational institutions",
   "private": true,
   "workspaces": [
     "frontend",

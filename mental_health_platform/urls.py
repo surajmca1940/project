@@ -66,5 +66,6 @@ urlpatterns += i18n_patterns(
 
 # Serve static and media files during development
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()  # This serves from STATICFILES_DIRS
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

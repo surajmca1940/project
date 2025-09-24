@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Home" %} - {% trans "Digital Psychological Intervention System" %}{% endblock %}
+{% block title %}{% trans "Home" %} - {% trans "IndAid" %}{% endblock %}
 
 {% block content %}
 <div class="hero-section bg-light p-5 rounded mb-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold text-primary">{% trans "Digital Psychological Intervention System" %}</h1>
+                <h1 class="display-4 fw-bold text-primary">{% trans "IndAid" %}</h1>
                 <p class="lead">{% trans "A comprehensive platform supporting mental health and well-being in higher education institutions" %}</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <a href="{% url 'ai_support:chat' %}" class="btn btn-primary btn-lg px-4 me-md-2">{% trans "Get AI Support" %}</a>
